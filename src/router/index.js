@@ -36,7 +36,14 @@ const routes = [
   {
     path: '/propaganda',
     name: 'propaganda',
-    component: () => import('../views/propaganda/')
+    component: () => import('../views/propaganda/'),
+    children:[
+      {
+        path: '/lawArt',
+        name: 'lawArt',
+        component: () => import('../views/propaganda/lawArt')
+      },
+    ]
   },
   {
     path: '/map',
@@ -53,6 +60,7 @@ const routes = [
     name: 'register',
     component: () => import('../views/register.vue')
   },
+  
 
 
 ]
