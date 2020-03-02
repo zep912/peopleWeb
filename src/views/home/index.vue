@@ -9,7 +9,7 @@
         </el-carousel>
       </el-col>
       <el-col :span="8">
-        <el-tabs v-model="activeName" type="card" stretch @tab-click="handleClick">
+        <el-tabs v-model="activeName" type="card" stretch>
           <el-tab-pane label="通知公告" name="first">
             <el-card>
               <div v-for="(item, index) in content.noticeList.slice(0, 6)" :key="item.newsId" class="item">
@@ -53,23 +53,91 @@
       </el-col>
     </el-row>
     <el-row :gutter="10" style="margin-top: 10px">
-      <el-col :span="16" style="background-color: #fff; padding: 10px">
-        <el-tabs v-model="activeName1" type="card" @tab-click="handleClick">
-          <el-tab-pane label="法律法规" name="first">
-            <div class="tab-content">
-              <div class="tab-header">
-                <h3>司法行政十大原则金曲奉献祖国"征集评选活动"</h3>
-                <p>
-                  网上申请的，先行提交电子材料，现场验证时提交纸质原件，正本原件核对无误后退回。网上提交的材料必须与当场提交的材料内容相同。
-                </p>
-              </div>
+      <el-col :span="16">
+        <el-tabs class="new-box" type="card">
+          <el-tab-pane label="法律法规">
+            <div class="tab-content" v-for="item in content.lawList" :key="item.lawId">
+              <div class="tab-left">{{item.lawTitle}}</div>
+              <div class="tab-right">{{item.execDate}}</div>
             </div>
           </el-tab-pane>
-          <el-tab-pane label="司法解释" name="second">配置管理</el-tab-pane>
-          <el-tab-pane label="国际条约惯例" name="third">配置管理</el-tab-pane>
+          <el-tab-pane label="司法解释">
+            <div class="tab-content" v-for="item in content.judicialList" :key="item.lawId">
+              <div class="tab-left">{{item.lawTitle}}</div>
+              <div class="tab-right">{{item.publishDate}}</div>
+            </div>
+          </el-tab-pane>
+          <el-tab-pane label="国际条约惯例">
+            <div class="tab-content" v-for="item in content.internationalList" :key="item.lawId">
+              <div class="tab-left">{{item.lawTitle}}</div>
+              <div class="tab-right">{{item.publishDate}}</div>
+            </div>
+          </el-tab-pane>
         </el-tabs>
       </el-col>
       <el-col :span="8">
+        <el-tabs class="new-box" type="card">
+          <el-tab-pane label="法律服务">
+            <div class="serve-box">
+              <div class="serve-content">
+                <i class="el-icon-edit"></i>
+                <div>在线咨询</div>
+              </div>
+              <div class="serve-content">
+                <i class="el-icon-edit"></i>
+                <div>在线预约</div>
+              </div>
+              <div class="serve-content">
+                <i class="el-icon-edit"></i>
+                <div>司法考试</div>
+              </div>
+              <div class="serve-content">
+                <i class="el-icon-edit"></i>
+                <div>群众批评意见</div>
+              </div>
+            </div>
+          </el-tab-pane>
+        </el-tabs>
+      </el-col>
+    </el-row>
+    <el-carousel height="120px" style="margin: 10px 0">
+      <el-carousel-item v-for="item in content.bannerList1" :key="item.bannerId">
+        <img :src="item.imgPath">
+      </el-carousel-item>
+    </el-carousel>
+    <el-row :gutter="10">
+      <el-col :span="16">
+        <el-tabs class="new-box" type="card">
+          <el-tab-pane label="司法培训">
+            <div class="serve-box train-box">
+              <div class="train-content" v-for="item in 8" :key="item">
+              </div>
+            </div>
+          </el-tab-pane>
+        </el-tabs>
+      </el-col>
+      <el-col :span="8">
+        <div class="img-content" v-for="item in 3" :key="item"></div>
+      </el-col>
+    </el-row>
+    <el-row :gutter="10" style="margin-top: 10px">
+      <el-col :span="16">
+        <el-tabs type="card" class="new-box">
+          <el-tab-pane label="司法培训">
+            <div style="background-color: red; height: 320px;">
+            </div>
+          </el-tab-pane>
+        </el-tabs>
+      </el-col>
+      <el-col :span="8">
+        <div class="map-list">
+          <div class="map-content" v-for="item in content.mapList" :key="item.orgName">
+            <div class="map-left">{{item.orgName}}</div>
+            <div class="map-right">
+              <span>{{item.orgCunt}}</span>家
+            </div>
+          </div>
+        </div>
       </el-col>
     </el-row>
   </div>
@@ -103,9 +171,6 @@ export default {
     }
   },
   methods: {
-    handleClick(tab, event) {
-      console.log(tab, event);
-    },
     getData() {
       this.$ajaxPost('/index/mainData', {request: 123}).then(({data}) => {
         if (data.code === 200) {
@@ -186,6 +251,91 @@ export default {
         }
         &:last-of-type {
           margin-bottom: 14px;
+        }
+      }
+    }
+    .new-box {
+      overflow: hidden;
+      height: 300px;
+      background-color: #fff;
+      padding: 15px!important;
+      border-top: 2px solid #449efe;
+      box-sizing: border-box;
+      .el-tabs__item {
+        height: 40px;
+        line-height: 40px;
+      }
+      .el-tab-pane {
+        .tab-content {
+          display: flex;
+          height: 40px;
+          line-height: 40px;
+          .tab-left {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            flex: 1;
+            padding-right: 30px;
+            font-size: 16px;
+          }
+          .tab-right {
+            width: 100px;
+            color: #666;
+          }
+        }
+        .serve-box {
+          padding: 15px 0;
+          display: grid;
+          grid-gap: 15px 15px;
+          grid-template-columns: repeat(3, 1fr);
+          .serve-content {
+            padding: 20px 0 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+            i {
+              font-size: 36px;
+            }
+            div {
+              padding: 5px 0;
+            }
+          }
+        }
+        .train-box {
+          grid-template-columns: repeat(4, 1fr);
+          .train-content {
+            height: 100px;
+            background-color: red;
+          }
+        }
+      }
+    }
+    .img-content {
+      height: 90px;
+      background-color: red;
+      margin-bottom: 15px;
+      &:last-of-type {
+        margin-bottom: 0;
+      }
+    }
+    .map-list {
+      .map-content {
+        display: flex;
+        font-size: 16px;
+        padding: 0 20px;
+        border: 1px solid #ccc;
+        height: 48px;
+        line-height: 48px;
+        .map-left {
+          flex: 1;
+        }
+        .map-right {
+          text-align: right;
+          width: 80px;
+          span {
+            font-size: 28px;
+            color: red;
+            margin-right: 20px;
+          }
         }
       }
     }
