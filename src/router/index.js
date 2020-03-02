@@ -43,6 +43,16 @@ const routes = [
         name: 'lawArt',
         component: () => import('../views/propaganda/lawArt')
       },
+      {
+        path: '/laws',
+        name: 'laws',
+        component: () => import('../views/propaganda/laws')
+      },
+      {
+        path: '/judicial',
+        name: 'judicial',
+        component: () => import('../views/propaganda/judicial')
+      }
     ]
   },
   {

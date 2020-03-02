@@ -5,13 +5,13 @@
       <el-row>
         <el-col :span="9">
           <router-link to="/lawArt"><i class="el-icon-arrow-right"></i>以案释法</router-link>
-          <router-link to=""><i class="el-icon-arrow-right"></i>法律法规</router-link>
-          <router-link to=""><i class="el-icon-arrow-right"></i>司法培训</router-link>
+          <router-link to="/laws"><i class="el-icon-arrow-right"></i>法律法规</router-link>
+          <router-link to="/judicial"><i class="el-icon-arrow-right"></i>司法培训</router-link>
           <img src="../../assets/img/pic1.png" alt="">
           <img src="../../assets/img/pic2.png" alt="">
           <img src="../../assets/img/pic3.png" alt="">
         </el-col>
-        <el-col :span="10">
+        <el-col :span="14">
           <router-view />
         </el-col>
       </el-row>
@@ -51,6 +51,7 @@ export default {
   color: #000;
   box-sizing: border-box;
   padding-left: 10px;
+  background: #fff;
   i{
     margin-right: 10px;
   }

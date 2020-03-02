@@ -1,7 +1,7 @@
 <template>
   <div class="lawArt">
     <div class="lawTitle">
-      <span class="lawTitles">以案释法</span>
+      <span class="lawTitles">法律法规</span>
       <span>
         共计：
         <span>{{num}}</span>篇
