@@ -5,16 +5,16 @@ import './util.js'
 import util from "./util";
 
 // 请求地址
-const baseURL = '';
+const baseURL = 'http://59.44.27.201:9010/jjkj/sfj/api';
 // 创建axios实例
 const service = axios.create({
   baseURL: baseURL,
   timeout: 10000
-})
+});
 let mask = {}; //遮罩对象
 
-let pending = {}  //声明一个对象来存储每次请求的唯一标识和取消函数
-let CancelToken = axios.CancelToken //axios的CancelToken
+let pending = {};  //声明一个对象来存储每次请求的唯一标识和取消函数
+let CancelToken = axios.CancelToken; //axios的CancelToken
 const removePending = (key) => {
   if (pending[key]) { //如果是重复请求，执行cancelToken
     pending[key]('取消重复')
