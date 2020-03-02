@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
+import Home from '../views/home/'
 
 Vue.use(VueRouter)
 
@@ -21,32 +21,32 @@ const routes = [
   {
     path: '/government',
     name: 'government',
-    component: () => import('../views/government.vue')
+    component: () => import('../views/government/')
   },
   {
     path: '/law',
     name: 'law',
-    component: () => import('../views/law.vue')
+    component: () => import('../views/law/')
   },
   {
     path: '/lawer',
     name: 'lawer',
-    component: () => import('../views/lawer.vue')
+    component: () => import('../views/lawer/')
   },
   {
     path: '/propaganda',
     name: 'propaganda',
-    component: () => import('../views/propaganda.vue')
+    component: () => import('../views/propaganda/')
   },
   {
     path: '/map',
     name: 'map',
-    component: () => import('../views/map.vue')
+    component: () => import('../views/map/')
   },
   {
     path: '/mailbox',
     name: 'mailbox',
-    component: () => import('../views/mailbox.vue')
+    component: () => import('../views/mailbox/')
   },
   {
     path: '/register',
