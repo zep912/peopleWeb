@@ -11,22 +11,44 @@
       <el-col :span="8">
         <el-tabs v-model="activeName" type="card" stretch @tab-click="handleClick">
           <el-tab-pane label="通知公告" name="first">
-            <div class="tab-content">
-              <div class="tab-header">
-                <h3>司法行政十大原则金曲奉献祖国"征集评选活动"</h3>
-                <p>
-                  网上申请的，先行提交电子材料，现场验证时提交纸质原件，正本原件核对无误后退回。网上提交的材料必须与当场提交的材料内容相同。
-                </p>
-              </div>
-              <el-card class="box-card">
-                <div v-for="item in content.noticeList" :key="item.newsId" class="item">
-                  {{item.newsContent}}
+            <el-card>
+              <div v-for="(item, index) in content.noticeList.slice(0, 6)" :key="item.newsId" class="item">
+                <div class="header-top" v-if="index === 0">
+                  <h3>{{item.newsContent}}</h3>
+                  <p>
+                    {{item.newsTitle}}
+                  </p>
                 </div>
-              </el-card>
-            </div>
+                <div class="text" v-else>{{item.newsContent}}</div>
+              </div>
+            </el-card>
           </el-tab-pane>
-          <el-tab-pane label="公示信息" name="second">配置管理</el-tab-pane>
-          <el-tab-pane label="新闻资讯" name="third">配置管理</el-tab-pane>
+          <el-tab-pane label="公示信息" name="second">
+            <el-card>
+              <div v-for="(item, index) in content.publicityList.slice(0, 6)" :key="item.newsId" class="item">
+                <div class="header-top" v-if="index === 0">
+                  <h3>{{item.newsContent}}</h3>
+                  <p>
+                    {{item.newsTitle}}
+                  </p>
+                </div>
+                <div class="text" v-else>{{item.newsContent}}</div>
+              </div>
+            </el-card>
+          </el-tab-pane>
+          <el-tab-pane label="新闻资讯" name="third">
+            <el-card>
+              <div v-for="(item, index) in content.newsList.slice(0, 6)" :key="item.newsId" class="item">
+                <div class="header-top" v-if="index === 0">
+                  <h3>{{item.newsContent}}</h3>
+                  <p>
+                    {{item.newsTitle}}
+                  </p>
+                </div>
+                <div class="text" v-else>{{item.newsContent}}</div>
+              </div>
+            </el-card>
+          </el-tab-pane>
         </el-tabs>
       </el-col>
     </el-row>
@@ -85,7 +107,7 @@ export default {
       console.log(tab, event);
     },
     getData() {
-      this.$ajaxPost('/index/mainData', {}).then(({data}) => {
+      this.$ajaxPost('/index/mainData', {request: 123}).then(({data}) => {
         if (data.code === 200) {
           this.content = data.content;
         }
@@ -93,7 +115,7 @@ export default {
     }
   },
   mounted() {
-    this.getData()
+    this.getData();
   }
 }
 </script>
@@ -116,46 +138,54 @@ export default {
         background: #409EFF;
       }
     }
-    .tab-content {
-      background: #fff;
-      .tab-header {
-        padding: 20px;
-        border-bottom: 1px dashed;
-        h3 {
-          width: 100%;
+    .el-card__body {
+      padding: 0;
+      .item {
+        width: 100%;
+        .header-top {
+          padding: 10px;
+          border-bottom: 1px dashed #ccc;
+          h3 {
+            width: 100%;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            font-size: 20px;
+          }
+          p {
+            margin-top: 10px;
+            width: 100%;
+            min-height: 40px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+          }
+        }
+        .text {
           text-overflow: ellipsis;
           white-space: nowrap;
           overflow: hidden;
-          font-size: 20px;
-        }
-        p {
-          margin-top: 10px;
-          width: 100%;
-          text-overflow: ellipsis;
-          overflow: hidden;
-          display: -webkit-box;
-          -webkit-box-orient: vertical;
-          -webkit-line-clamp: 2;
-        }
-      }
-      .el-card__body {
-        padding: 5px 20px;
-        .item {
-          width: 100%;
+          padding: 0 20px;
           height: 36px;
           line-height: 36px;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          overflow: hidden;
           &:before {
             content: '';
             display: inline-block;
             width: 5px;
             height: 5px;
+            margin-right: 5px;
             background-color: black;
             border-radius: 50%;
             vertical-align: middle;
           }
+        }
+        &:nth-of-type(2) {
+          margin-top: 14px;
+        }
+        &:last-of-type {
+          margin-bottom: 14px;
         }
       }
     }
