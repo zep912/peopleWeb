@@ -22,31 +22,35 @@ export default {
   data() {
     return {
       num: "1000",
-      list: [
-        {
-          title: "律师事务所设立审核登记",
-          time: "2018-12-14",
-          id:11
-        },
-        {
-          title: "律师事务所设立审核登记",
-          time: "2018-12-14",
-          id:2
-        },
-        {
-          title: "律师事务所设立审核登记",
-          time: "2018-12-14",
-          id:3  
-        }
-      ]
+      list: [],
+      page:{
+        pageSize:10,
+        pageNum:1
+      }
     };
   },
   created() {},
-  mounted() {},
+  mounted() {
+    this.getData();
+  },
   methods: {
-      lawClick(n,id){
-          console.log(n,id)
-      }
+    lawClick(n, id) {
+      console.log(n, id);
+    },
+    getData() {
+      let obj = {
+        token: "64d1d05f5ccb4670a6d342f3b3c002ce", //类型：String  必有字段  备注：token 用户身份标识
+        scopeLevel: "", //类型：String  可有字段  备注：效力级别
+        lawTimeliness: "", //类型：String  可有字段  备注：时效性
+        lawTitle: "", //类型：String  可有字段  备注：标题
+        ...this.page
+      };
+      this.$ajaxPost("/doc/lawRegulations/getLawRegulationsList", obj).then(
+        res => {
+          console.log(res);
+        }
+      );
+    }
   }
 };
 </script>
@@ -85,18 +89,18 @@ export default {
       cursor: pointer;
       list-style: none;
     }
-    li span:nth-of-type(1)::before{
-        content:'';
-        width: 5px;
-        height: 5px;
-        border-radius: 50%;
-        background: #000;
-        display: inline-block;
-        margin-right: 10px;
+    li span:nth-of-type(1)::before {
+      content: "";
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #000;
+      display: inline-block;
+      margin-right: 10px;
     }
   }
-  .el-pagination{
-      text-align: right
+  .el-pagination {
+    text-align: right;
   }
 }
 </style>

@@ -37,23 +37,6 @@ const routes = [
     path: '/propaganda',
     name: 'propaganda',
     component: () => import('../views/propaganda/'),
-    children:[
-      {
-        path: '/lawArt',
-        name: 'lawArt',
-        component: () => import('../views/propaganda/lawArt')
-      },
-      {
-        path: '/laws',
-        name: 'laws',
-        component: () => import('../views/propaganda/laws')
-      },
-      {
-        path: '/judicial',
-        name: 'judicial',
-        component: () => import('../views/propaganda/judicial')
-      }
-    ]
   },
   {
     path: '/map',
@@ -69,6 +52,11 @@ const routes = [
     path: '/register',
     name: 'register',
     component: () => import('../views/register.vue')
+  },
+  {
+    path: '/user',
+    name: 'user',
+    component: () => import('../views/userInfo/')
   },
   
 

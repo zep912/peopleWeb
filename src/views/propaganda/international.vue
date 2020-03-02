@@ -1,7 +1,7 @@
 <template>
   <div class="lawArt">
     <div class="lawTitle">
-      <span class="lawTitles">司法解释</span>
+      <span class="lawTitles">国际条约惯例</span>
       <span>
         共计：
         <span>{{num}}</span>篇

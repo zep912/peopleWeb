@@ -1,11 +1,12 @@
 <template>
   <div id="app">
     <div id="top">
-      <img src alt />
+      <img :src='img1' alt />
       <div class="topRight">
         <el-button-group>
           <el-button type="primary" @click="register">注册</el-button>
           <el-button type="primary">登录</el-button>
+                    <el-button type="primary" @click="user">个人中心</el-button>
         </el-button-group>
         <div class="topBtn">
           <el-input v-model="keyWord" placeholder="请输入关键字查询"></el-input>
@@ -25,18 +26,27 @@
       </div>
     </div>
     <router-view />
+    <Footer></Footer>
   </div>
 </template>
 <script>
+import Footer from './components/foot'
 export default {
+  components:{
+    Footer
+  },
   data() {
     return {
-      keyWord:''
+      keyWord:'',
+      img1:require('./assets/img/pic4.png'),
     };
   },
   methods: {
     register() {
       this.$router.push("/register");
+    },
+    user(){
+      this.$router.push('./user')
     },
     btn(){
 
@@ -63,7 +73,7 @@ li{
   color: #2c3e50;
   background: #f2f2f2;
   height: 100%;
-  padding-bottom: 10px;
+  // padding-bottom: 10px;
 }
 #top {
   width: 85%;

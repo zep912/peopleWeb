@@ -8,9 +8,9 @@
               <el-select v-model="form.value1" placeholder="请选择">
                 <el-option
                   v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  :key="item.id"
+                  :label="item.dictDataName"
+                  :value="item.id"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -20,9 +20,9 @@
               <el-select v-model="form.value2" placeholder="请选择">
                 <el-option
                   v-for="item in scopeList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  :key="item.id"
+                  :label="item.dictDataName"
+                  :value="item.id"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -34,9 +34,9 @@
               <el-select v-model="form.value3" placeholder="请选择">
                 <el-option
                   v-for="item in content"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  :key="item.id"
+                  :label="item.dictDataName"
+                  :value="item.id"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -59,7 +59,8 @@
               <i class="el-icon-arrow-down el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>黄金糕</el-dropdown-item>
+              <el-dropdown-item>由低到高</el-dropdown-item>
+              <el-dropdown-item>由高到低</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </div>
@@ -80,20 +81,28 @@
           <span>共计:</span>
           <span>{{num}}个</span>
         </div>
-        <div>
-          <el-button-group>
-            <el-button type="primary" icon="el-icon-s-fold" size="mini"></el-button>
-            <el-button type="primary" icon="el-icon-menu" size="mini"></el-button>
-          </el-button-group>
+        <div class="jud-imgs">
+            <span class="jud-img1"  @click="tabListChange">
+                <img :src="img1" alt="" v-show='imgShow'>
+                <img :src="img3" alt="" v-show='!imgShow'>
+            </span>
+            <span class="jud-img2"  @click="tabListChange">
+                <img :src="img2" alt=""  v-show='imgShow'>
+                <img :src="img4" alt=""  v-show='!imgShow'>
+            </span>
         </div>
       </div>
     </div>
-    <ul>
-      <li v-for="(item,index) in list" :key="index">
+    <ul class="judicial-ul">
+      <li v-for="(item,index) in list" :key="index" ref='judLi' :class='imgShow?"":"lump"'>
         <img :src="item.img" alt />
-        <div>
-          <h3>{{item.title}}</h3>
-          <div>
+        <div class="judi-cours">
+            <p>
+              <span  v-show='imgShow'>课件标题:</span>
+              <span>{{item.title}}</span>
+            </p>
+
+          <div class='judic-info'  v-show='imgShow'>
             <span>课件简介:</span>
             <span>{{item.content}}</span>
           </div>
@@ -107,105 +116,115 @@
 export default {
   data() {
     return {
-      options: [
-        {
-          value: "1",
-          label: "视频"
-        },
-        {
-          value: "2",
-          label: "文档"
-        }
-      ],
-      scopeList: [
-        {
-          value: "全部",
-          label: "司法解释"
-        }
-      ],
-      content: [
-        {
-          value: "全部",
-          label: "全部"
-        },
-        {
-          value: "刑法",
-          label: "刑法"
-        },
-        {
-          value: "三国",
-          label: "三国"
-        },
-        {
-          value: "民法",
-          label: "民法"
-        },
-        {
-          value: "行政",
-          label: "行政"
-        },
-        {
-          value: "刑诉",
-          label: "刑诉"
-        },
-        {
-          value: "商经",
-          label: "商经"
-        },
-        {
-          value: "理论",
-          label: "理论"
-        },
-        {
-          value: "民诉",
-          label: "民诉"
-        }
-      ],
+        img1:require('../../assets/img/u2893.png'),
+        img2:require('../../assets/img/u2896.png'),
+        img3:require('../../assets/img/u2900.png'),
+        img4:require('../../assets/img/u2903.png'),
+      options: [],
+      scopeList: [],
+      content: [],
       form: {
         value1: "",
         value2: "",
-        value3:''
+        value3: ""
       },
+      imgShow:true,
       num: 10000,
       list: [
         {
-          img: "~/assets/img/u2937.png",
+          img:
+            "http://59.44.27.201:8888/group1/M00/00/70/wKgAaF41W06APFbDAA5Ar5VE-d0142.jpg    ",
+          title: "施工安全生产责任和安全生产教育培训制度",
+          content: "XXXXX"
+        },
+        {
+          img:
+            "http://59.44.27.201:8888/group1/M00/00/70/wKgAaF41W06APFbDAA5Ar5VE-d0142.jpg    ",
+          title: "施工安全生产责任和安全生产教育培训制度",
+          content: "XXXXX"
+        },
+        {
+          img:
+            "http://59.44.27.201:8888/group1/M00/00/70/wKgAaF41W06APFbDAA5Ar5VE-d0142.jpg    ",
+          title: "施工安全生产责任和安全生产教育培训制度",
+          content: "XXXXX"
+        },
+        {
+          img:
+            "http://59.44.27.201:8888/group1/M00/00/70/wKgAaF41W06APFbDAA5Ar5VE-d0142.jpg    ",
+          title: "施工安全生产责任和安全生产教育培训制度",
+          content: "XXXXX"
+        },
+        {
+          img:
+            "http://59.44.27.201:8888/group1/M00/00/70/wKgAaF41W06APFbDAA5Ar5VE-d0142.jpg    ",
           title: "施工安全生产责任和安全生产教育培训制度",
           content: "XXXXX"
         }
       ],
-      page:{
-         pageNum:1,
-        pageSize:10
+      page: {
+        pageNum: 1,
+        pageSize: 10
       }
     };
   },
   created() {},
   mounted() {
     this.getData();
+    this.initData()
   },
   methods: {
+      tabListChange(){
+          
+          this.imgShow = !this.imgShow
+      },
     search() {},
+    initData(){
+        let obj = {
+            dictCode:'neirongfenlei',
+            userId:'111',
+            parentDictDataCode:''
+        }
+        this.$ajaxPost('/support/getDictionaryList',obj).then(res=>{
+            this.content = res.data.content.resultList
+        })
+        let obj2 = {
+            dictCode:'kejianleixing',
+            userId:'111',
+            parentDictDataCode:''
+        }
+        this.$ajaxPost('/support/getDictionaryList',obj2).then(res=>{
+            this.options = res.data.content.resultList
+        })
+        let obj3 = {
+            dictCode:'zhishifanwei',
+            userId:'111',
+            parentDictDataCode:''
+        }
+        this.$ajaxPost('/support/getDictionaryList',obj3).then(res=>{
+            this.scopeList = res.data.content.resultList
+        })
+    },
     getData() {
       let obj = {
         token: "64d1d05f5ccb4670a6d342f3b3c002ce", //类型：String  可有字段  备注：token 用户身份标识
         couType: this.form.value1, //类型：String  可有字段  备注：课件类型 1：视频；2：文档；
-        knowledgeScope:this.form.value2, //类型：String  可有字段  备注：知识范围
+        knowledgeScope: this.form.value2, //类型：String  可有字段  备注：知识范围
         contentType: this.form.value3, //类型：String  可有字段  备注：内容分类
-        couName:this.form.name, //类型：String  可有字段  备注：课件名称
+        couName: this.form.name, //类型：String  可有字段  备注：课件名称
         orderModel: "1", //类型：String  可有字段  备注：排序方式 1：播放量；2：时间
         orderType: "1", //类型：String  可有字段  备注：排序类型 1：由高到低；2：由低到高；
         ...this.page
       };
-      this.$ajaxPost('/train/getPublicTrainList',obj).then((res)=>{
-          console.log(res)
-      })
+      this.$ajaxPost("/train/getPublicTrainList", obj).then(res => {
+        console.log(res);
+      });
     }
   }
 };
 </script>
 
-<style lang='scss'>
+<style lang='scss' scope>
 .jud-box {
   border: 1px solid #1491cd;
   box-sizing: border-box;
@@ -245,12 +264,73 @@ export default {
       margin-right: 10px;
     }
   }
+  
   .jud-total {
     display: flex;
     justify-content: flex-end;
     div:nth-of-type(1) {
       margin-right: 10px;
     }
+    .jud-imgs{
+        .jud-img1,.jud-img2{
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            box-sizing: border-box;
+            padding: 5px;
+            border: 1px solid #ccc;
+            text-align: center;
+            img{
+                width: 100%;
+                height: 100%;
+            }
+        }
+    }
   }
 }
+.judicial-ul{
+    margin-top: 20px;
+    .lump{
+        width: 32%;
+        float: left;
+        background: inherit;
+        padding: 0;
+        .judi-cours{
+            margin-left: 0;
+        }
+    }
+    .lump:nth-of-type(3n-1){
+        margin-right: 2%;
+        margin-left:2%;
+        
+    }
+    li{
+        width: 100%;
+        background: #fff;
+        box-sizing: border-box;
+        padding: 10px 15px;
+        overflow: hidden;
+        margin-bottom: 10px;
+    }
+    .judi-cours{
+        float: left;
+        margin-left: 20px;
+        p span:nth-of-type(2){
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+    }
+    .judic-info{
+        margin-top: 10px;
+        span:nth-of-type(2){
+            margin-left: 10px;
+        }
+    }
+}
+.judicial-ul li img {
+    width: 250px;
+    height: 150px;
+    float: left;
+  }
 </style>
