@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div style="width:100%;background:#fff">
+    <div class="header">
       <div id="top">
-        <img :src="img1" alt />
+        <img class="imgLogo" src="../assets/img/pic4.png" alt/>
         <div class="topRight">
           <el-button-group>
             <el-button type="primary" @click="register">注册</el-button>
@@ -43,7 +43,6 @@ export default {
   data() {
     return {
       keyWord: "",
-      img1: require("../assets/img/pic4.png")
     };
   },
   methods: {
@@ -69,12 +68,19 @@ export default {
   height: 100%;
   // padding-bottom: 10px;
 }
+.header {
+  width: 100%;
+  background: #fff;
+}
 #top {
   width: 85%;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
-  padding-top: 20px;
+  padding: 10px 0;
+  .imgLogo {
+    height: 100px;
+  }
   .topRight {
     text-align: right;
     .el-button-group {

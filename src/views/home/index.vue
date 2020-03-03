@@ -111,6 +111,7 @@
           <el-tab-pane label="司法培训">
             <div class="serve-box train-box">
               <div class="train-content" v-for="item in 8" :key="item">
+                <div class="train-title">暂无数据暂无数据暂无数据</div>
               </div>
             </div>
           </el-tab-pane>
@@ -126,8 +127,9 @@
       <el-col :span="16">
         <el-tabs type="card" class="new-box">
           <el-tab-pane label="司法地图">
-            <div style="background-color: red; height: 320px;">
-            </div>
+            <!--<div style="background-color: red; height: 320px;">-->
+            <!--</div>-->
+            <baseMap></baseMap>
           </el-tab-pane>
         </el-tabs>
       </el-col>
@@ -146,9 +148,12 @@
 </template>
 
 <script>
-
+import baseMap from '@/components/map'
 export default {
   name: 'Home',
+  components: {
+    baseMap
+  },
   data() {
     return {
       activeName: 'first',
@@ -190,7 +195,6 @@ export default {
   .content {
     width: 85%;
     margin: 10px auto;
-    height: 1000px;
     font-size: 14px;
     .el-tabs__header {
       margin: 0;
@@ -281,7 +285,8 @@ export default {
             font-size: 16px;
           }
           .tab-right {
-            width: 100px;
+            text-align: right;
+            width: 120px;
             color: #666;
           }
         }
@@ -307,6 +312,24 @@ export default {
           .train-content {
             height: 100px;
             background-color: red;
+            position: relative;
+            .train-title {
+              position: absolute;
+              left: 0;
+              bottom: 0;
+              width: 100%;
+              height: 30px;
+              line-height: 30px;
+              padding: 0 6px;
+              box-sizing: border-box;
+              font-size: 14px;
+              font-weight: 700;
+              background: rgba(0, 0, 0, 0.5);
+              color: #fff;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              overflow: hidden;
+            }
           }
         }
       }
