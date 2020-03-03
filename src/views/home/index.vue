@@ -117,9 +117,9 @@
         </el-tabs>
       </el-col>
       <el-col :span="8">
-        <img src="../../assets/img/csfb.png" class="img-content" alt="">
+        <!-- <img src="../../assets/img/csfb.png" class="img-content" alt="">
         <img src="../../assets/img/sft.png" class="img-content" alt="">
-        <img src="../../assets/img/pfw.png" class="img-content" alt="">
+        <img src="../../assets/img/pfw.png" class="img-content" alt=""> -->
       </el-col>
     </el-row>
     <el-row :gutter="10" style="margin-top: 10px">

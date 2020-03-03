@@ -8,7 +8,7 @@
             <li
               v-for="(item,index) in navList"
               :key="index"
-              @click="navClick(item,index)"
+              @click="navClick(item,index,item.index)"
               :class="{active:active==index}"
             >
               <i class="el-icon-arrow-right"></i>
@@ -27,11 +27,11 @@
             </div>
             <ul class="lawUl">
               <li v-for="(item,index) in list" :key="index" @click="lawClick(item,id)">
-                <span>{{item.title}}</span>
-                <span class="time">{{item.time}}</span>
+                <span>{{item.newsTitle}}</span>
+                <span class="time">{{item.publishTime}}</span>
               </li>
             </ul>
-            <el-pagination background layout="prev, pager, next" :total="1000"></el-pagination>
+            <el-pagination background layout="prev, pager, next" :total="total"></el-pagination>
           </div>
         </el-col>
       </el-row>
@@ -43,74 +43,75 @@
 export default {
   data() {
     return {
-      active:0,
-      isShow:true,
+      active: 0,
+      isShow: true,
       navList: [
         {
           name: "组织机构",
-          index:1
+          index: 1
         },
         {
           name: "公示信息",
-          index:2
+          index: 2
         },
         {
           name: "通知公告",
-          index:3
+          index: 3
         },
         {
           name: "新闻资讯",
-          index:4
+          index: 4
         },
         {
           name: "办事指南",
-          index:5
+          index: 5
         },
         {
           name: "征求意见",
-          index:6
+          index: 6
         }
       ],
       activeName: "1",
       tabPosition: "left",
       num: "1000",
       list: [],
-      navTitle:'法律法规',
-      page:{
-        pageSize:10,
-        pageNum:1
-      }
+      navTitle: "组织机构",
+      page: {
+        pageSize: 10,
+        pageNum: 1
+      },
+      total:0
     };
   },
   created() {},
   mounted() {
-    this.navClick({name:"法律法规",},0)
+    this.navClick({ name: "组织机构" }, 0,1);
   },
   methods: {
     lawClick(n, id) {
       console.log(n, id);
     },
-    navClick(n,index){
-      this.active=index;
-      this.navTitle = n.name
-      if(index==0){
+    navClick(n,index,type) {
+      this.active = index;
+      this.navTitle = n.name;
         let obj = {
-          "scopeLevel":"",
-          "lawTimeliness":"",
-          "lawTitle":"",
+          token: "64d1d05f5ccb4670a6d342f3b3c002ce", //类型：String  可有字段  备注：token 用户身份标识
+          newsType: type, //类型：String  必有字段  备注：资讯类型 1：组织机构；2：公示信息；3：通知公告；4：新闻资讯；5：办事指南；6：征求意见；7：政务公开
           ...this.page
         };
-        this.$ajaxPost('/doc/lawRegulations/getLawRegulationsList',obj).then(res=>{
-          console.log(res)
-        })
-      }
+        this.$ajaxPost("/doc/news/getOpenNewsList", obj).then(res => {
+          console.log(res);
+          this.list = res.data.content.dataList;
+          this.num = res.data.content.pageInfo.total;
+          this.total = this.num;
+        });
     }
   }
 };
 </script>
 
 <style lang='scss' scope>
-.menu{
+.menu {
   margin-top: 20px;
 }
 .lawArt {
@@ -200,7 +201,9 @@ export default {
   border-top: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
 }
-.propa_wrap .el-col li:nth-of-type(3),.propa_wrap .el-col li:nth-of-type(4),.propa_wrap .el-col li:nth-of-type(5) {
+.propa_wrap .el-col li:nth-of-type(3),
+.propa_wrap .el-col li:nth-of-type(4),
+.propa_wrap .el-col li:nth-of-type(5) {
   border-bottom: 1px solid #ccc;
 }
 </style>

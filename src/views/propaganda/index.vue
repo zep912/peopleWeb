@@ -1,6 +1,6 @@
 <template>
   <div class="propa" id="propaga">
-    <div class="menu">首页>普法宣传</div>
+    <div class="menu" style="margin-top:20px">首页>普法宣传</div>
     <div class="propa_wrap">
       <el-row>
         <el-col :span="8">
@@ -30,11 +30,11 @@
             </div>
             <ul class="lawUl">
               <li v-for="(item,index) in list" :key="index" @click="lawClick(item,id)">
-                <span>{{item.title}}</span>
-                <span class="time">{{item.time}}</span>
+                <span class="lawTitle">{{item.lawTitle}}</span>
+                <span class="time">{{item.execDate}}</span>
               </li>
             </ul>
-            <el-pagination background layout="prev, pager, next" :total="1000"></el-pagination>
+            <el-pagination background layout="prev, pager, next" :total="total"></el-pagination>
           </div>
           <Judicial v-show="!isShow"></Judicial>
         </el-col>
@@ -44,70 +44,76 @@
 </template>
 
 <script>
-import Judicial from './judicial'
+import Judicial from "./judicial";
 export default {
-  components:{
-Judicial
+  components: {
+    Judicial
   },
   data() {
     return {
-      active:0,
-      isShow:true,
+      active: 0,
+      isShow: true,
+      total: 0,
       navList: [
         {
           name: "法律法规",
-          docType:1
+          docType: 1
         },
         {
           name: "司法解释",
-          docType:2
+          docType: 2
         },
         {
           name: "国际条约惯例",
-          docType:3
+          docType: 3
         },
         {
           name: "司法培训",
-          docType:4
+          docType: 4
         }
       ],
       activeName: "1",
       tabPosition: "left",
       num: "1000",
       list: [],
-      navTitle:'法律法规',
-      page:{
-        pageSize:10,
-        pageNum:1
+      navTitle: "法律法规",
+      page: {
+        pageSize: 10,
+        pageNum: 1
       }
     };
   },
   created() {},
   mounted() {
-    this.navClick({name:"法律法规",},0)
+    this.navClick({ name: "法律法规" }, 0);
+    this.active = 0;
   },
   methods: {
     lawClick(n, id) {
       console.log(n, id);
     },
-    navClick(n,type,index){
-      this.active=index;
-      if(type!=4){
-         this.isShow = true
-        this.navTitle = n.name
+    navClick(n, type, index) {
+      this.active = index;
+      if (type != 4) {
+        this.isShow = true;
+        this.navTitle = n.name;
         let obj = {
-          "scopeLevel":"",
-          "lawTimeliness":"",
-          "lawTitle":"",
-          "docType":type,
+          token: "64d1d05f5ccb4670a6d342f3b3c002ce",
+          scopeLevel: "",
+          lawTimeliness: "",
+          lawTitle: "",
+          docType: type,
           ...this.page
         };
-        this.$ajaxPost('/doc/lawRegulations/getLawRegulationsList',obj).then(res=>{
-          console.log(res)
-        })
-      }else{
+        this.$ajaxPost("/doc/lawRegulations/getLawRegulationsList", obj).then(
+          res => {
+            this.list = res.data.content.dataList;
+            this.total = res.data.content.pageInfo.total;
+          }
+        );
+      } else {
         this.isShow = false;
-        return
+        return;
       }
     }
   }
@@ -115,6 +121,14 @@ Judicial
 </script>
 
 <style lang='scss' scope>
+.lawTitle {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  word-break: break-all;
+  width: 80%;
+  display: inline-block;
+}
 .lawArt {
   padding: 20px;
   background: #fff;

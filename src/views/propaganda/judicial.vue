@@ -175,7 +175,6 @@ export default {
   },
   methods: {
       tabListChange(){
-
           this.imgShow = !this.imgShow
       },
     search() {},
@@ -204,10 +203,11 @@ export default {
         this.$ajaxPost('/support/getDictionaryList',obj3).then(res=>{
             this.scopeList = res.data.content.resultList
         })
+        console.log(this.scopeList,111)
     },
     getData() {
       let obj = {
-        // token: "64d1d05f5ccb4670a6d342f3b3c002ce", //类型：String  可有字段  备注：token 用户身份标识
+        token: "64d1d05f5ccb4670a6d342f3b3c002ce", //类型：String  可有字段  备注：token 用户身份标识
         couType: this.form.value1, //类型：String  可有字段  备注：课件类型 1：视频；2：文档；
         knowledgeScope: this.form.value2, //类型：String  可有字段  备注：知识范围
         contentType: this.form.value3, //类型：String  可有字段  备注：内容分类
@@ -264,7 +264,7 @@ export default {
       margin-right: 10px;
     }
   }
-
+  
   .jud-total {
     display: flex;
     justify-content: flex-end;
@@ -302,7 +302,7 @@ export default {
     .lump:nth-of-type(3n-1){
         margin-right: 2%;
         margin-left:2%;
-
+        
     }
     li{
         width: 100%;
