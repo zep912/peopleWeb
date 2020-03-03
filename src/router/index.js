@@ -56,7 +56,7 @@ const routes = [
       },
       {
         path: '/lawer/lawerInfo',
-        name: '律师信息',
+        name: '律师详情',
         component: () => import('../views/lawer/lawerInfo')
       },
     ]
