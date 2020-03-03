@@ -11,8 +11,8 @@
           <p>辽ICP 备12011155号-1</p>
       </div>
       <div class="footRight">
-          <img src="/assets/img/982.png" alt="">
-          <img src="assets/img/983.png" alt="">
+          <img src="../assets/img/u982.png" alt="">
+          <img src="../assets/img/u983.png" alt="">
       </div>
   </div>
   </div>
@@ -25,6 +25,9 @@ export default {
 </script>
 
 <style lang='scss'>
+.footRight{
+    float: right;
+}
 .footer{
     width: 100%;
     background: #fff
