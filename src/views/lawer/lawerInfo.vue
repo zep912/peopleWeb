@@ -1,5 +1,5 @@
 <template>
-  <div class="lawerInfo">
+  <div class="lawerInfos">
     <div class="lawerInfoTop">
       <img src="../../assets/img/lawer.png" alt />
       <div class="lawerList">
@@ -156,7 +156,7 @@ export default {
   margin-top: 20px;
   padding: 20px;
 }
-.lawerInfo {
+.lawerInfos {
   width: 85%;
   margin: 0 auto;
   border-top: 1px solid #1885c8;
