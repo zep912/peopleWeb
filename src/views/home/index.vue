@@ -80,19 +80,19 @@
           <el-tab-pane label="法律服务">
             <div class="serve-box">
               <div class="serve-content">
-                <i class="el-icon-edit"></i>
+                <img src="../../assets/svg/zxzx.svg" alt="">
                 <div>在线咨询</div>
               </div>
               <div class="serve-content">
-                <i class="el-icon-edit"></i>
+                <img src="../../assets/svg/zxyy.svg" alt="">
                 <div>在线预约</div>
               </div>
               <div class="serve-content">
-                <i class="el-icon-edit"></i>
+                <img src="../../assets/svg/sfks.svg" alt="">
                 <div>司法考试</div>
               </div>
               <div class="serve-content">
-                <i class="el-icon-edit"></i>
+                <img src="../../assets/svg/qzyj.svg" alt="">
                 <div>群众批评意见</div>
               </div>
             </div>
@@ -111,7 +111,7 @@
           <el-tab-pane label="司法培训">
             <div class="serve-box train-box">
               <div class="train-content" v-for="item in 8" :key="item">
-                <div class="train-title">暂无数据暂无数据暂无数据</div>
+                <div class="train-title">暂无数据</div>
               </div>
             </div>
           </el-tab-pane>
@@ -299,11 +299,15 @@ export default {
             padding: 20px 0 10px;
             text-align: center;
             border: 1px solid #ddd;
-            i {
-              font-size: 36px;
+            img {
+              width: 36px;
             }
             div {
               padding: 5px 0;
+            }
+            &:hover {
+              background: #3ba6d5;
+              font-weight: 700;
             }
           }
         }
@@ -311,7 +315,7 @@ export default {
           grid-template-columns: repeat(4, 1fr);
           .train-content {
             height: 100px;
-            background-color: red;
+            background-color: #ddd;
             position: relative;
             .train-title {
               position: absolute;
