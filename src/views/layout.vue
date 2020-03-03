@@ -5,7 +5,7 @@
     <div class="topRight">
       <el-button-group>
         <el-button type="primary" @click="register">注册</el-button>
-        <el-button type="primary">登录</el-button>
+        <el-button type="primary" @click="$router.push('/login')">登录</el-button>
         <el-button type="primary" @click="user">个人中心</el-button>
       </el-button-group>
       <div class="topBtn">
@@ -71,24 +71,27 @@
   #top {
     width: 85%;
     margin: 0 auto;
-    margin-bottom: 20px;
     display: flex;
     justify-content: space-between;
-    padding-top: 20px;
+    img {
+      height: 110px;
+      margin-left: -40px;
+    }
     .topRight{
+      padding: 10px;
       text-align: right;
+      box-sizing: border-box;
       .el-button-group{
         .el-button{
           background: #0fa1d4
         }
-
       }
     }
     .topBtn{
       width: 400px;
       display: flex;
       justify-content: space-between;
-      margin-top: 20px;
+      margin-top: 10px;
       .el-input__inner{
         border: 1px solid #197fc5;
         border-top-right-radius: 0;

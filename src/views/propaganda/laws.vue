@@ -39,7 +39,7 @@ export default {
     },
     getData() {
       let obj = {
-        token: "64d1d05f5ccb4670a6d342f3b3c002ce", //类型：String  必有字段  备注：token 用户身份标识
+        // token: "64d1d05f5ccb4670a6d342f3b3c002ce", //类型：String  必有字段  备注：token 用户身份标识
         scopeLevel: "", //类型：String  可有字段  备注：效力级别
         lawTimeliness: "", //类型：String  可有字段  备注：时效性
         lawTitle: "", //类型：String  可有字段  备注：标题

@@ -19,11 +19,6 @@ service.interceptors.request.use((config) => {
   if (config[0]) {
     loading = Loading.service({fullscreen: true, text: '拼命加载中....'})
   }
-  // let token = Cookies.get('token');
-  // config.headers['optDevice'] = 'PC'
-  // if (token) {
-  //   config.headers['Authorization'] = token
-  // }
   return config
 }, function (error) {
   return Promise.reject(error)
@@ -33,14 +28,11 @@ service.interceptors.response.use((res) => {
   if (res.status === 200) {
     if (res.data.code == 402 || res.data.code == 401) {
       console.log('未登录');
-      // setTimeout(() => {
-        // Cookies.remove('token')
-        // window.localStorage.clear()
-        // window.sessionStorage.clear()
-        // router.push({path: '/login'}, () => {
-        //   window.location.reload()
-        // })
-      // }, 1000)
+      setTimeout(() => {
+        this.router.push({path: '/login'}, () => {
+          window.location.reload()
+        });
+      }, 1000)
     }
     if (typeof loading.close == 'function') {
       loading.close()

@@ -95,7 +95,6 @@ export default {
       this.navTitle = n.name
       if(index==0){
         let obj = {
-          "token":"64d1d05f5ccb4670a6d342f3b3c002ce",
           "scopeLevel":"",
           "lawTimeliness":"",
           "lawTitle":"",

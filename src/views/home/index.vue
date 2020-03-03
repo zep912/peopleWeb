@@ -117,7 +117,9 @@
         </el-tabs>
       </el-col>
       <el-col :span="8">
-        <div class="img-content" v-for="item in 3" :key="item"></div>
+        <img src="../../assets/img/csfb.png" class="img-content" alt="">
+        <img src="../../assets/img/sft.png" class="img-content" alt="">
+        <img src="../../assets/img/pfw.png" class="img-content" alt="">
       </el-col>
     </el-row>
     <el-row :gutter="10" style="margin-top: 10px">
@@ -310,7 +312,8 @@ export default {
       }
     }
     .img-content {
-      height: 90px;
+      width: 100%;
+      /*height: 90px;*/
       background-color: red;
       margin-bottom: 15px;
       &:last-of-type {

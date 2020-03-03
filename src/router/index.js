@@ -56,7 +56,12 @@ const routes = [
       },
     ]
   },
-]
+  {
+    path: '/login',
+    component: () => import('../views/login.vue'),
+    children: []
+  }
+];
 
 const router = new VueRouter({
   mode: 'history',
