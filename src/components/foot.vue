@@ -31,11 +31,10 @@ export default {
 }
 .foot{
     width: 85%;
-    margin: 0 auto;
-    margin-top: 10px;
+    margin: 10px auto 0;
     overflow: hidden;
-    padding-top: 20px;
-    padding-bottom: 10px;
+    padding: 15px;
+    box-sizing: border-box;
     .footLeft{
         float: left;
         ul{

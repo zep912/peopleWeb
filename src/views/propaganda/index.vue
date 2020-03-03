@@ -96,12 +96,12 @@ Judicial
          this.isShow = true
         this.navTitle = n.name
         let obj = {
-          "token":"64d1d05f5ccb4670a6d342f3b3c002ce",               
-          "scopeLevel":"",                
-          "lawTimeliness":"",               
-          "lawTitle":"",     
-          "docType":type,           
-          ...this.page              
+          "token":"64d1d05f5ccb4670a6d342f3b3c002ce",
+          "scopeLevel":"",
+          "lawTimeliness":"",
+          "lawTitle":"",
+          "docType":type,
+          ...this.page
         };
         this.$ajaxPost('/doc/lawRegulations/getLawRegulationsList',obj).then(res=>{
           console.log(res)
@@ -178,7 +178,7 @@ Judicial
   text-align: left;
   color: #000;
   box-sizing: border-box;
-  padding-left: 10px;
+  padding-left: 15px;
   background: #fff;
   cursor: pointer;
   i {

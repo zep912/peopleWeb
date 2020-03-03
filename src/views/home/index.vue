@@ -123,7 +123,7 @@
     <el-row :gutter="10" style="margin-top: 10px">
       <el-col :span="16">
         <el-tabs type="card" class="new-box">
-          <el-tab-pane label="司法培训">
+          <el-tab-pane label="司法地图">
             <div style="background-color: red; height: 320px;">
             </div>
           </el-tab-pane>
