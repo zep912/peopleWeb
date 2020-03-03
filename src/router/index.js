@@ -11,47 +11,47 @@ const routes = [
     children: [
       {
         path: '/',
-        component: () => import('../views/home/'),
-        name: 'home'
+        name: '首页',
+        component: () => import('../views/home/')
       },
       {
         path: '/government',
-        name: 'government',
+        name: '政务公开',
         component: () => import('../views/government/')
       },
       {
         path: '/law',
-        name: 'law',
+        name: '法律服务',
         component: () => import('../views/law/')
       },
       {
         path: '/lawer',
-        name: 'lawer',
+        name: '律师信息',
         component: () => import('../views/lawer/')
       },
       {
         path: '/propaganda',
-        name: 'propaganda',
+        name: '普法宣传',
         component: () => import('../views/propaganda/'),
       },
       {
         path: '/map',
-        name: 'map',
+        name: '司法地图',
         component: () => import('../views/map/')
       },
       {
         path: '/mailbox',
-        name: 'mailbox',
+        name: '局长信箱',
         component: () => import('../views/mailbox/')
       },
       {
         path: '/register',
-        name: 'register',
+        name: '账号注册',
         component: () => import('../views/register.vue')
       },
       {
         path: '/user',
-        name: 'user',
+        name: '个人中心',
         component: () => import('../views/userInfo/')
       },
     ]
