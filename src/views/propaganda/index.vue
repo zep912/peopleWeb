@@ -28,7 +28,7 @@
               </span>
             </div>
             <ul class="lawUl">
-              <li v-for="(item,index) in list" :key="index" @click="lawClick(item,id)">
+              <li v-for="(item,index) in list" :key="index" @click="lawClick(item.lawId)">
                 <span class="lawTitle">{{item.lawTitle}}</span>
                 <span class="time">{{item.execDate}}</span>
               </li>
@@ -88,8 +88,8 @@ export default {
     this.active = 0;
   },
   methods: {
-    lawClick(n, id) {
-      console.log(n, id);
+    lawClick(id) {
+      this.$router.push({path:'/propaganda/getInfo',query:{id:id}})
     },
     navClick(n, type, index) {
       this.active = index;
@@ -97,7 +97,6 @@ export default {
         this.isShow = true;
         this.navTitle = n.name;
         let obj = {
-          token: "64d1d05f5ccb4670a6d342f3b3c002ce",
           scopeLevel: "",
           lawTimeliness: "",
           lawTitle: "",

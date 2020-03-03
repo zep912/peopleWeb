@@ -59,6 +59,11 @@ const routes = [
         name: '律师详情',
         component: () => import('../views/lawer/lawerInfo')
       },
+      {
+        path: '/propaganda/getInfo',
+        name: '',
+        component: () => import('../views/propaganda/getInfo')
+      },
     ]
   },
   {
