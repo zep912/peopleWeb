@@ -1,6 +1,5 @@
 <template>
   <div class="propa" id="propaga">
-    <div class="menu">首页>政务公开</div>
     <div class="propa_wrap">
       <el-row>
         <el-col :span="8">

@@ -1,6 +1,5 @@
 <template>
   <div class="map">
-    <div style="margin-top:20px;border-bottom:1px solid #10a0d3;padding-bottom:10px">首页>司法地图</div>
     <div class="mapbox">
       <el-row>
         <el-col :span="8" v-show="boxShow">
@@ -305,7 +304,7 @@ export default {
   }
 }
 .map {
-  width: 80%;
+  width: 85%;
   margin: 0 auto;
 }
 .bm-view {

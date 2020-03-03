@@ -1,6 +1,5 @@
 <template>
   <div class="propa" id="propaga">
-    <div class="menu" style="margin-top:20px">首页>普法宣传</div>
     <div class="propa_wrap">
       <el-row>
         <el-col :span="8">

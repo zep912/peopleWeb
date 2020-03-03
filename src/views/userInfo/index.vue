@@ -1,6 +1,5 @@
 <template>
   <div class="userInfo">
-    <div>首页>个人中心</div>
     <el-col :span="6">
       <el-menu
         default-active="2"
@@ -51,6 +50,6 @@ export default {
     width: 85%;
     margin: 0 auto;
     margin-top:20px;
-    
+
 }
 </style>

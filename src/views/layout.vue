@@ -28,6 +28,9 @@
         <router-link to="/mailbox">局长信箱</router-link>
       </div>
     </div>
+    <el-breadcrumb separator-class="el-icon-arrow-right" v-if="!['', '/'].includes($route.path)">
+      <el-breadcrumb-item v-for="item in breadcrumbList" :key="item.path" :to="item">{{item.name}}</el-breadcrumb-item>
+    </el-breadcrumb>
     <router-view />
     <Footer></Footer>
   </div>
@@ -43,6 +46,7 @@ export default {
   data() {
     return {
       keyWord: "",
+      breadcrumbList: [{path: '/', name: '首页'}]
     };
   },
   methods: {
@@ -53,6 +57,32 @@ export default {
       this.$router.push("./user");
     },
     btn() {}
+  },
+  created() {
+    const {path, name} = this.$route;
+    if (path.lastIndexOf('/') === 0) {
+      if (path.length > 1) {
+        this.breadcrumbList = [{path: '/', name: '首页'}, {path, name}];
+      } else {
+        this.breadcrumbList = [{path: '/', name: '首页'}];
+      }
+    } else if (path.lastIndexOf('/') > 0) {
+      this.breadcrumbList.push({path, name});
+    }
+  },
+  watch: {
+    $route(val) {
+      const {path, name} = val;
+      if (path.lastIndexOf('/') === 0) {
+        if (path.length > 1) {
+          this.breadcrumbList = [{path: '/', name: '首页'}, {path, name}];
+        } else {
+          this.breadcrumbList = [{path: '/', name: '首页'}];
+        }
+      } else if (path.lastIndexOf('/') > 0) {
+        this.breadcrumbList.push({path, name});
+      }
+    }
   }
 };
 </script>
@@ -135,5 +165,14 @@ export default {
   height: 100%;
   display: flex;
   justify-content: space-around;
+}
+  .el-breadcrumb {
+    width: 85%;
+    margin: 20px auto;
+    font-size: 16px;
+    font-weight: 700;
+  }
+.el-breadcrumb__inner a, .el-breadcrumb__inner.is-link {
+  color: #3ba6d5;
 }
 </style>
