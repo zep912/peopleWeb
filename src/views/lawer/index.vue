@@ -88,7 +88,7 @@
       <ul>
         <li v-for="(item,index) in list" :key="index" @click="lawerClick(item.id)">
           <div class="lawerImg">
-            <img src alt />
+            <img src='../../assets/img/lawer.png' alt />
             <div class="lawerInfo">
               <h3>
                 {{item.name}}律师
@@ -272,6 +272,7 @@ export default {
       height: 130px;
       margin-right: 10px;
       float: left;
+      margin-left: 15px;
     }
     .lawerInfo{
       box-sizing: border-box;
