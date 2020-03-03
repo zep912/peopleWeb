@@ -86,7 +86,7 @@
     <!-- 律师信息 -->
     <div class="lawerList">
       <ul>
-        <li v-for="(item,index) in list" :key="index">
+        <li v-for="(item,index) in list" :key="index" @click="lawerClick(item.id)">
           <div class="lawerImg">
             <img src alt />
             <div class="lawerInfo">
@@ -115,6 +115,13 @@
         </li>
       </ul>
     </div>
+    <div class="footPage">
+      <el-pagination
+  background
+  layout="prev, pager, next"
+  :total="1000">
+</el-pagination>
+    </div>
   </div>
 </template>
 
@@ -141,18 +148,68 @@ export default {
           content:'知识产权，房产纠纷，劳动争议，债权债务，婚姻 家庭',
           ConsultationVolume:100,
           ServiceTimes:1000,
-          SatisfactionDegree:5.4
+          SatisfactionDegree:5.4,
+          id:2
+        },
+        {
+          name:'小小',
+          year:1,
+          mobile:'123456789',
+          content:'知识产权，房产纠纷，劳动争议，债权债务，婚姻 家庭',
+          ConsultationVolume:100,
+          ServiceTimes:1000,
+          SatisfactionDegree:5.4,
+          id:2
+        },
+        {
+          name:'小小',
+          year:1,
+          mobile:'123456789',
+          content:'知识产权，房产纠纷，劳动争议，债权债务，婚姻 家庭',
+          ConsultationVolume:100,
+          ServiceTimes:1000,
+          SatisfactionDegree:5.4,
+          id:2
+        },
+        {
+          name:'小小',
+          year:1,
+          mobile:'123456789',
+          content:'知识产权，房产纠纷，劳动争议，债权债务，婚姻 家庭',
+          ConsultationVolume:100,
+          ServiceTimes:1000,
+          SatisfactionDegree:5.4,
+          id:2
+        },
+        {
+          name:'小小',
+          year:1,
+          mobile:'123456789',
+          content:'知识产权，房产纠纷，劳动争议，债权债务，婚姻 家庭',
+          ConsultationVolume:100,
+          ServiceTimes:1000,
+          SatisfactionDegree:5.4,
+          id:2
         }
       ]
     };
   },
   created() {},
   mounted() {},
-  methods: {}
+  methods: {
+    lawerClick(id){
+      console.log(id)
+      this.$router.push({path:'/lawer/lawerInfo',query:{id:id}})
+    }
+  }
 };
 </script>
 
 <style lang='scss'>
+.footPage{
+  text-align: right;
+  padding-bottom: 10px;
+}
 .lawer {
   width: 85%;
   margin: 0 auto;
@@ -190,13 +247,23 @@ export default {
   }
 }
 .lawerList {
+  padding-bottom: 20px;
+  ul{
+    overflow: hidden;
+  }
   ul li {
-    width: 33%;
+    width: 32%;
     background: #fff;
     border: 1px solid #ccc;
     box-sizing: border-box;
     padding-top: 20px;
+    float: left;
+    margin-right: 1%;
+    margin-bottom: 1%;
     // padding-left: 20px;
+  }
+  ul li:nth-of-type(3n){
+    margin-right: 0;
   }
   .lawerImg {
     overflow: hidden;

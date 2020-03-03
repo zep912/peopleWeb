@@ -73,7 +73,7 @@ export default {
       ],
       activeName: "1",
       tabPosition: "left",
-      num: "1000",
+      num: 0,
       list: [],
       navTitle: "法律法规",
       page: {
@@ -108,6 +108,7 @@ export default {
           res => {
             this.list = res.data.content.dataList;
             this.total = res.data.content.pageInfo.total;
+            this.num = this.total
           }
         );
       } else {

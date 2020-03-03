@@ -54,6 +54,11 @@ const routes = [
         name: '个人中心',
         component: () => import('../views/userInfo/')
       },
+      {
+        path: '/lawer/lawerInfo',
+        name: '律师信息',
+        component: () => import('../views/lawer/lawerInfo')
+      },
     ]
   },
   {
