@@ -86,29 +86,35 @@
     <!-- 律师信息 -->
     <div class="lawerList">
       <ul>
-        <li v-for="(item,index) in list" :key="index" @click="lawerClick(item.id)">
+        <li v-for="(item,index) in list" :key="index" @click="lawerClick(item.lawyerId)">
           <div class="lawerImg">
-            <img src='../../assets/img/lawer.png' alt />
+            <img :src="item.photoUrl" alt />
             <div class="lawerInfo">
               <h3>
-                {{item.name}}律师
-                <span>(执业{{item.year}}年)</span>
+                {{item.lawyerName}}律师
+                <span>(执业{{item.operationYears}}年)</span>
               </h3>
-              <p>电话：<span>{{item.mobile}}</span></p>
-              <p><span>擅长专业：</span><span>{{item.content}}</span></p>
+              <p>
+                电话：
+                <span>{{item.lawyerPhone}}</span>
+              </p>
+              <p>
+                <span>擅长专业：</span>
+                <span>{{item.content}}</span>
+              </p>
             </div>
           </div>
           <div class="lawerExcu">
             <div>
-              <p>{{item.ConsultationVolume}}</p>
+              <p>{{item.serviceData.consultAmount}}</p>
               <p>咨询量</p>
             </div>
             <div>
-              <p>{{item.ServiceTimes}}</p>
+              <p>{{item.serviceData.serviceAmount}}</p>
               <p>服务次数</p>
             </div>
             <div>
-              <p>{{item.SatisfactionDegree}}</p>
+              <p>{{item.serviceData.satisfaction.toFixed(2)}}</p>
               <p>满意度</p>
             </div>
           </div>
@@ -116,11 +122,7 @@
       </ul>
     </div>
     <div class="footPage">
-      <el-pagination
-  background
-  layout="prev, pager, next"
-  :total="1000">
-</el-pagination>
+      <el-pagination background layout="prev, pager, next" :total="total"></el-pagination>
     </div>
   </div>
 </template>
@@ -129,7 +131,7 @@
 export default {
   data() {
     return {
-      total: 10000,
+      total: 0,
       form: {
         area: ""
       },
@@ -140,73 +142,50 @@ export default {
         }
       ],
       value: "",
-      list:[
-        {
-          name:'小小',
-          year:1,
-          mobile:'123456789',
-          content:'知识产权，房产纠纷，劳动争议，债权债务，婚姻 家庭',
-          ConsultationVolume:100,
-          ServiceTimes:1000,
-          SatisfactionDegree:5.4,
-          id:2
-        },
-        {
-          name:'小小',
-          year:1,
-          mobile:'123456789',
-          content:'知识产权，房产纠纷，劳动争议，债权债务，婚姻 家庭',
-          ConsultationVolume:100,
-          ServiceTimes:1000,
-          SatisfactionDegree:5.4,
-          id:2
-        },
-        {
-          name:'小小',
-          year:1,
-          mobile:'123456789',
-          content:'知识产权，房产纠纷，劳动争议，债权债务，婚姻 家庭',
-          ConsultationVolume:100,
-          ServiceTimes:1000,
-          SatisfactionDegree:5.4,
-          id:2
-        },
-        {
-          name:'小小',
-          year:1,
-          mobile:'123456789',
-          content:'知识产权，房产纠纷，劳动争议，债权债务，婚姻 家庭',
-          ConsultationVolume:100,
-          ServiceTimes:1000,
-          SatisfactionDegree:5.4,
-          id:2
-        },
-        {
-          name:'小小',
-          year:1,
-          mobile:'123456789',
-          content:'知识产权，房产纠纷，劳动争议，债权债务，婚姻 家庭',
-          ConsultationVolume:100,
-          ServiceTimes:1000,
-          SatisfactionDegree:5.4,
-          id:2
-        }
-      ]
+      list: [],
+      page:{
+        pageSize:10,
+        pageNum:1
+      }
     };
   },
   created() {},
-  mounted() {},
+  mounted() {
+    this.getData()
+  },
   methods: {
-    lawerClick(id){
-      console.log(id)
-      this.$router.push({path:'/lawer/lawerInfo',query:{id:id}})
+    lawerClick(id) {
+      this.$router.push({ path: "/lawer/lawerInfo", query: { id: id } });
+    },
+    getData() {
+      let obj = {
+        areaRegionId: "", 
+        areaRegionList: [{
+            areaRegionId: "102030" 
+          }
+        ],
+        adeptSpecialty: "2",
+        adeptSpecialtyList: [
+          {
+            adeptSpecialty: "1" 
+          }
+        ],
+        keyWord: "", 
+        sortModel: "1", //类型：String  可有字段  备注：排序主体 1：咨询量；2：满意度；3：接案率；4：结案率
+        sortType: "1", //类型：String  可有字段  备注：排序方式 1：由高到低(默认)；2：由低到高；
+        ...this.page
+      };
+      this.$ajaxPost('/lawyer/getValidLawyerList',obj).then(res=>{
+        this.list = res.data.content.dataList;
+        this.total = res.data.content.pageInfo.total
+      })
     }
   }
 };
 </script>
 
 <style lang='scss'>
-.footPage{
+.footPage {
   text-align: right;
   padding-bottom: 10px;
 }
@@ -248,7 +227,7 @@ export default {
 }
 .lawerList {
   padding-bottom: 20px;
-  ul{
+  ul {
     overflow: hidden;
   }
   ul li {
@@ -262,38 +241,38 @@ export default {
     margin-bottom: 1%;
     // padding-left: 20px;
   }
-  ul li:nth-of-type(3n){
+  ul li:nth-of-type(3n) {
     margin-right: 0;
   }
   .lawerImg {
     overflow: hidden;
-    img{
+    img {
       width: 110px;
       height: 130px;
       margin-right: 10px;
       float: left;
       margin-left: 15px;
     }
-    .lawerInfo{
+    .lawerInfo {
       box-sizing: border-box;
       float: left;
       width: 65%;
-      p:nth-of-type(1){
+      p:nth-of-type(1) {
         margin-bottom: 10px;
       }
-      p:nth-of-type(2){
-        span{
+      p:nth-of-type(2) {
+        span {
           float: left;
         }
-        span:nth-of-type(2){
-          width: 65%
+        span:nth-of-type(2) {
+          width: 65%;
         }
       }
-      h3{
+      h3 {
         font-size: 16px;
         font-weight: 600;
         margin-bottom: 20px;
-        span{
+        span {
           font-weight: normal;
           font-size: 14px;
           margin-left: 5px;
@@ -301,7 +280,7 @@ export default {
       }
     }
   }
-  .lawerExcu{
+  .lawerExcu {
     overflow: hidden;
     // height: 40px;
     background: #e8f4fa;
@@ -309,18 +288,18 @@ export default {
     padding-top: 10px;
     padding-bottom: 10px;
     margin-top: 10px;
-    div{
+    div {
       float: left;
       width: 33%;
       text-align: center;
-      p:nth-of-type(1){
+      p:nth-of-type(1) {
         font-weight: 600;
         font-size: 16px;
       }
     }
-    div:nth-of-type(2){
+    div:nth-of-type(2) {
       border-right: 1px solid #ccc;
-      border-left:1px solid #ccc
+      border-left: 1px solid #ccc;
     }
   }
 }

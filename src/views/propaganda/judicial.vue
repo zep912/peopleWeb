@@ -94,7 +94,7 @@
       </div>
     </div>
     <ul class="judicial-ul">
-      <li v-for="(item,index) in list" :key="index" ref='judLi' :class='imgShow?"":"lump"'>
+      <li v-for="(item,index) in list" :key="index" ref='judLi' :class='imgShow?"":"lump"' @click="toVideo(item.id)">
         <img :src="item.img" alt />
         <div class="judi-cours">
             <p>
@@ -217,8 +217,12 @@ export default {
         ...this.page
       };
       this.$ajaxPost("/train/getPublicTrainList", obj).then(res => {
-        console.log(res);
+        console.log(res,111);
       });
+    },
+    toVideo(id){
+      console.log(id)
+      this.$router.push({path:'/propaganda/video',query:{id:id}})
     }
   }
 };

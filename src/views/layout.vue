@@ -4,9 +4,12 @@
       <div id="top">
         <img class="imgLogo" src="../assets/img/pic4.png" alt/>
         <div class="topRight">
+          
           <el-button-group>
-            <el-button type="primary" @click="register">注册</el-button>
-            <el-button type="primary" @click="$router.push({path: '/login'})">登录</el-button>
+            <el-button type="primary" @click="register" v-show='isLogin'>注册</el-button>
+            <el-button type="primary" @click="$router.push({path: '/login'})" v-show='isLogin'>登录</el-button>
+            <el-button type='primary' v-show='!isLogin'>您好 {{userName}}</el-button>
+            <el-button type='primary' v-show='!isLogin' @click="quit">注销</el-button>
             <el-button type="primary" @click="user">个人中心</el-button>
           </el-button-group>
           <div class="topBtn">
@@ -46,7 +49,9 @@ export default {
   data() {
     return {
       keyWord: "",
-      breadcrumbList: [{path: '/', name: '首页'}]
+      breadcrumbList: [{path: '/', name: '首页'}],
+      isLogin:true,
+      userName:''
     };
   },
   methods: {
@@ -56,7 +61,11 @@ export default {
     user() {
       this.$router.push("./user");
     },
-    btn() {}
+    btn() {},
+    quit(){
+      this.isLogin = true;
+      
+    }
   },
   created() {
     const {path, name} = this.$route;
@@ -68,6 +77,13 @@ export default {
       }
     } else if (path.lastIndexOf('/') > 0) {
       this.breadcrumbList.push({path, name});
+    }
+  },
+  mounted(){
+    console.log(this.$store)
+    if(this.$store.state.token){
+      this.isLogin = false;
+      this.userName = this.$store.state.userInfo.userName
     }
   },
   watch: {

@@ -1,20 +1,20 @@
 <template>
   <div class="lawerInfos">
     <div class="lawerInfoTop">
-      <img src="../../assets/img/lawer.png" alt />
+      <img :src="form.baseInfo.photoUrl?form.baseInfo.photoUrl:''" alt />
       <div class="lawerList">
         <div class="lawerInfobox">
           <h3>
-            {{form.name}}律师
-            <span>(执业{{form.year}}年)</span>
+            {{form.lawyerName}}律师
+            <span>(执业{{form.baseInfo.operationYears}}年)</span>
           </h3>
           <p>
             电话：
-            <span>{{form.mobile}}</span>
+            <span>{{form.baseInfo.lawyerPhone}}</span>
           </p>
           <p>
             <span>擅长专业：</span>
-            <span>{{form.content}}</span>
+            <span>{{form.baseInfo.adeptSpecialtys}}</span>
           </p>
         </div>
       </div>
@@ -27,15 +27,15 @@
         </div>
         <div class="progressBox">
           <p>满意度</p>
-          <el-progress type="circle" :percentage="25" :stroke-width=20 color="#66cccc"></el-progress>
+          <el-progress type="circle" :percentage="form.evaluationResult.satisfaction" :stroke-width=20 color="#66cccc"></el-progress>
         </div>
         <div class="progressBox">
           <p>接案率</p>
-          <el-progress type="circle" :percentage="100" :stroke-width=20 color="#ff9933"></el-progress>
+          <el-progress type="circle" :percentage="form.evaluationResult.acceptRate" :stroke-width=20 color="#ff9933"></el-progress>
         </div>
         <div class="progressBox">
           <p>结案率</p>
-          <el-progress type="circle" :percentage="70" :stroke-width=20 color="#ff6060"></el-progress>
+          <el-progress type="circle" :percentage="form.evaluationResult.settleRate" :stroke-width=20 color="#ff6060"></el-progress>
         </div>
       </div>
       <div class="wx">
@@ -51,39 +51,39 @@
           <el-form :model="form" label-width="100px">
             <el-row>
               <el-col :span="12">
-                <el-form-item label="姓名:"></el-form-item>
-                <el-form-item label="性别:"></el-form-item>
-                <el-form-item label="居住地址:"></el-form-item>
-                <el-form-item label="政治面貌:"></el-form-item>
-                <el-form-item label="学历:"></el-form-item>
-                <el-form-item label="专业:"></el-form-item>
-                <el-form-item label="执行类别:"></el-form-item>
-                <el-form-item label="资格证类型:"></el-form-item>
-                <el-form-item label="首次执业:"></el-form-item>
-                <el-form-item label="执业机构:"></el-form-item>
-                <el-form-item label="人员类型:"></el-form-item>
+                <el-form-item label="姓名:">{{form.baseInfo.lawerName}}</el-form-item>
+                <el-form-item label="性别:">{{form.baseInfo.sexDesc}}</el-form-item>
+                <el-form-item label="居住地址:">{{form.baseInfo.fullAreaAddres}}</el-form-item>
+                <el-form-item label="政治面貌:">{{form.baseInfo.politicsStatusDesc}}</el-form-item>
+                <el-form-item label="学历:">{{form.baseInfo.educationCertificationDesc}}</el-form-item>
+                <el-form-item label="专业:">{{form.baseInfo.major}}</el-form-item>
+                <el-form-item label="执行类别:">{{form.baseInfo.professionTypeDesc}}</el-form-item>
+                <el-form-item label="资格证类型:">{{form.baseInfo.certificationTypeDesc}}</el-form-item>
+                <el-form-item label="首次执业:">{{form.baseInfo.firstOperation}}</el-form-item>
+                <el-form-item label="执业机构:">{{form.baseInfo.orgName}}</el-form-item>
+                <el-form-item label="人员类型:">{{form.baseInfo.lawerName}}</el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="执业证书:"></el-form-item>
-                <el-form-item label="出生日期:"></el-form-item>
+                <el-form-item label="执业证书:">{{form.baseInfo.credentialCode}}</el-form-item>
+                <el-form-item label="出生日期:">{{form.baseInfo.birthdayDesc}}</el-form-item>
                 <el-form-item label></el-form-item>
-                <el-form-item label="民族:"></el-form-item>
-                <el-form-item label="学位:"></el-form-item>
-                <el-form-item label="人事档案:"></el-form-item>
+                <el-form-item label="民族:">{{form.baseInfo.nationCodeDesc}}</el-form-item>
+                <el-form-item label="学位:">{{form.baseInfo.degreeDesc}}</el-form-item>
+                <el-form-item label="人事档案:">{{form.baseInfo.lawyerRecord}}</el-form-item>
                 <el-form-item label></el-form-item>
-                <el-form-item label="资格证号"></el-form-item>
-                <el-form-item label="现职称:"></el-form-item>
-                <el-form-item label="进所时间:"></el-form-item>
+                <el-form-item label="资格证号">{{form.baseInfo.certificationCode}}</el-form-item>
+                <el-form-item label="现职称:">{{form.baseInfo.professionTitle}}</el-form-item>
+                <el-form-item label="进所时间:">{{form.baseInfo.joinTimeDesc}}</el-form-item>
               </el-col>
             </el-row>
             <el-row>
               <el-form-item label="诚信信息:">
-                <el-table :data="tableData" style="width: 100%" border>
+                <el-table :data="form.faithList" style="width: 100%" border>
                   <el-table-column prop="date" label="序号" width="180"></el-table-column>
-                  <el-table-column prop="name" label="授予机构" width="180"></el-table-column>
-                  <el-table-column prop="address" label="授予日期"></el-table-column>
-                  <el-table-column prop="address" label="授予内容"></el-table-column>
-                  <el-table-column prop="address" label="表彰级别"></el-table-column>
+                  <el-table-column prop="awardName" label="授予机构" width="180"></el-table-column>
+                  <el-table-column prop="awardDate" label="授予日期"></el-table-column>
+                  <el-table-column prop="awardContent" label="授予内容"></el-table-column>
+                  <el-table-column prop="commendLevel" label="表彰级别"></el-table-column>
                 </el-table>
               </el-form-item>
             </el-row>
@@ -93,7 +93,7 @@
           </el-form>
         </el-tab-pane>
         <el-tab-pane label="服务记录" name="second">
-          <el-table :data="tableData" style="width: 100%" border>
+          <el-table :data="form.faithList" style="width: 100%" border>
             <el-table-column prop="date" label="序号" width="80"></el-table-column>
             <el-table-column prop="name" label="服务类型" width="180"></el-table-column>
             <el-table-column prop="address" label="服务人员"></el-table-column>
@@ -116,9 +116,9 @@ export default {
   data() {
     return {
       form: {
-        name: "小小",
-        year: 1,
-        mobile: "123456789",
+        name: "",
+        year: 0,
+        mobile: "",
         content: "知识产权，房产纠纷，劳动争议，债权债务，婚姻 家庭",
         id: 2
       },
@@ -134,14 +134,24 @@ export default {
           name: "王小虎",
           address: "上海市普陀区金沙江路 1517 弄"
         }
-      ]
+      ],
+      id:''
     };
   },
   created() {},
-  mounted() {},
+  mounted() {
+    console.log(this.$router)
+    this.id = this.$router.currentRoute.query.id;
+    this.getLawerInfo()
+  },
   methods: {
     handleClick(tab, event) {
       console.log(tab, event);
+    },
+    getLawerInfo(){
+      this.$ajaxPost('/lawyer/getValidLawyerInfo',{'lawyerId':'11c33a23bca8498785a5c6f9ab21e4ba'}).then(res=>{
+        this.form = res.data.content
+      })
     }
   }
 };

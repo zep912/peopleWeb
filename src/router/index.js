@@ -65,6 +65,11 @@ const routes = [
         name: '',
         component: () => import('../views/propaganda/getInfo')
       },
+      {
+        path: '/propaganda/video',
+        name: '司法培训',
+        component: () => import('../views/propaganda/video')
+      },
     ]
   },
   {
