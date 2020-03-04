@@ -1,7 +1,7 @@
 <template>
   <div class="userInfo">
     <el-row>
-      <el-col :span="8">
+      <el-col :span="6">
         <el-menu :unique-opened="true" @open="handleOpen" @close="handleClose" @select="handleSelect">
           <el-submenu index="refer">
             <template slot="title">
@@ -22,7 +22,13 @@
           <el-submenu index="info" :class="{'is-active': active >= 3}">
             <template slot="title">
               <i class="el-icon-arrow-right"></i>
-              <span slot="title">个人中心</span>
+              <span slot="title">个人信息</span>
+            </template>
+          </el-submenu>
+          <el-submenu index="feedback" :class="{'is-active': active >= 3}">
+            <template slot="title">
+              <i class="el-icon-arrow-right"></i>
+              <span slot="title">意见反馈</span>
             </template>
           </el-submenu>
           <el-submenu index="4" :class="{'is-active': active >= 3}">
@@ -33,7 +39,7 @@
           </el-submenu>
         </el-menu>
       </el-col>
-      <el-col :span="15">
+      <el-col :span="17">
         <component :is="active"></component>
       </el-col>
     </el-row>
@@ -78,6 +84,17 @@ export default {
   margin: 0 auto;
   margin-top: 20px;
   .el-submenu {
+    border-bottom: 1px solid #ccc;
+    .el-menu-item::before{
+      content: '';
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      display: inline-block;
+      background: #999;
+      margin-right: 5px;
+      vertical-align: middle
+    }
     .el-submenu__title {
       font-size: 16px;
       height: 50px;
