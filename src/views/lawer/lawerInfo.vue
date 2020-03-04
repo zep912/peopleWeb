@@ -23,19 +23,19 @@
       <div class="progress">
         <div class="progressBox">
           <p>咨询量</p>
-          <el-progress type="circle" :percentage="10" stroke-width="20" color="#0da9d7"></el-progress>
+          <el-progress type="circle" :percentage="10" :stroke-width=20 color="#0da9d7"></el-progress>
         </div>
         <div class="progressBox">
           <p>满意度</p>
-          <el-progress type="circle" :percentage="25" stroke-width="20" color="#66cccc"></el-progress>
+          <el-progress type="circle" :percentage="25" :stroke-width=20 color="#66cccc"></el-progress>
         </div>
         <div class="progressBox">
           <p>接案率</p>
-          <el-progress type="circle" :percentage="100" stroke-width="20" color="#ff9933"></el-progress>
+          <el-progress type="circle" :percentage="100" :stroke-width=20 color="#ff9933"></el-progress>
         </div>
         <div class="progressBox">
           <p>结案率</p>
-          <el-progress type="circle" :percentage="70" stroke-width="20" color="#ff6060"></el-progress>
+          <el-progress type="circle" :percentage="70" :stroke-width=20 color="#ff6060"></el-progress>
         </div>
       </div>
       <div class="wx">
@@ -45,6 +45,7 @@
     </div>
 
     <div class="lawerMsg">
+      <el-button class="lawerMsg-btn">针对性咨询</el-button>
       <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
         <el-tab-pane label="基本信息" name="first">
           <el-form :model="form" label-width="100px">
@@ -155,6 +156,7 @@ export default {
   background: #fff;
   margin-top: 20px;
   padding: 20px;
+  position: relative;
 }
 .lawerInfos {
   width: 85%;
@@ -230,5 +232,26 @@ export default {
     height: 130px;
     margin-bottom: 10px;
   }
+}
+.lawerMsg-btn{
+  position: absolute;
+  right: 22px;
+  top: 10px;
+  width: 120px;
+  height: 44px;
+  background: linear-gradient(to right,#10a1d4,#1b7bc3);
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+.lawerMsg .el-tabs__item{
+  border: none
+}
+.lawerMsg .is-active{
+  background: #10a1d4;
+  color: #fff
+}
+.lawerMsg .el-tabs--card>.el-tabs__header .el-tabs__nav{
+  border: 0
 }
 </style>
