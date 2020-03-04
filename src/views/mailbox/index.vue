@@ -1,9 +1,10 @@
 <template>
   <div class="mailbox">
-    <div class="mail-box">
+   
+    <div class="mailForm">
+       <div class="mail-box">
       <span>局长信箱</span>
     </div>
-    <div class="mailForm">
       <el-form label-width="80px" :model="form">
         <el-form-item label="问题类型:">
           <el-radio-group v-model="form.sex">
@@ -163,7 +164,6 @@ export default {
 }
 .mail-box {
   text-align: left;
-  margin-top: 20px;
   margin-bottom: 20px;
   span {
     display: inline-block;

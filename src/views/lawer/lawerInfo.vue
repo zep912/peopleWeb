@@ -149,7 +149,10 @@ export default {
       console.log(tab, event);
     },
     getLawerInfo(){
-      this.$ajaxPost('/lawyer/getValidLawyerInfo',{'lawyerId':'11c33a23bca8498785a5c6f9ab21e4ba'}).then(res=>{
+      let obj = {
+        lawyerId:this.id
+      }
+      this.$ajaxPost('/lawyer/getValidLawyerInfo',obj).then(res=>{
         this.form = res.data.content
       })
     }

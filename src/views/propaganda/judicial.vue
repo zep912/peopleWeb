@@ -207,13 +207,12 @@ export default {
     },
     getData() {
       let obj = {
-        token: "64d1d05f5ccb4670a6d342f3b3c002ce", //类型：String  可有字段  备注：token 用户身份标识
         couType: this.form.value1, //类型：String  可有字段  备注：课件类型 1：视频；2：文档；
         knowledgeScope: this.form.value2, //类型：String  可有字段  备注：知识范围
         contentType: this.form.value3, //类型：String  可有字段  备注：内容分类
         couName: this.form.name, //类型：String  可有字段  备注：课件名称
-        orderModel: "1", //类型：String  可有字段  备注：排序方式 1：播放量；2：时间
-        orderType: "1", //类型：String  可有字段  备注：排序类型 1：由高到低；2：由低到高；
+        orderModel: "", //类型：String  可有字段  备注：排序方式 1：播放量；2：时间
+        orderType: "", //类型：String  可有字段  备注：排序类型 1：由高到低；2：由低到高；
         ...this.page
       };
       this.$ajaxPost("/train/getPublicTrainList", obj).then(res => {
