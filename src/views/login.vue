@@ -54,6 +54,8 @@
                 this.$store.commit('userInfo', data.content.userInfo);
                 this.$store.commit('authorityList', data.content.authorityList);
                 this.$store.commit('token', data.content.token);
+                this.$Cookies.set('token', data.content.token);
+                this.$router.go(-1);
               }
             })
           }

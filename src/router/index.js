@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import Cookies from 'js-cookie'
 
 Vue.use(VueRouter);
 
@@ -73,5 +74,26 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
 });
+
+// 需要登录的页面url
+const blackList = ['/law'];
+router.beforeEach((to, from, next) => {
+  if (blackList.includes(to.path)) {
+    if (Cookies.get('token')) { //判断本地是否存在token
+      next()
+    } else {
+      if (to.path === '/login') {
+        next()
+      } else {
+        next({
+          path: '/login'
+        })
+      }
+    }
+  } else {
+    next()
+  }
+});
+
 
 export default router
