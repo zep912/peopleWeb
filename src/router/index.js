@@ -87,6 +87,7 @@ router.beforeEach((to, from, next) => {
     if (Cookies.get('token')) { //判断本地是否存在token
       next()
     } else {
+      Cookies.set('toPath', to.path === '/login' ? '' : to.path);
       if (to.path === '/login') {
         next()
       } else {

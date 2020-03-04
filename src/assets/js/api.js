@@ -26,13 +26,11 @@ service.interceptors.request.use((config) => {
 
 service.interceptors.response.use((res) => {
   if (res.status === 200) {
-    if (res.data.code == 402 || res.data.code == 401) {
-      console.log('未登录');
+    if ([220, 401, 402].includes(res.data.code)) {
       setTimeout(() => {
-        this.router.push({path: '/login'}, () => {
-          window.location.reload()
-        });
-      }, 1000)
+        window.location.href = window.location.origin + '/login';
+        window.location.reload()
+      }, 2000)
     }
     if (typeof loading.close == 'function') {
       loading.close()

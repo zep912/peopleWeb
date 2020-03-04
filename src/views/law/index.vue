@@ -73,7 +73,7 @@
             </el-upload>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary">提交</el-button>
+            <el-button type="primary" @click="saveOnline">提交</el-button>
             <el-button>取消</el-button>
           </el-form-item>
         </el-form>
@@ -501,6 +501,13 @@ export default {
       list: [],
       total:0,
       imageUrl: ''
+    }
+  },
+  methods: {
+    saveOnline() {
+      this.$ajaxPost('/consult/saveConsultOnline', this.form).then(({data}) => {
+        console.log(data);
+      })
     }
   }
 }
