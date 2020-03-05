@@ -80,19 +80,19 @@
           <el-tab-pane label="法律服务">
             <div class="serve-box">
               <div class="serve-content">
-                <img src="../../assets/svg/zxzx.svg" alt="">
+                <i class="iconfont iconhtmal"></i>
                 <div>在线咨询</div>
               </div>
               <div class="serve-content">
-                <img src="../../assets/svg/zxyy.svg" alt="">
+                <i class="iconfont iconyuyuexuanzhong"></i>
                 <div>在线预约</div>
               </div>
               <div class="serve-content">
-                <img src="../../assets/svg/sfks.svg" alt="">
+                <i class="iconfont iconxiaoxi"></i>
                 <div>司法考试</div>
               </div>
               <div class="serve-content">
-                <img src="../../assets/svg/qzyj.svg" alt="">
+                <i class="iconfont iconsifa"></i>
                 <div>群众批评意见</div>
               </div>
             </div>
@@ -299,8 +299,8 @@ export default {
             padding: 20px 0 10px;
             text-align: center;
             border: 1px solid #ddd;
-            img {
-              width: 36px;
+            i {
+              font-size: 36px;
             }
             div {
               padding: 5px 0;
@@ -308,6 +308,7 @@ export default {
             &:hover {
               background: #3ba6d5;
               font-weight: 700;
+              color: #fff;
             }
           }
         }

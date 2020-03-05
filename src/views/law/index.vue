@@ -2,19 +2,19 @@
   <div class="law">
     <div class="law-header">
       <div class="law-content" :class="{active: active === 1}" @click="active = 1">
-        <img src="../../assets/svg/zxzx.svg" alt="">
+        <i class="iconfont iconhtmal"></i>
         <div>在线咨询</div>
       </div>
       <div class="law-content" :class="{active: active === 2}" @click="active = 2">
-        <img src="../../assets/svg/zxyy.svg" alt="">
+        <i class="iconfont iconyuyuexuanzhong"></i>
         <div>在线预约</div>
       </div>
       <div class="law-content" :class="{active: active === 3}" @click="active = 3">
-        <img src="../../assets/svg/qzyj.svg" alt="">
+        <i class="iconfont iconxiaoxi"></i>
         <div>群众批评意见</div>
       </div>
       <div class="law-content" :class="{active: active === 4}" @click="active = 4">
-        <img src="../../assets/svg/sfks.svg" alt="">
+        <i class="iconfont iconsifa"></i>
         <div>司法考试</div>
       </div>
     </div>
@@ -79,7 +79,130 @@
         </el-form>
       </el-tab-pane>
       <el-tab-pane label="针对性咨询">
-        针对性咨询
+        <div class="lawForm">
+          <el-form :model="form" label-width="80px">
+            <el-row>
+              <el-col :span="5">
+                <el-form-item label="所属区域:">
+                  <el-select v-model="form.area" placeholder="请选择">
+                    <el-option
+                            v-for="item in options"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="5" :offset="2">
+                <el-form-item label="擅长专业:">
+                  <el-select v-model="form.area" placeholder="请选择">
+                    <el-option
+                            v-for="item in options"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value"
+                    ></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="5" :offset="2">
+                <el-form-item label="关键字:">
+                  <el-input placeholder="输入查找的关键字"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="3" :offset="1" style="margin-top:-3px">
+                <el-button class="formBtn" size="medium">搜索</el-button>
+              </el-col>
+            </el-row>
+          </el-form>
+        </div>
+        <!-- 选择 -->
+        <div class="lawSec">
+          <div class="lawSecFour">
+            <el-dropdown>
+          <span class="el-dropdown-link">
+            咨询量
+            <i class="el-icon-arrow-down el-icon--right"></i>
+          </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>黄金糕</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+            <el-dropdown>
+          <span class="el-dropdown-link">
+            满意度
+            <i class="el-icon-arrow-down el-icon--right"></i>
+          </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>黄金糕</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+            <el-dropdown>
+          <span class="el-dropdown-link">
+            接案率
+            <i class="el-icon-arrow-down el-icon--right"></i>
+          </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>黄金糕</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+            <el-dropdown>
+          <span class="el-dropdown-link">
+            结案率
+            <i class="el-icon-arrow-down el-icon--right"></i>
+          </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>黄金糕</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
+          <div class="lawTotal">
+            <span>共计：</span>
+            <span>{{total}}个</span>
+          </div>
+        </div>
+        <div class="lawerList">
+          <ul>
+            <li v-for="(item,index) in lawList" :key="index">
+              <div class="lawerImg">
+                <img :src="item.photoUrl" alt />
+                <div class="lawerInfo">
+                  <div class="info-box">
+                    <div class="info-left">
+                      <h3 class="info-title">{{item.lawyerName}}律师<span>(执业{{item.operationYears}}年)</span></h3>
+                      <div class="info-phone">电话：<span>{{item.lawyerPhone}}</span></div>
+                    </div>
+                    <div class="info-right">
+                      <el-button>点击咨询</el-button>
+                    </div>
+                  </div>
+                  <p>
+                    <span>擅长专业：</span>
+                    <span>{{item.content}}</span>
+                  </p>
+                </div>
+              </div>
+              <div class="lawerExcu">
+                <div>
+                  <p>{{item.serviceData.consultAmount}}</p>
+                  <p>咨询量</p>
+                </div>
+                <div>
+                  <p>{{item.serviceData.serviceAmount}}</p>
+                  <p>服务次数</p>
+                </div>
+                <div>
+                  <p>{{item.serviceData.satisfaction.toFixed(2)}}</p>
+                  <p>满意度</p>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="footPage">
+          <el-pagination background layout="prev, pager, next" :total="total"></el-pagination>
+        </div>
       </el-tab-pane>
     </el-tabs>
     <el-tabs class="law-body" type="card" v-if="active === 2">
@@ -417,6 +540,11 @@ export default {
       },
       appointment: {},
       suggestCriticism: {},
+      lawList: [],
+      page: {
+        pageSize:10,
+        pageNum:1
+      },
       rules: {
         questionTitle: [
           {required: true, message: '请填写标题', trigger: 'change'}
@@ -498,9 +626,17 @@ export default {
         ]
       },
       num: "1000",
-      list: [],
+      list: [
+        {newsTitle: '标题', publishTime: '2020-02-10'}
+      ],
       total:0,
-      imageUrl: ''
+      imageUrl: '',
+      options: [
+        {
+          value: "选项1",
+          label: "黄金糕"
+        }
+      ],
     }
   },
   methods: {
@@ -508,7 +644,36 @@ export default {
       this.$ajaxPost('/consult/saveConsultOnline', this.form).then(({data}) => {
         console.log(data);
       })
+    },
+    getData() {
+      let obj = {
+        areaRegionId: "",
+        areaRegionList: [{
+          areaRegionId: "102030"
+        }
+        ],
+        adeptSpecialty: "2",
+        adeptSpecialtyList: [
+          {
+            adeptSpecialty: "1"
+          }
+        ],
+        keyWord: "",
+        sortModel: "1", //类型：String  可有字段  备注：排序主体 1：咨询量；2：满意度；3：接案率；4：结案率
+        sortType: "1", //类型：String  可有字段  备注：排序方式 1：由高到低(默认)；2：由低到高；
+        ...this.page
+      };
+      this.$ajaxPost('/lawyer/getValidLawyerList',obj).then(res=>{
+        const dataList = res.data.content.dataList;
+        for (let i = 0; i < 10; i++) {
+          this.lawList = this.lawList.concat(dataList);
+        }
+        this.total = res.data.content.pageInfo.total
+      })
     }
+  },
+  mounted() {
+    this.getData()
   }
 }
 </script>
@@ -527,8 +692,8 @@ export default {
       text-align: center;
       border: 1px solid #ddd;
       cursor: pointer;
-      img {
-        width: 36px;
+      i {
+        font-size: 36px;
       }
       div {
         padding: 5px 0;
@@ -536,6 +701,7 @@ export default {
       &.active {
         background: #3ba6d5;
         font-weight: 700;
+        color: #fff;
       }
     }
   }
@@ -627,5 +793,100 @@ export default {
 }
 .el-select {
   width: 100%;
+}
+.lawForm {
+  padding-top: 22px;
+  box-sizing: border-box;
+  padding-left: 10px;
+}
+.formBtn {
+  background: linear-gradient(to right, #109ed2, #1a7bc3);
+  color: #fff;
+  width: 90px;
+  height: 40px;
+  // margin-top: -10px;
+}
+.el-dropdown {
+  margin-right: 30px;
+}
+.lawSec {
+  margin-top: 20px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  .lawSecFour {
+    float: left;
+  }
+  .lawTotal {
+    float: right;
+  }
+}
+.lawerList {
+  padding-bottom: 20px;
+  ul {
+    overflow: hidden;
+  }
+  ul li {
+    width: 33%;
+    background: #fff;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    padding-top: 20px;
+    float: left;
+    margin-right: 0.5%;
+    margin-bottom: 0.5%;
+    font-size: 14px;
+  }
+  ul li:nth-of-type(3n) {
+    margin-right: 0;
+  }
+  .lawerImg {
+    overflow: hidden;
+    display: flex;
+    img {
+      width: 110px;
+      height: 130px;
+      margin-right: 10px;
+      margin-left: 15px;
+    }
+    .lawerInfo {
+      box-sizing: border-box;
+      flex: 1;
+      .info-box {
+        display: inline-flex;
+        .info-left {
+          flex: 1;
+        }
+        .info-right {
+          margin: 0 10px;
+          .el-button {
+            width: 70px;
+            height: 70px;
+            padding: 5px;
+          }
+        }
+      }
+    }
+  }
+  .lawerExcu {
+    overflow: hidden;
+    background: #e8f4fa;
+    box-sizing: border-box;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-top: 10px;
+    div {
+      float: left;
+      width: 33%;
+      text-align: center;
+      p:nth-of-type(1) {
+        font-weight: 600;
+        font-size: 16px;
+      }
+    }
+    div:nth-of-type(2) {
+      border-right: 1px solid #ccc;
+      border-left: 1px solid #ccc;
+    }
+  }
 }
 </style>

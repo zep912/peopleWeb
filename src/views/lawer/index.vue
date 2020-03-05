@@ -159,24 +159,27 @@ export default {
     },
     getData() {
       let obj = {
-        areaRegionId: "", 
+        areaRegionId: "",
         areaRegionList: [{
-            areaRegionId: "102030" 
+            areaRegionId: "102030"
           }
         ],
         adeptSpecialty: "2",
         adeptSpecialtyList: [
           {
-            adeptSpecialty: "1" 
+            adeptSpecialty: "1"
           }
         ],
-        keyWord: "", 
+        keyWord: "",
         sortModel: "1", //类型：String  可有字段  备注：排序主体 1：咨询量；2：满意度；3：接案率；4：结案率
         sortType: "1", //类型：String  可有字段  备注：排序方式 1：由高到低(默认)；2：由低到高；
         ...this.page
       };
       this.$ajaxPost('/lawyer/getValidLawyerList',obj).then(res=>{
-        this.list = res.data.content.dataList;
+        const dataList = res.data.content.dataList;
+        for (let i = 0; i < 10; i++) {
+          this.list = this.list.concat(dataList);
+        }
         this.total = res.data.content.pageInfo.total
       })
     }
@@ -231,32 +234,32 @@ export default {
     overflow: hidden;
   }
   ul li {
-    width: 32%;
+    width: 33%;
     background: #fff;
     border: 1px solid #ccc;
     box-sizing: border-box;
     padding-top: 20px;
     float: left;
-    margin-right: 1%;
-    margin-bottom: 1%;
-    // padding-left: 20px;
+    margin-right: 0.5%;
+    margin-bottom: 0.5%;
+    font-size: 14px;
   }
   ul li:nth-of-type(3n) {
     margin-right: 0;
   }
   .lawerImg {
     overflow: hidden;
+    display: flex;
     img {
       width: 110px;
       height: 130px;
       margin-right: 10px;
-      float: left;
       margin-left: 15px;
     }
     .lawerInfo {
       box-sizing: border-box;
-      float: left;
       width: 65%;
+      position: relative;
       p:nth-of-type(1) {
         margin-bottom: 10px;
       }

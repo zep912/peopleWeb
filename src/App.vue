@@ -12,7 +12,8 @@ export default {
 };
 </script>
 <style lang="scss">
-* {
+@import './assets/font/iconfont.css';
+  * {
   padding: 0;
   margin: 0;
 }
