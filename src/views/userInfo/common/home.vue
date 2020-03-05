@@ -42,7 +42,7 @@
         </span>
       </div>
       <ul>
-        <li v-for="(item,index) in list" :key="index">
+        <li v-for="(item,index) in list" :key="index" @click="homeClick">
           <span>{{item.title}}</span>
           <span class="time">{{item.time}}</span>
         </li>
@@ -68,7 +68,11 @@ export default {
       ]
     };
   },
-  methods: {}
+  methods: {
+    homeClick(){
+      this.$router.push('/user/consult')
+    }
+  }
 };
 </script>
 

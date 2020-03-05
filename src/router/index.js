@@ -53,7 +53,12 @@ const routes = [
       {
         path: '/user',
         name: '个人中心',
-        component: () => import('../views/userInfo/')
+        component: () => import('../views/userInfo/'),
+      },
+      {
+        path: '/user/consult',
+        name: '个人中心',
+        component: () => import('../views/userInfo/consult'),
       },
       {
         path: '/lawer/lawerInfo',
