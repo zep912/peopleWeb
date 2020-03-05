@@ -301,6 +301,7 @@ export default {
             border: 1px solid #ddd;
             i {
               font-size: 36px;
+              color: #3ba6d5;
             }
             div {
               padding: 5px 0;
@@ -309,6 +310,9 @@ export default {
               background: #3ba6d5;
               font-weight: 700;
               color: #fff;
+              i {
+                color: #fff;
+              }
             }
           }
         }
