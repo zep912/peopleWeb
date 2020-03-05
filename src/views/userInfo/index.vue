@@ -2,36 +2,42 @@
   <div class="userInfo">
     <el-row>
       <el-col :span="6">
-        <el-menu :unique-opened="true" @open="handleOpen" @close="handleClose" @select="handleSelect">
+        <el-menu :unique-opened="true" @open="handleOpen" @select="handleSelect">
+          <el-submenu index="home" :class="{'no-opened': ['home', 'info', 'feedback', 'session'].includes(active)}">
+            <template slot="title">
+              <i class="el-icon-arrow-right"></i>
+              <span slot="title">个人信息主页</span>
+            </template>
+          </el-submenu>
           <el-submenu index="refer">
             <template slot="title">
               <i class="el-icon-arrow-right"></i>
               <span>我的咨询</span>
             </template>
-            <el-menu-item index="refer">免费咨询</el-menu-item>
-            <el-menu-item index="payRefer">针对性咨询</el-menu-item>
+            <el-menu-item index="refer" :class="{'is-active': active === 'refer'}">免费咨询</el-menu-item>
+            <el-menu-item index="payRefer" :class="{'is-active': active === 'payRefer'}">针对性咨询</el-menu-item>
           </el-submenu>
           <el-submenu index="lawHelp">
             <template slot="title">
               <i class="el-icon-arrow-right"></i>
               <span>我的预约</span>
             </template>
-            <el-menu-item index="lawHelp">法律援助预约</el-menu-item>
-            <el-menu-item index="lawPeople">人民调解预约</el-menu-item>
+            <el-menu-item index="lawHelp" :class="{'is-active': active === 'lawHelp'}">法律援助预约</el-menu-item>
+            <el-menu-item index="lawPeople" :class="{'is-active': active === 'lawPeople'}">人民调解预约</el-menu-item>
           </el-submenu>
-          <el-submenu index="info" :class="{'is-active': active >= 3}">
+          <el-submenu index="info" :class="{'no-opened': ['home', 'info', 'feedback', 'session'].includes(active)}">
             <template slot="title">
               <i class="el-icon-arrow-right"></i>
               <span slot="title">个人信息</span>
             </template>
           </el-submenu>
-          <el-submenu index="feedback" :class="{'is-active': active >= 3}">
+          <el-submenu index="feedback" :class="{'no-opened': ['home', 'info', 'feedback', 'session'].includes(active)}">
             <template slot="title">
               <i class="el-icon-arrow-right"></i>
               <span slot="title">意见反馈</span>
             </template>
           </el-submenu>
-          <el-submenu index="4" :class="{'is-active': active >= 3}">
+          <el-submenu index="session" disabled :class="{'no-opened': ['home', 'info', 'feedback', 'session'].includes(active)}">
             <template slot="title">
               <i class="el-icon-arrow-right"></i>
               <span slot="title">在线会话</span>
@@ -63,16 +69,10 @@ export default {
   components: {home, info, feedback, lawHelp, lawPeople, payRefer, refer},
   methods: {
     handleOpen(key) {
-      console.log(key);
-      if (key != 1) this.active = key;
+      this.active = key !== 'session' ? key : 'home';
     },
-    handleClose(key, keyPath) {
-      console.log(key, keyPath);
-    },
-    handleSelect(key, keyPath) {
-      console.log(key);
+    handleSelect(key) {
       this.active = key;
-      console.log(key, keyPath);
     },
   }
 };
@@ -81,8 +81,7 @@ export default {
 <style lang="scss">
 .userInfo{
   width: 85%;
-  margin: 0 auto;
-  margin-top: 20px;
+  margin: 0 auto 20px;
   .el-submenu {
     border-bottom: 1px solid #ccc;
     .el-menu-item::before{
@@ -119,11 +118,16 @@ export default {
         }
       }
     }
-    &.is-active {
+    &.no-opened {
       .el-submenu__title {
         .el-icon-arrow-right {
           transform: none;
         }
+      }
+    }
+    &.is-disabled {
+      .el-submenu__title {
+        opacity: 1;
       }
     }
   }

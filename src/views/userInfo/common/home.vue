@@ -77,11 +77,12 @@ export default {
   margin-left: 20px;
   .home-menu {
     overflow: hidden;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-column-gap: 20px;
     li {
-      width: 150px;
       height: 150px;
       float: left;
-      margin-right: 20px;
       background: #fff;
       text-align: center;
       box-sizing: border-box;
