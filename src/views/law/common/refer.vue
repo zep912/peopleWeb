@@ -428,6 +428,7 @@
     margin-bottom: 20px;
     .lawSecFour {
       float: left;
+      user-select: none;
       span {
         display: inline-block;
         padding: 0 10px 0 20px;
@@ -446,6 +447,8 @@
       }
     }
     .lawTotal {
+      height: 30px;
+      line-height: 30px;
       float: right;
     }
   }

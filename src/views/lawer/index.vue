@@ -3,8 +3,8 @@
     <div class="lawForm">
       <el-form :model="lawyerRequest" label-width="80px">
         <el-row>
-          <el-col :span="5">
-            <el-form-item label="所属区域:">
+          <el-col :span="6">
+            <el-form-item label="所属区域">
               <el-select v-model="lawyerRequest.areaRegionId" placeholder="请选择">
                 <el-option
                   v-for="item in areaRegionList"
@@ -15,8 +15,8 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="5" :offset="2">
-            <el-form-item label="擅长专业:">
+          <el-col :span="6" :offset="1">
+            <el-form-item label="擅长专业">
               <el-select v-model="lawyerRequest.adeptSpecialty" placeholder="请选择">
                 <el-option
                   v-for="item in adeptSpecialtyList"
@@ -27,8 +27,8 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="5" :offset="2">
-            <el-form-item label="关键字:">
+          <el-col :span="6" :offset="1">
+            <el-form-item label="关键字">
               <el-input placeholder="输入查找的关键字" v-model="lawyerRequest.keyWord"></el-input>
             </el-form-item>
           </el-col>
@@ -41,42 +41,10 @@
     <!-- 选择 -->
     <div class="lawSec">
       <div class="lawSecFour">
-        <el-dropdown>
-          <span class="el-dropdown-link">
-            咨询量
-            <i class="el-icon-arrow-down el-icon--right"></i>
-          </span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>黄金糕</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-        <el-dropdown>
-          <span class="el-dropdown-link">
-            满意度
-            <i class="el-icon-arrow-down el-icon--right"></i>
-          </span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>黄金糕</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-        <el-dropdown>
-          <span class="el-dropdown-link">
-            接案率
-            <i class="el-icon-arrow-down el-icon--right"></i>
-          </span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>黄金糕</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
-        <el-dropdown>
-          <span class="el-dropdown-link">
-            结案率
-            <i class="el-icon-arrow-down el-icon--right"></i>
-          </span>
-          <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>黄金糕</el-dropdown-item>
-          </el-dropdown-menu>
-        </el-dropdown>
+        <span :class="setClass('1')" @click="searchSort('1')">咨询量<i class="el-icon-caret-bottom"></i></span>
+        <span :class="setClass('2')" @click="searchSort('2')">满意度<i class="el-icon-caret-bottom"></i></span>
+        <span :class="setClass('3')" @click="searchSort('3')">接案率<i class="el-icon-caret-bottom"></i></span>
+        <span :class="setClass('4')" @click="searchSort('4')">结案率<i class="el-icon-caret-bottom"></i></span>
       </div>
       <div class="lawTotal">
         <span>共计：</span>
@@ -135,24 +103,16 @@ export default {
       form: {
         area: ""
       },
-      options: [
-        {
-          value: "选项1",
-          label: "黄金糕"
-        }
-      ],
       value: "",
       list: [],
-      page: {
-        pageSize: 10,
-        pageNum: 1
-      },
       areaRegionList: [],
       lawyerRequest: {
-        pageNum: "1",
-        pageSize: "12",
+        pageNum: '1',
+        pageSize: '12',
         total: 0,
-        keyWord: ""
+        keyWord: '',
+        sortModel: '1',
+        sortType: '1'
       },
       lawList: [],
       adeptSpecialtyList: []
@@ -165,7 +125,10 @@ export default {
     this.getDictionaryList("shanchangzhuangye", "adeptSpecialtyList", true);
   },
   methods: {
-    search() {},
+    search() {
+      this.lawyerRequest.pageNum = '1';
+      this.getValidLawyerList();
+    },
     getDictionaryList(dictCode, typeName, flag) {
       this.$ajaxPost("/support/getDictionaryList", {
         dictCode,
@@ -178,6 +141,18 @@ export default {
           this[typeName] = defaultArr.concat(data.content.resultList);
         }
       });
+    },
+    setClass(sortModel) {
+      return {active: this.lawyerRequest.sortModel === sortModel, 'sort-bottom': this.lawyerRequest.sortModel === sortModel && this.lawyerRequest.sortType === '2'}
+    },
+    searchSort(sortModel) {
+      if (this.lawyerRequest.sortModel === sortModel) {
+        this.lawyerRequest.sortType = this.lawyerRequest.sortType === '1' ? '2' : '1';
+      } else {
+        this.lawyerRequest.sortModel = sortModel;
+        this.lawyerRequest.sortType = '1';
+      }
+      this.getValidLawyerList();
     },
     getValidLawyerList() {
       this.$ajaxPost("/lawyer/getValidLawyerList", this.lawyerRequest).then(
@@ -203,9 +178,9 @@ export default {
             );
           }
         }
-         
+
       );
-     
+
     },
     lawerClick(id) {
       this.$router.push({ path: "./listLawer/lawerInfo", query: { id: id } });
@@ -249,8 +224,27 @@ export default {
     margin-bottom: 20px;
     .lawSecFour {
       float: left;
+      user-select: none;
+      span {
+        display: inline-block;
+        padding: 0 10px 0 20px;
+        height: 30px;
+        line-height: 30px;
+        border: 1px solid #ccc;
+        cursor: pointer;
+        &.active {
+          color: #1982C6;
+        }
+        &.sort-bottom {
+          i {
+            transform: rotate(180deg);
+          }
+        }
+      }
     }
     .lawTotal {
+      height: 30px;
+      line-height: 30px;
       float: right;
     }
   }

@@ -1,35 +1,35 @@
 <template>
   <el-tabs class="law-body" type="card">
     <el-tab-pane label="法律援助预约">
-      <el-form ref="lawAidAppointment" :model="lawAidAppointment" :rules="rules" label-width="140px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="140px">
         <el-row>
           <el-col :span="12">
             <el-form-item label="申请人" prop="questionTitle">
-              <el-input v-model="lawAidAppointment.questionTitle"></el-input>
+              <el-input v-model="form.questionTitle"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="手机号码" prop="applyPhone">
-              <el-input v-model="lawAidAppointment.applyPhone"></el-input>
+              <el-input v-model="form.applyPhone"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="住所地" prop="areaStreetId">
               <el-row>
                 <el-col :span="8">
-                  <el-select v-model="lawAidAppointment.areaCityId" placeholder="请选择">
+                  <el-select v-model="form.areaCityId" placeholder="请选择">
                     <el-option label="区域一" value="shanghai"></el-option>
                     <el-option label="区域二" value="beijing"></el-option>
                   </el-select>
                 </el-col>
                 <el-col :span="8">
-                  <el-select v-model="lawAidAppointment.areaRegionId" placeholder="请选择">
+                  <el-select v-model="form.areaRegionId" placeholder="请选择">
                     <el-option label="区域一" value="shanghai"></el-option>
                     <el-option label="区域二" value="beijing"></el-option>
                   </el-select>
                 </el-col>
                 <el-col :span="8">
-                  <el-select v-model="lawAidAppointment.areaStreetId" placeholder="请选择">
+                  <el-select v-model="form.areaStreetId" placeholder="请选择">
                     <el-option label="区域一" value="shanghai"></el-option>
                     <el-option label="区域二" value="beijing"></el-option>
                   </el-select>
@@ -39,12 +39,12 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="详情地址" prop="areaAddress">
-              <el-input v-model="lawAidAppointment.areaAddress"></el-input>
+              <el-input v-model="form.areaAddress"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="事件类别" prop="matterType">
-              <el-radio-group v-model="lawAidAppointment.matterType">
+              <el-radio-group v-model="form.matterType">
                 <el-radio label="离婚" name="1"></el-radio>
                 <el-radio label="交通事故" name="2"></el-radio>
                 <el-radio label="刑事辩护" name="3"></el-radio>
@@ -54,7 +54,7 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="受援人类别" prop="identityTypeList">
-              <el-checkbox-group v-model="lawAidAppointment.identityTypeList">
+              <el-checkbox-group v-model="form.identityTypeList">
                 <el-checkbox label="离婚" name="1"></el-checkbox>
                 <el-checkbox label="交通事故" name="2"></el-checkbox>
                 <el-checkbox label="刑事辩护" name="3"></el-checkbox>
@@ -64,7 +64,7 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="经济困难情形" prop="difficultyType">
-              <el-radio-group v-model="lawAidAppointment.difficultyType">
+              <el-radio-group v-model="form.difficultyType">
                 <el-radio label="离婚" name="1"></el-radio>
                 <el-radio label="交通事故" name="2"></el-radio>
                 <el-radio label="刑事辩护" name="3"></el-radio>
@@ -74,7 +74,7 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="案情及申请理由" prop="applyReason">
-              <el-input type="textarea" v-model="lawAidAppointment.applyReason"></el-input>
+              <el-input type="textarea" v-model="form.applyReason"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -110,7 +110,7 @@
           </el-col>
           <el-col :span="24" style="text-align: center">
             <el-form-item>
-              <el-radio-group v-model="lawAidAppointment.acceptance">
+              <el-radio-group v-model="form.acceptance">
                 <el-radio :label="1">本人承诺以上所填内容和提交的证件、证明材料均真实。</el-radio>
               </el-radio-group>
             </el-form-item>
@@ -247,8 +247,13 @@
     name: "booking",
     data() {
       return {
-        lawAidAppointment: {
+        form: {
           identityTypeList: []
+        },
+        params: {
+          pageNum: 1,
+          pageSize: 4,
+          total: 0
         },
         rules: {
           questionTitle: [
@@ -333,6 +338,22 @@
         imageUrl: '',
         appointment: {},
       }
+    },
+    methods: {
+      // getMediateCommitteeList() {
+      //   this.$ajaxPost('/lawOrg/getMediateCommitteeList', this.params).then(({data}) => {
+      //     if (data.code === 200) {
+      //       console.log(data);
+      //     }
+      //   })
+      // },
+      // getAppointmentTime() {
+      //   this.$ajaxPost('/appointment/getAppointmentTime', this.appointment).then(({data}) => {
+      //     if (data.code === 200) {
+      //       console.log(data);
+      //     }
+      //   })
+      // }
     }
   }
 </script>
