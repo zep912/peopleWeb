@@ -59,6 +59,9 @@ export default {
   name: "home",
   data() {
     return {
+      lawyerRequest:{
+total:'',
+      },
       form: {
         feedbackCout: "",
         freeCount: "",
@@ -78,7 +81,7 @@ export default {
   },
   mounted() {
     this.token = this.$store.state.token
-    this.getIndexData();
+    // this.getIndexData();
     this.getCousultList()
   },
   methods: {
@@ -101,7 +104,8 @@ export default {
       }
       this.$ajaxPost('/index/recentlyConsultList',obj).then(res=>{
         console.log(res)
-        this.consultList = res.data.content.dataList
+        this.consultList = res.data.content.dataList;
+        // this.total = res.data.content.
       })
     }
   }

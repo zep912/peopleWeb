@@ -123,18 +123,7 @@ export default {
         id: 2
       },
       activeName: "first",
-      tableData: [
-        {
-          date: "1",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1518 弄"
-        },
-        {
-          date: "2",
-          name: "王小虎",
-          address: "上海市普陀区金沙江路 1517 弄"
-        }
-      ],
+      tableData: [],
       id:''
     };
   },

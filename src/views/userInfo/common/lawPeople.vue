@@ -8,9 +8,9 @@
               <el-select v-model="form.matterType" placeholder="请选择">
                 <el-option
                   v-for="item in resultList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  :key="item.dictDataCode"
+                  :label="item.dictDataName"
+                  :value="item.dictDataCode"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -47,7 +47,7 @@
         <li v-for="(item,index) in list" :key="index">
           <span class="title">{{item.lawOrgName}}</span>
           <span class="time">{{item.appointmentDate}}</span>
-          <span class="type" :class="item.applyStatus=='预约成功'?'active':''">{{type(item.applyStatus)}}</span>
+          <span class="type" :class="item.applyStatus=='2'?'active':''">{{type(item.applyStatus)}}</span>
         </li>
       </ul>
     </div>
@@ -84,26 +84,30 @@ export default {
       page: {
         pageSize: 10,
         pageNum: 1
-      }
+      },
+      total:0
     };
   },
   mounted() {
     this.getDict();
+    this.getData()
   },
   methods: {
     type(n) {
       switch (n) {
         case 1:
-          return "预约成功";
-        case 2:
           return "待响应";
+        case 2:
+          return "预约成功";
+          case 3:
+            return '预约失败'
       }
     },
     getDict() {
       let obj = {
-        dictCode: "jiufenzhonglei", //类型：String  必有字段  备注：数据类型，具体内容会提供excel文档以供参考
-        parentDictDataCode: "", //类型：String  可有字段  备注：父级字典ID
-        userId: "111" //类型：String  必有字段  备注：这个参数随便写
+        dictCode: "jiufenleixing", 
+        parentDictDataCode: "", 
+        userId: "111" 
       };
       this.$ajaxPost("/support/getDictionaryList", obj).then(res => {
         this.resultList = res.data.content.resultList;
@@ -111,10 +115,10 @@ export default {
     },
     getData() {
       let obj = {
-        token: this.$store.state.token, //类型：String  必有字段  备注：token 用户身份标识
-        applyDate: "", //类型：String  可有字段  备注：申请日期 格式yyyy-MM-dd
-        applyStartDate: "2019-12-01", //类型：String  可有字段  备注：申请开始日期 格式yyyy-MM-dd
-        applyEndDate: "2019-12-20", //类型：String  可有字段  备注：申请结束日期 格式yyyy-MM-dd
+        token: this.$store.state.token, 
+        applyDate: "", 
+        applyStartDate: "", 
+        applyEndDate: "",
         ...this.form,
         ...this.page
       };
