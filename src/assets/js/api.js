@@ -3,6 +3,7 @@ import axios from 'axios'
 import qs from 'qs'
 import { Loading } from 'element-ui'
 import './util.js'
+import Cookies from 'js-cookie'
 
 // 请求地址
 const baseURL = 'http://59.44.27.201:9010/jjkj/sfj/api';
@@ -26,11 +27,15 @@ service.interceptors.request.use((config) => {
 
 service.interceptors.response.use((res) => {
   if (res.status === 200) {
-    if ([220, 401, 402].includes(res.data.code)) {
-      setTimeout(() => {
-        window.location.href = window.location.origin + '/login';
-        window.location.reload()
-      }, 2000)
+    if (res.data.code == 220) {
+      if (res.data.msg === '无效的token') {
+        Cookies.remove('token');
+        sessionStorage.setItem("store", JSON.stringify({}));
+        setTimeout(() => {
+          window.location.href = window.location.origin + '/login';
+          window.location.reload()
+        }, 2000)
+      }
     }
     if (typeof loading.close == 'function') {
       loading.close()
