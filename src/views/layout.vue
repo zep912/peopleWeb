@@ -4,7 +4,7 @@
       <div id="top">
         <img class="imgLogo" src="../assets/img/pic4.png" alt/>
         <div class="topRight">
-          
+
           <el-button-group>
             <el-button type="primary" @click="register" v-show='isLogin'>注册</el-button>
             <el-button type="primary" @click="$router.push({path: '/login'})" v-show='isLogin'>登录</el-button>
@@ -64,7 +64,10 @@ export default {
     btn() {},
     quit(){
       this.isLogin = true;
-      
+      this.$store.commit('userInfo', '');
+      this.$store.commit('authorityList', '');
+      this.$store.commit('token', '');
+      this.$Cookies.set('token', '');
     }
   },
   created() {
