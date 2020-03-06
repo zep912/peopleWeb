@@ -219,10 +219,7 @@
         </el-form-item>
         <el-form-item label="咨询类型" prop="questionType">
           <el-radio-group v-model="form.questionType">
-            <el-radio label="离婚" name="1"></el-radio>
-            <el-radio label="交通事故" name="2"></el-radio>
-            <el-radio label="刑事辩护" name="3"></el-radio>
-            <el-radio label="婚姻家庭" name="4"></el-radio>
+            <el-radio v-for="item in questionTypeList" :key="item.dictDataCode" :label="item.dictDataCode">{{item.dictDataName}}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="问题描述" prop="questionDesc">
