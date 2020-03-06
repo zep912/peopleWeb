@@ -1,27 +1,30 @@
 <template>
-  <el-tabs class="law-body" type="card">
-    <el-tab-pane label="免费咨询">
+  <el-tabs class="law-body" type="card" v-model="form.consultType" @tab-click="tabClick">
+    <el-tab-pane label="免费咨询" name="1">
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="标题" prop="questionTitle">
           <el-input v-model="form.questionTitle"></el-input>
         </el-form-item>
-        <el-form-item label="问题类型" prop="consultType">
-          <el-radio-group v-model="form.consultType">
-            <el-radio label="离婚" name="1"></el-radio>
-            <el-radio label="交通事故" name="2"></el-radio>
-            <el-radio label="刑事辩护" name="3"></el-radio>
-            <el-radio label="婚姻家庭" name="4"></el-radio>
+        <el-form-item label="问题类型" prop="questionType">
+          <el-radio-group v-model="form.questionType">
+            <el-radio v-for="item in questionTypeList" :key="item.dictDataCode" :label="item.dictDataCode">{{item.dictDataName}}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="问题描述" prop="questionDesc">
-          <el-input type="textarea" v-model="form.questionDesc"></el-input>
+          <el-input type="textarea" v-model="form.questionDesc" :rows="5"></el-input>
         </el-form-item>
-        <el-form-item label="手机号码">
-          <el-input type="phone" v-model="form.phone"></el-input>
-        </el-form-item>
-        <el-form-item label="提问者">
-          <el-input type="textarea" v-model="form.questionName"></el-input>
-        </el-form-item>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="手机号码">
+              <el-input type="phone" v-model="userInfo.mobilePhone" disabled></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="提问者">
+              <el-input v-model="userInfo.userName" disabled></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-form-item label="住所地">
           <el-row>
             <el-col :span="12">
@@ -35,53 +38,51 @@
         <el-form-item label="上传图片">
           <el-upload class="avatar-uploader" :data="{token: form.token}" :show-file-list="false"
                      action="http://59.44.27.201:9010/jjkj/sfj/api/support/uploadFileToLocal"
-                     :on-preview="uploadSuccess" :before-upload="beforeAvatarUpload">
+                     :on-success="uploadSuccess" :before-upload="beforeAvatarUpload">
             <img v-if="imageUrl" :src="imageUrl" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
-        <el-form-item>
-          <el-button type="primary">提交</el-button>
+        <el-form-item style="text-align: center">
+          <el-button type="primary" @click="onSubmit">提交</el-button>
           <el-button>取消</el-button>
         </el-form-item>
       </el-form>
     </el-tab-pane>
-    <el-tab-pane label="针对性咨询">
+    <el-tab-pane label="针对性咨询" name="2">
       <div class="payHelp" v-if="!form.lawyerId">
         <div class="lawForm">
           <el-form :model="lawyerRequest" label-width="80px">
             <el-row>
-              <el-col :span="5">
+              <el-col :span="6">
                 <el-form-item label="所属区域:">
-                  <el-select v-model="lawyerRequest.areaRegionList" multiple placeholder="请选择">
-                    <el-option
-                            v-for="item in options"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value"
+                  <el-select v-model="lawyerRequest.areaRegionId" placeholder="请选择">
+                    <el-option v-for="item in areaRegionList" :key="item.areaId"
+                            :label="item.areaName"
+                            :value="item.areaId"
                     ></el-option>
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="5" :offset="2">
+              <el-col :span="6" :offset="1">
                 <el-form-item label="擅长专业:">
-                  <el-select v-model="lawyerRequest.adeptSpecialtyList" multiple placeholder="请选择">
+                  <el-select v-model="lawyerRequest.adeptSpecialty" placeholder="请选择">
                     <el-option
-                            v-for="item in options"
-                            :key="item.value"
-                            :label="item.label"
-                            :value="item.value"
+                            v-for="item in adeptSpecialtyList"
+                            :key="item.dictDataCode"
+                            :label="item.dictDataName"
+                            :value="item.dictDataCode"
                     ></el-option>
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="5" :offset="2">
+              <el-col :span="6" :offset="1">
                 <el-form-item label="关键字:">
                   <el-input placeholder="输入查找的关键字" v-model="lawyerRequest.keyWord"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="3" :offset="1" style="margin-top:-3px">
-                <el-button class="formBtn" size="medium">搜索</el-button>
+                <el-button class="formBtn" size="medium" @click="search">搜索</el-button>
               </el-col>
             </el-row>
           </el-form>
@@ -127,7 +128,7 @@
           </div>
           <div class="lawTotal">
             <span>共计：</span>
-            <span>{{total}}个</span>
+            <span>{{lawyerRequest.total}}个</span>
           </div>
         </div>
         <div class="lawerList">
@@ -169,14 +170,14 @@
           </ul>
         </div>
         <div class="footPage">
-          <el-pagination background layout="prev, pager, next" :total="total"></el-pagination>
+          <el-pagination background layout="prev, pager, next" :total="lawyerRequest.total" @size-change="sizeChange"></el-pagination>
         </div>
       </div>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px" v-if="form.lawyerId">
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px" class="payHelpClass" v-if="form.lawyerId">
         <el-form-item label="意见律师" prop="lawyerId">
           <div class="lawerList">
             <ul>
-              <li style="width: 36%">
+              <li style="width: 40%">
                 <div class="lawerImg">
                   <img :src="lawyerItem.photoUrl" alt />
                   <div class="lawerInfo">
@@ -216,8 +217,8 @@
         <el-form-item label="标题" prop="questionTitle">
           <el-input v-model="form.questionTitle"></el-input>
         </el-form-item>
-        <el-form-item label="咨询类型" prop="consultType">
-          <el-radio-group v-model="form.consultType">
+        <el-form-item label="咨询类型" prop="questionType">
+          <el-radio-group v-model="form.questionType">
             <el-radio label="离婚" name="1"></el-radio>
             <el-radio label="交通事故" name="2"></el-radio>
             <el-radio label="刑事辩护" name="3"></el-radio>
@@ -225,14 +226,20 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="问题描述" prop="questionDesc">
-          <el-input type="textarea" v-model="form.questionDesc"></el-input>
+          <el-input type="textarea" v-model="form.questionDesc" :rows="5"></el-input>
         </el-form-item>
-        <el-form-item label="手机号码">
-          <el-input type="phone" v-model="form.phone"></el-input>
-        </el-form-item>
-        <el-form-item label="提问者">
-          <el-input type="textarea" v-model="form.questionName"></el-input>
-        </el-form-item>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="手机号码">
+              <el-input type="phone" v-model="userInfo.mobilePhone" disabled></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="提问者">
+              <el-input v-model="userInfo.userName" disabled></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-form-item label="住所地">
           <el-row>
             <el-col :span="12">
@@ -243,8 +250,8 @@
             </el-col>
           </el-row>
         </el-form-item>
-        <el-form-item>
-          <el-button type="primary">提交</el-button>
+        <el-form-item style="text-align: center">
+          <el-button type="primary" @click="onSubmit">提交</el-button>
           <el-button @click="cancel">取消</el-button>
         </el-form-item>
       </el-form>
@@ -259,11 +266,13 @@
     components: {areaList},
     data() {
       return {
+        questionTypeList: [],
+        userInfo: {},
         form: {
           areaArray: [],
           token: "",                //类型：String  必有字段  备注：用户身份标识
-          consultType: "",                //类型：String  必有字段  备注：咨询类型 1：免费咨询；2：针对性咨询
-          questionType: "2",                //类型：String  必有字段  备注：问题类型
+          consultType: "1",                //类型：String  必有字段  备注：咨询类型 1：免费咨询；2：针对性咨询
+          questionType: "",                //类型：String  必有字段  备注：问题类型
           questionTitle: "",                //类型：String  必有字段  备注：标题
           questionDesc: "",                //类型：String  必有字段  备注：问题描述
           lawyerId: "",                //类型：String  可有字段  备注：意向律师ID(当提交针对性咨询时，此字段必有，如果是免费咨询，后台要查出当前的值班律师ID)
@@ -273,94 +282,25 @@
           questionTitle: [
             {required: true, message: '请填写标题', trigger: 'change'}
           ],
-          consultType: [
-            {required: true, message: '请选择咨询类型', trigger: 'change'}
+          questionType: [
+            {required: true, message: '请选择问题类型', trigger: 'change'}
           ],
           questionDesc: [
             {required: true, message: '请填写问题描述', trigger: 'change'}
           ],
-          applyPhone: [
-            {required: true, message: '请填写手机号码', trigger: 'change'}
-          ],
-          areaCityId: [
-            {required: true, message: '请选择市', trigger: 'change'}
-          ],
-          areaRegionId: [
-            {required: true, message: '请选择区', trigger: 'change'}
-          ],
-          areaStreetId: [
-            {required: true, message: '请选择街道', trigger: 'change'}
-          ],
-          areaAddress: [
-            {required: true, message: '请填写地址', trigger: 'change'}
-          ],
-          matterType: [
-            {required: true, message: '请选择事项类别', trigger: 'change'}
-          ],
-          identityTypeList: [
-            {required: true, message: '请选择受援人类别', trigger: 'change'}
-          ],
-          difficultyType: [
-            {required: true, message: '请选择经济困难情形', trigger: 'change'}
-          ],
-          applyReason: [
-            {required: true, message: '请填写案情及申请理由', trigger: 'change'}
-          ],
-          fileList: [
-            {required: true, message: '请上传证明材料', trigger: 'change'}
-          ],
-          appelleeName: [
-            {required: true, message: '请填写被申请人姓名', trigger: 'change'}
-          ],
-          appelleePhone: [
-            {required: true, message: '请填写被申请人电话', trigger: 'change'}
-          ],
-          appelleeCityId: [
-            {required: true, message: '请选择市', trigger: 'change'}
-          ],
-          appelleeRegionId: [
-            {required: true, message: '请选择区', trigger: 'change'}
-          ],
-          appelleeStreetId: [
-            {required: true, message: '请选择街道', trigger: 'change'}
-          ],
-          appelleeAddress: [
-            {required: true, message: '请填写地址', trigger: 'change'}
-          ],
-          disputeType: [
-            {required: true, message: '请选择纠纷类型', trigger: 'change'}
-          ],
-          disputeDetail: [
-            {required: true, message: '请填写纠纷情况', trigger: 'change'}
-          ],
-          lawOrgId: [
-            {required: true, message: '请选择预约委员会', trigger: 'change'}
-          ],
-          deptName: [
-            {required: true, message: '请选择反馈部门', trigger: 'change'}
-          ],
-          feeTitle: [
-            {required: true, message: '请填写反馈事项', trigger: 'change'}
-          ],
-          feeContent: [
-            {required: true, message: '请填写遇到的问题', trigger: 'change'}
-          ],
-          personPhone: [
-            {required: true, message: '请填写手机号码', trigger: 'change'}
+          lawyerId: [
+            {required: true, message: '请选择律师', trigger: 'change'}
           ]
         },
         lawList: [],
-        total:0,
         imageUrl: '',
-        options: [
-          {
-            value: "选项1",
-            label: "黄金糕"
-          }
-        ],
+        adeptSpecialtyList: [],
+        areaRegionList: [],
         lawyerRequest: {
-          areaRegionList: [],
-          adeptSpecialtyList: []
+          pageNum: '1',
+          pageSize: '12',
+          total: 0,
+          keyWord: '',
         },
         lawyerItem: {
           serviceData: {
@@ -371,30 +311,50 @@
       }
     },
     methods: {
-      getData() {
-        let obj = {
-          areaRegionId: "",
-          areaRegionList: [{
-            areaRegionId: "102030"
+      getDictionaryList(dictCode, typeName, flag) {
+        this.$ajaxPost('/support/getDictionaryList', {dictCode, userId: '1'}).then(({data}) => {
+          if (data.code == 200) {
+            const defaultArr = flag ? [{dictDataCode: '', dictDataName: '全部'}] : [];
+            this[typeName] = defaultArr.concat(data.content.resultList);
           }
-          ],
-          adeptSpecialty: "2",
-          adeptSpecialtyList: [
-            {
-              adeptSpecialty: "1"
-            }
-          ],
-          keyWord: "",
-          sortModel: "1", //类型：String  可有字段  备注：排序主体 1：咨询量；2：满意度；3：接案率；4：结案率
-          sortType: "1", //类型：String  可有字段  备注：排序方式 1：由高到低(默认)；2：由低到高；
-          ...this.page
-        };
-        this.$ajaxPost('/lawyer/getValidLawyerList',obj).then(res=>{
+        })
+      },
+      getAreaList() {
+        this.$ajaxPost('/support/getAreaList', {areaLevel: '3'}).then(({data}) => {
+          if (data.code === 200) {
+            this.areaRegionList = [{areaId: '', areaName: '全部'}].concat(data.content.dataList.reduce((res, item) => {
+              if (!res.some(val => val.areaId === item.areaId)) {
+                item.leaf = item.areaLevel === '4';
+                res.push(item)
+              }
+              return res;
+            }, []));
+          }
+        })
+      },
+      tabClick({name}) {
+        if (name === '2') {
+          this.getDictionaryList('shanchangzhuangye', 'adeptSpecialtyList', true);
+          this.getAreaList();
+          this.getValidLawyerList();
+        }
+      },
+      sizeChange(pageNum) {
+        this.lawyerRequest.pageNum = pageNum;
+        this.getValidLawyerList();
+      },
+      search() {
+        this.lawyerRequest.pageNum = '1';
+        this.getValidLawyerList();
+      },
+      getValidLawyerList() {
+        this.$ajaxPost('/lawyer/getValidLawyerList', this.lawyerRequest).then(res=>{
           const dataList = res.data.content.dataList;
-          for (let i = 0; i < 10; i++) {
-            this.lawList = this.lawList.concat(dataList);
-          }
-          this.total = res.data.content.pageInfo.total
+          this.lawList = dataList;
+          // for (let i = 0; i < 10; i++) {
+          //   this.lawList = this.lawList.concat(dataList);
+          // }
+          this.lawyerRequest.total = res.data.content.pageInfo.total
         })
       },
       payRefer(item) {
@@ -407,7 +367,7 @@
       cancel() {
         this.form = {
           areaArray: [],
-          questionType: "2",                //类型：String  必有字段  备注：问题类型
+          consultType: "2",
           fileId: ''
         };
       },
@@ -429,10 +389,39 @@
         }
         return isImg && isLt100M;
       },
+      onSubmit() {
+        this.$refs['form'].validate((valid) => {
+          if (valid) {
+            const areaArray = this.form.areaArray;
+            let form = Object.assign({}, this.form);
+            if (areaArray && areaArray.length) {
+              form.areaCityId = areaArray[0];
+              form.areaRegionId = areaArray[1];
+              form.areaStreetId = areaArray[2];
+            }
+            this.$ajaxPost('/consult/saveConsultOnline', form).then(({data}) => {
+              if (data.code === 200) {
+                this.form = {token: this.$store.getters.token, areaArray: []};
+                this.imageUrl = "";
+                this.$nextTick(() => {
+                  this.$refs['form'].clearValidate();
+                });
+                this.$message.success('提交成功', 3000);
+              } else {
+                this.$message.error(data.msg, 3000);
+              }
+            })
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      }
     },
     mounted() {
       this.form.token = this.$Cookies.get('token');
-      this.getData();
+      this.userInfo = this.$store.state.userInfo;
+      this.getDictionaryList('wentileixing', 'questionTypeList');
     }
   }
 </script>
@@ -540,6 +529,11 @@
       border-right: 1px solid #ccc;
       border-left: 1px solid #ccc;
     }
+  }
+}
+.payHelpClass {
+  .el-form-item__content {
+    line-height: initial;
   }
 }
 </style>

@@ -36,4 +36,10 @@ li{
 .el-form {
   width: 90%;
 }
+.el-radio-group {
+  line-height: inherit!important;
+  .el-radio {
+    width: 100px;
+  }
+}
 </style>

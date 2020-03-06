@@ -8,7 +8,7 @@
       <el-form label-width="80px" :model="form" :rules="rules" ref="form">
         <el-form-item label="问题类型" prop="feeType">
           <el-radio-group v-model="form.feeType">
-            <el-radio v-for="item in feeTypeList" :key="item.value" :label="item.value">{{item.label}}</el-radio>
+            <el-radio v-for="item in feeTypeList" :key="item.dictDataCode" :label="item.dictDataCode">{{item.dictDataName}}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="标题" prop="feeTitle">
@@ -114,9 +114,7 @@ export default {
     getDictionaryList() {
       this.$ajaxPost('/support/getDictionaryList', {dictCode: 'fankuileixing', userId: '1'}).then(({data}) => {
         if (data.code == 200) {
-          this.feeTypeList = data.content.resultList.map(item => {
-            return {value: item.dictDataCode, label: item.dictDataName}
-          })
+          this.feeTypeList = data.content.resultList;
         }
       })
     },
@@ -137,7 +135,7 @@ export default {
               this.$nextTick(() => {
                 this.$refs['form'].clearValidate();
               });
-              this.$message.success('发送成功', 3000);
+              this.$message.success('提交成功', 3000);
             } else {
               this.$message.error(data.msg, 3000);
             }
