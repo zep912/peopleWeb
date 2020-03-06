@@ -5,31 +5,31 @@
         <img src="../../../assets/img/u100.png" alt />
 
         <p>免费咨询</p>
-        <p>{{form.num1}}</p>
+        <p>{{form.freeCount?form.freeCount:0}}</p>
       </li>
       <li>
         <img src="../../../assets/img/u101.png" alt />
 
         <p>针对性咨询</p>
-        <p>{{form.num1}}</p>
+        <p>{{form.assignCount?form.assignCount:0}}</p>
       </li>
       <li>
         <img src="../../../assets/img/u102.png" alt />
 
         <p>法律援助预约</p>
-        <p>{{form.num1}}</p>
+        <p>{{form.lawCount?form.lawCount:0}}</p>
       </li>
       <li>
         <img src="../../../assets/img/u103.png" alt />
 
         <p>人民调解预约</p>
-        <p>{{form.num1}}</p>
+        <p>{{form.mediateCout?form.mediateCout:0}}</p>
       </li>
       <li>
         <img src="../../../assets/img/u104.png" alt />
 
         <p>意见反馈</p>
-        <p>{{form.num1}}</p>
+        <p>{{form.feedbackCout?form.feedbackCout:0}}</p>
       </li>
     </ul>
 
@@ -38,15 +38,18 @@
         <span class="homeNear">近期咨询</span>
         <span class="homeAccout">
           共有：
-          <span>{{num}}篇</span>
+          <span>{{total}}篇</span>
         </span>
       </div>
       <ul>
-        <li v-for="(item,index) in list" :key="index" @click="homeClick">
-          <span>{{item.title}}</span>
-          <span class="time">{{item.time}}</span>
+        <li v-for="(item,index) in consultList" :key="index" @click="homeClick">
+          <span>{{item.consultTitle}}</span>
+          <span class="time">{{item.consultDate}}</span>
         </li>
       </ul>
+          <div class="footPage">
+      <el-pagination background layout="prev, pager, next" :total="lawyerRequest.total"></el-pagination>
+    </div>
     </div>
   </div>
 </template>
@@ -57,20 +60,49 @@ export default {
   data() {
     return {
       form: {
-        num1: 100
+        feedbackCout: "",
+        freeCount: "",
+        assignCount: "",
+        lawCount: "",
+        mediateCout: ""
       },
-      num: 1234,
-      list: [
-        {
-          title: "123",
-          time: "2020-01-01"
-        }
-      ]
+      list: [],
+      token:'',
+      page:{
+        pageSize:5,
+        pageNum:1
+      },
+      total:'',
+      consultList:[]
     };
   },
+  mounted() {
+    this.token = this.$store.state.token
+    this.getIndexData();
+    this.getCousultList()
+  },
   methods: {
-    homeClick(){
-      this.$router.push('/user/consult')
+    homeClick() {
+      this.$router.push("/user/consult");
+    },
+    getIndexData() {
+      this.$ajaxPost("/index/indexData", {
+        token: this.token
+      }).then(res => {
+        if (res.data.code == 200) {
+          this.form = res.data.content.countData;
+        }
+      });
+    },
+    getCousultList(){
+      let obj = {
+        token:this.token,
+        ...this.page
+      }
+      this.$ajaxPost('/index/recentlyConsultList',obj).then(res=>{
+        console.log(res)
+        this.consultList = res.data.content.dataList
+      })
     }
   }
 };
@@ -139,13 +171,13 @@ export default {
       border-bottom: 1px dashed #ccc;
       box-sizing: border-box;
       // padding-right: 20px;
-      .time{
+      .time {
         float: right;
-        color: #999
+        color: #999;
       }
     }
-    li:before{
-      content: '';
+    li:before {
+      content: "";
       width: 5px;
       height: 5px;
       border-radius: 50%;
@@ -155,5 +187,8 @@ export default {
       margin-right: 10px;
     }
   }
+}
+.footPage{
+  text-align: right;
 }
 </style>

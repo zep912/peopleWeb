@@ -5,9 +5,9 @@
         <el-row>
           <el-col :span="6">
             <el-form-item label="纠纷种类">
-              <el-select v-model="value" placeholder="请选择">
+              <el-select v-model="form.matterType" placeholder="请选择">
                 <el-option
-                  v-for="item in options"
+                  v-for="item in resultList"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
@@ -17,9 +17,9 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="状态">
-              <el-select v-model="value" placeholder="请选择">
+              <el-select v-model="form.applyStatus" placeholder="请选择">
                 <el-option
-                  v-for="item in options"
+                  v-for="item in statusList"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
@@ -28,7 +28,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="10" :offset="1" class="referInput">
-            <el-input placeholder="请输入" style="width:220px"></el-input>
+            <el-input placeholder="请输入" style="width:220px" v-model="form.questionTitle"></el-input>
             <el-button class="referBtn">搜索</el-button>
           </el-col>
         </el-row>
@@ -40,15 +40,14 @@
         <span class="homeNear">人民调解预约</span>
         <span class="homeAccout">
           共有：
-          <span>{{num}}篇</span>
+          <span>{{total}}篇</span>
         </span>
       </div>
       <ul>
         <li v-for="(item,index) in list" :key="index">
-          <span class="title">{{item.title}}</span>
-          <span class="time">{{item.time}}</span>
-
-          <span class="type" :class="item.type==1?'active':''">{{type(item.type)}}</span>
+          <span class="title">{{item.lawOrgName}}</span>
+          <span class="time">{{item.appointmentDate}}</span>
+          <span class="type" :class="item.applyStatus=='预约成功'?'active':''">{{type(item.applyStatus)}}</span>
         </li>
       </ul>
     </div>
@@ -60,37 +59,36 @@ export default {
   name: "refer",
   data() {
     return {
-      options: [
+      form: {
+        matterType: "",
+        applyStatus: "",
+        questionTitle: ""
+      },
+      statusList: [
         {
-          value: "选项1",
-          label: "黄金糕"
+          label: "待响应",
+          value: "1"
+        },
+        {
+          label: "预约成功",
+          value: "2"
+        },
+        {
+          label: "预约失败",
+          value: "3"
         }
       ],
+      resultList: [],
       value: "",
-      num: 11111,
-      list: [
-        {
-          title: "123",
-          time: "2020-01-01",
-          type: 1
-        },
-        {
-          title: "123",
-          time: "2020-01-01",
-          type: 2
-        },
-        {
-          title: "123",
-          time: "2020-01-01",
-          type: 1
-        },
-        {
-          title: "123",
-          time: "2020-01-01",
-          type: 2
-        }
-      ]
+      list: [],
+      page: {
+        pageSize: 10,
+        pageNum: 1
+      }
     };
+  },
+  mounted() {
+    this.getDict();
   },
   methods: {
     type(n) {
@@ -99,8 +97,31 @@ export default {
           return "预约成功";
         case 2:
           return "待响应";
-      
       }
+    },
+    getDict() {
+      let obj = {
+        dictCode: "jiufenzhonglei", //类型：String  必有字段  备注：数据类型，具体内容会提供excel文档以供参考
+        parentDictDataCode: "", //类型：String  可有字段  备注：父级字典ID
+        userId: "111" //类型：String  必有字段  备注：这个参数随便写
+      };
+      this.$ajaxPost("/support/getDictionaryList", obj).then(res => {
+        this.resultList = res.data.content.resultList;
+      });
+    },
+    getData() {
+      let obj = {
+        token: this.$store.state.token, //类型：String  必有字段  备注：token 用户身份标识
+        applyDate: "", //类型：String  可有字段  备注：申请日期 格式yyyy-MM-dd
+        applyStartDate: "2019-12-01", //类型：String  可有字段  备注：申请开始日期 格式yyyy-MM-dd
+        applyEndDate: "2019-12-20", //类型：String  可有字段  备注：申请结束日期 格式yyyy-MM-dd
+        ...this.form,
+        ...this.page
+      };
+      this.$ajaxPost('/appointment/getOwnerMediateList',obj).then(res=>{
+          this.list = res.data.content.dataList;
+          this.total = res.data.content.pageInfo.total;
+      })
     }
   }
 };
@@ -162,7 +183,7 @@ export default {
       border-bottom: 1px dashed #ccc;
       box-sizing: border-box;
       // padding-right: 20px;
-      .title{
+      .title {
         color: #10a1d4;
         text-decoration: underline;
       }

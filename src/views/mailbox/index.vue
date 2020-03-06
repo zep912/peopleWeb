@@ -28,12 +28,12 @@
           </el-upload>
         </el-form-item>
         <el-row>
-          <el-col :span="12">
+          <el-col :span="9">
             <el-form-item label="发信人">
               <el-input v-model="userInfo.userName" disabled></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="12" :offset="1">
             <el-form-item label="手机号码">
               <el-input v-model="userInfo.mobilePhone" disabled></el-input>
             </el-form-item>
@@ -41,10 +41,10 @@
         </el-row>
         <el-form-item label="住所地">
           <el-row>
-            <el-col :span="12">
+            <el-col :span="8">
               <area-list v-model="form.areaArray"></area-list>
             </el-col>
-            <el-col :span="12">
+            <el-col :span="12" :offset="1">
               <el-input placeholder="请输入" v-model="form.areaAddress"></el-input>
             </el-col>
           </el-row>

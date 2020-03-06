@@ -1,39 +1,39 @@
 <template>
   <div class="lawer">
     <div class="lawForm">
-      <el-form :model="form" label-width="80px">
+      <el-form :model="lawyerRequest" label-width="80px">
         <el-row>
           <el-col :span="5">
             <el-form-item label="所属区域:">
-              <el-select v-model="form.area" placeholder="请选择">
+              <el-select v-model="lawyerRequest.areaRegionId" placeholder="请选择">
                 <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  v-for="item in areaRegionList"
+                  :key="item.areaId"
+                  :label="item.areaName"
+                  :value="item.areaId"
                 ></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="5" :offset="2">
             <el-form-item label="擅长专业:">
-              <el-select v-model="form.area" placeholder="请选择">
+              <el-select v-model="lawyerRequest.adeptSpecialty" placeholder="请选择">
                 <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  v-for="item in adeptSpecialtyList"
+                  :key="item.dictDataCode"
+                  :label="item.dictDataName"
+                  :value="item.dictDataCode"
                 ></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="5" :offset="2">
             <el-form-item label="关键字:">
-              <el-input placeholder="输入查找的关键字"></el-input>
+              <el-input placeholder="输入查找的关键字" v-model="lawyerRequest.keyWord"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="3" :offset="1" style="margin-top:-3px">
-            <el-button class="formBtn" size="medium">搜索</el-button>
+            <el-button class="formBtn" size="medium" @click="search">搜索</el-button>
           </el-col>
         </el-row>
       </el-form>
@@ -80,13 +80,13 @@
       </div>
       <div class="lawTotal">
         <span>共计：</span>
-        <span>{{total}}个</span>
+        <span>{{lawyerRequest.total}}个</span>
       </div>
     </div>
     <!-- 律师信息 -->
     <div class="lawerList">
       <ul>
-        <li v-for="(item,index) in list" :key="index" @click="lawerClick(item.lawyerId)">
+        <li v-for="(item,index) in lawList" :key="index" @click="lawerClick(item.lawyerId)">
           <div class="lawerImg">
             <img :src="item.photoUrl" alt />
             <div class="lawerInfo">
@@ -122,7 +122,7 @@
       </ul>
     </div>
     <div class="footPage">
-      <el-pagination background layout="prev, pager, next" :total="total"></el-pagination>
+      <el-pagination background layout="prev, pager, next" :total="lawyerRequest.total"></el-pagination>
     </div>
   </div>
 </template>
@@ -143,45 +143,72 @@ export default {
       ],
       value: "",
       list: [],
-      page:{
-        pageSize:10,
-        pageNum:1
-      }
+      page: {
+        pageSize: 10,
+        pageNum: 1
+      },
+      areaRegionList: [],
+      lawyerRequest: {
+        pageNum: "1",
+        pageSize: "12",
+        total: 0,
+        keyWord: ""
+      },
+      lawList: [],
+      adeptSpecialtyList: []
     };
   },
   created() {},
   mounted() {
-    this.getData()
+    this.getValidLawyerList();
+    this.getAreaList();
+    this.getDictionaryList("shanchangzhuangye", "adeptSpecialtyList", true);
   },
   methods: {
-    lawerClick(id) {
-      this.$router.push({ path: "/listLawer/lawerInfo", query: { id: id } });
-    },
-    getData() {
-      let obj = {
-        areaRegionId: "",
-        areaRegionList: [{
-            areaRegionId: "102030"
-          }
-        ],
-        adeptSpecialty: "2",
-        adeptSpecialtyList: [
-          {
-            adeptSpecialty: "1"
-          }
-        ],
-        keyWord: "",
-        sortModel: "1", //类型：String  可有字段  备注：排序主体 1：咨询量；2：满意度；3：接案率；4：结案率
-        sortType: "1", //类型：String  可有字段  备注：排序方式 1：由高到低(默认)；2：由低到高；
-        ...this.page
-      };
-      this.$ajaxPost('/lawyer/getValidLawyerList',obj).then(res=>{
-        const dataList = res.data.content.dataList;
-        for (let i = 0; i < 10; i++) {
-          this.list = this.list.concat(dataList);
+    search() {},
+    getDictionaryList(dictCode, typeName, flag) {
+      this.$ajaxPost("/support/getDictionaryList", {
+        dictCode,
+        userId: "1"
+      }).then(({ data }) => {
+        if (data.code == 200) {
+          const defaultArr = flag
+            ? [{ dictDataCode: "", dictDataName: "全部" }]
+            : [];
+          this[typeName] = defaultArr.concat(data.content.resultList);
         }
-        this.total = res.data.content.pageInfo.total
-      })
+      });
+    },
+    getValidLawyerList() {
+      this.$ajaxPost("/lawyer/getValidLawyerList", this.lawyerRequest).then(
+        res => {
+          const dataList = res.data.content.dataList;
+          this.lawList = dataList;
+          this.lawyerRequest.total = res.data.content.pageInfo.total;
+        }
+      );
+    },
+    getAreaList() {
+      this.$ajaxPost("/support/getAreaList", { areaLevel: "3" }).then(
+        ({ data }) => {
+          if (data.code === 200) {
+            this.areaRegionList = [{ areaId: "", areaName: "全部" }].concat(
+              data.content.dataList.reduce((res, item) => {
+                if (!res.some(val => val.areaId === item.areaId)) {
+                  item.leaf = item.areaLevel === "4";
+                  res.push(item);
+                }
+                return res;
+              }, [])
+            );
+          }
+        }
+         
+      );
+     
+    },
+    lawerClick(id) {
+      this.$router.push({ path: "/lawer/lawerInfo", query: { id: id } });
     }
   }
 };

@@ -5,21 +5,21 @@
         <el-row>
           <el-col :span="6">
             <el-form-item label="问题类型">
-              <el-select v-model="value" placeholder="请选择">
+              <el-select v-model="form.dictDataCode" placeholder="请选择">
                 <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  v-for="item in questionTypeList"
+                  :key="item.dictDataCode"
+                  :label="item.dictDataName"
+                  :value="item.dictDataCode"
                 ></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="状态">
-              <el-select v-model="value" placeholder="请选择">
+              <el-select v-model="form.consultStatus" placeholder="请选择">
                 <el-option
-                  v-for="item in options"
+                  v-for="item in consultStatus"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
@@ -28,8 +28,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="10" :offset="1" class="referInput">
-            <el-input placeholder="请输入" style="width:220px"></el-input>
-            <el-button class="referBtn">搜索</el-button>
+            <el-input placeholder="请输入" style="width:220px" v-model="form.questionTitle"></el-input>
+            <el-button class="referBtn" @click="search">搜索</el-button>
           </el-col>
         </el-row>
       </el-form>
@@ -40,17 +40,20 @@
         <span class="homeNear">针对性咨询</span>
         <span class="homeAccout">
           共有：
-          <span>{{num}}篇</span>
+          <span>{{total}}篇</span>
         </span>
       </div>
-      <ul>
+      <ul class="referUl">
         <li v-for="(item,index) in list" :key="index">
-          <span>{{item.title}}</span>
-          <span class="time">{{item.time}}</span>
+          <span>{{item.questionTitle}}</span>
+          <span class="time">{{item.createTime}}</span>
 
-          <span class="type" :class="item.type==1?'active':''">{{type(item.type)}}</span>
+          <span class="type" :class="item.consultStatus==4?'active':''">{{type(item.consultStatus)}}</span>
         </li>
       </ul>
+       <div class="footPage">
+      <el-pagination background layout="prev, pager, next" :total="total"></el-pagination>
+    </div>
     </div>
   </div>
 </template>
@@ -66,50 +69,104 @@ export default {
           label: "黄金糕"
         }
       ],
-      value: "",
-      num: 11111,
-      list: [
+      form: {
+        consultStatus: "",
+        dictDataCode: ""
+      },
+      total: 0,
+      questionTypeList: [],
+      list: [],
+      consultStatus: [
         {
-          title: "123",
-          time: "2020-01-01",
-          type: 1
+          label: "待确认",
+          value: "1"
         },
         {
-          title: "123",
-          time: "2020-01-01",
-          type: 2
+          label: "解答中",
+          value: "2"
         },
         {
-          title: "123",
-          time: "2020-01-01",
-          type: 3
+          label: "待评价",
+          value: "3"
         },
         {
-          title: "123",
-          time: "2020-01-01",
-          type: 4
+          label: "已评价",
+          value: "4"
+        },
+        {
+          label: "律师拒绝",
+          value: "5"
+        },
+        {
+          label: "系统拒绝",
+          value: "6"
         }
-      ]
+      ],
+      page: {
+        pageSize: 10,
+        pageNum: 1
+      }
     };
   },
+  mounted() {
+    this.getDictionaryList("wentileixing", "questionTypeList");
+    this.getOwnerConsultList();
+  },
   methods: {
+    search() {},
+    getOwnerConsultList() {
+      let obj = {
+        token: this.$store.state.token,
+        consultType: "2",
+        ...this.form,
+        createTime: "", //类型：String  可有字段  备注：咨询时间 格式yyyy-MM-dd
+        ...this.page
+      };
+      this.$ajaxPost("/consult/getOwnerConsultList", obj).then(res => {
+        console.log(res);
+        this.list = res.data.content.dataList;
+        this.total = res.data.content.pageInfo.total;
+      });
+    },
     type(n) {
       switch (n) {
         case 1:
-          return "已完结";
+          return "待确认";
         case 2:
-          return "待响应";
-        case 3:
           return "解答中";
-        case 4:
+        case 3:
           return "待评价";
+        case 4:
+          return "已评价";
+        case 5:
+          return "律师拒绝";
+        case 6:
+          return "系统拒绝";
       }
+    },
+    getDictionaryList(dictCode, typeName, flag) {
+      this.$ajaxPost("/support/getDictionaryList", {
+        dictCode,
+        userId: "1"
+      }).then(({ data }) => {
+        if (data.code == 200) {
+          const defaultArr = flag
+            ? [{ dictDataCode: "", dictDataName: "全部" }]
+            : [];
+          this[typeName] = defaultArr.concat(data.content.resultList);
+        }
+      });
     }
   }
 };
 </script>
 
 <style lang="scss">
+.footPage{
+  margin-top: 20px;
+  margin-bottom: 20px;
+  text-align: right;
+}
 .refer {
   margin-left: 20px;
   .referTop {
@@ -156,7 +213,7 @@ export default {
       margin-right: 20px;
     }
   }
-  ul {
+  .referUl {
     margin-top: 20px;
     li {
       height: 44px;

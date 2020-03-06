@@ -2,12 +2,12 @@
   <div class="info">
     <span>个人信息</span>
     <el-form>
-      <el-form-item label='群众姓名:'>{{form.name}}</el-form-item>
-      <el-form-item label='身份证号:'>{{form.code}}</el-form-item>
-      <el-form-item label='手机号码:'>{{form.mobile}}</el-form-item>
-      <el-form-item label='性别:'>{{form.sex}}</el-form-item>
-      <el-form-item label='出生日期:'>{{form.born}}</el-form-item>
-      <el-form-item label='所属地区:'>{{form.address}}</el-form-item>
+      <el-form-item label='群众姓名:'>{{form.personName}}</el-form-item>
+      <el-form-item label='身份证号:'>{{form.idNumber}}</el-form-item>
+      <el-form-item label='手机号码:'>{{form.cellphone}}</el-form-item>
+      <el-form-item label='性别:'>{{form.sexDesc}}</el-form-item>
+      <el-form-item label='出生日期:'>{{form.birthday}}</el-form-item>
+      <el-form-item label='所属地区:'>{{form.addressDetail}}</el-form-item>
     </el-form>
   </div>
 </template>
@@ -18,16 +18,27 @@
     data() {
       return {
         form:{
-          name:'张三',
-          code:1234566,
-          mobile:1234567,
-          sex:'男',
-          borm:'1990年1月1日',
-          address:'XXXXXXXXXXXX'
+          personName:'',
+          idNumber:'',
+          cellphone:'',
+          sexDesc:'',
+          birthday:'',
+          addressDetail:''
         }
       }
     },
-    methods: {}
+    mounted(){
+      this.getUserInfo()
+      
+    },
+    methods: {
+      getUserInfo(){
+        this.$ajaxPost('/citizen/getCitizenInfo',{'token':this.$store.state.token}).then(res=>{
+          this.form = res.data.content
+        })
+      },
+      
+    }
   }
 </script>
 
