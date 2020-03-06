@@ -1,84 +1,52 @@
 <template>
   <div class="mailbox">
-   
+
     <div class="mailForm">
        <div class="mail-box">
       <span>局长信箱</span>
     </div>
-      <el-form label-width="80px" :model="form">
-        <el-form-item label="问题类型:">
-          <el-radio-group v-model="form.sex">
-            <el-radio :label="1">意见建议</el-radio>
-            <el-radio :label="2">反映情况</el-radio>
+      <el-form label-width="80px" :model="form" :rules="rules" ref="form">
+        <el-form-item label="问题类型" prop="feeType">
+          <el-radio-group v-model="form.feeType">
+            <el-radio v-for="item in feeTypeList" :key="item.value" :label="item.value">{{item.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="标题:">
-          <el-input v-model="form.title"></el-input>
+        <el-form-item label="标题" prop="feeTitle">
+          <el-input v-model="form.feeTitle"></el-input>
         </el-form-item>
-        <el-form-item label="内容描述:">
-          <el-input v-model="form.title" type="textarea" :rows="5"></el-input>
+        <el-form-item label="内容描述" prop="feeContent">
+          <el-input v-model="form.feeContent" type="textarea" :rows="5"></el-input>
         </el-form-item>
-        <el-form-item label="上传照片:">
+        <el-form-item label="上传照片">
           <el-upload
             class="avatar-uploader"
-            action="https://jsonplaceholder.typicode.com/posts/"
-            :show-file-list="false"
-            :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload"
-          >
+            :data="{token: form.token}" :show-file-list="false"
+            action="http://59.44.27.201:9010/jjkj/sfj/api/support/uploadFileToLocal"
+            :on-success="uploadSuccess" :before-upload="beforeAvatarUpload">
             <img v-if="imageUrl" :src="imageUrl" class="avatar" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="发信人:" style="width:80%">
-              <el-input v-model="form.name"></el-input>
+            <el-form-item label="发信人">
+              <el-input v-model="userInfo.userName" disabled></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="手机号码:" style="width:80%">
-              <el-input v-model="form.name"></el-input>
+            <el-form-item label="手机号码">
+              <el-input v-model="userInfo.mobilePhone" disabled></el-input>
             </el-form-item>
-            <div class="grid-content bg-purple-light"></div>
           </el-col>
         </el-row>
-        <el-form-item label="住所地:">
+        <el-form-item label="住所地">
           <el-row>
-            <el-col :span="4">
-              <el-select v-model="value" placeholder="请选择">
-                <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
+            <el-col :span="12">
+              <area-list v-model="form.areaArray"></area-list>
             </el-col>
-            <el-col :span="4" style='margin-left:10px;margin-right:10px'>
-              <el-select v-model="value" placeholder="请选择">
-                <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
+            <el-col :span="12">
+              <el-input placeholder="请输入" v-model="form.areaAddress"></el-input>
             </el-col>
-            <el-col :span="4" style='margin-right:10px'>
-              <el-select v-model="value" placeholder="请选择">
-                <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-
-            </el-col>
-                          <el-col :span="7">
-                <el-input placeholder="请输入"></el-input>
-              </el-col>
           </el-row>
         </el-form-item>
         <el-form-item style="text-align:center">
@@ -91,37 +59,95 @@
 </template>
 
 <script>
+import areaList from '@/components/areaList';
 export default {
+  components: {areaList},
   data() {
     return {
+      userInfo: {},
+      feeTypeList: [],
       form: {
-        name: "",
-        sex: "",
-        title: ""
+        token: '',
+        feeTitle: "",
+        feeType: "",
+        feeContent: "",
+        feeModel: '2',
+        areaArray: []
+      },
+      rules: {
+        feeTitle: [
+          {required: true, message: '请填写标题', trigger: 'change'}
+        ],
+        feeType: [
+          {required: true, message: '请选择问题类型', trigger: 'change'}
+        ],
+        feeContent: [
+          {required: true, message: '请填写内容描述', trigger: 'change'}
+        ],
       },
       imageUrl: "",
-      options:[],
-      value:''
     };
   },
-  mounted() {},
+  mounted() {
+    this.form.token = this.$store.getters.token;
+    this.userInfo = this.$store.state.userInfo;
+    this.getDictionaryList();
+  },
   methods: {
-    handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw);
+    uploadSuccess(res, file) {
+      if (res.code === 200) {
+        this.form.fileList = res.content.fileList.map(item => item.fileId);
+        this.imageUrl = URL.createObjectURL(file.raw);
+      }
     },
     beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
-      const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isJPG) {
-        this.$message.error("上传头像图片只能是 JPG 格式!");
+      const isImg = file.type.indexOf("image/") > -1;
+      const isLt100M = file.size / 1024 / 1024 < 100;
+      if (!isImg) {
+        this.$message.error("只能上传照片", 3000);
       }
-      if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
+      if (!isLt100M) {
+        this.$message.error("上传头像图片大小不能超过 100MB!", 3000);
       }
-      return isJPG && isLt2M;
+      return isImg && isLt100M;
     },
-    onSubmit() {}
+    getDictionaryList() {
+      this.$ajaxPost('/support/getDictionaryList', {dictCode: 'fankuileixing', userId: '1'}).then(({data}) => {
+        if (data.code == 200) {
+          this.feeTypeList = data.content.resultList.map(item => {
+            return {value: item.dictDataCode, label: item.dictDataName}
+          })
+        }
+      })
+    },
+    onSubmit() {
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          const areaArray = this.form.areaArray;
+          let form = Object.assign({}, this.form);
+          if (areaArray && areaArray.length) {
+            form.areaCityId = areaArray[0];
+            form.areaRegionId = areaArray[1];
+            form.areaStreetId = areaArray[2];
+          }
+          this.$ajaxPost('/suggest/saveSuggestForDirector', form).then(({data}) => {
+            if (data.code === 200) {
+              this.form = {token: this.$store.getters.token, areaArray: []};
+              this.imageUrl = "";
+              this.$nextTick(() => {
+                this.$refs['form'].clearValidate();
+              });
+              this.$message.success('发送成功', 3000);
+            } else {
+              this.$message.error(data.msg, 3000);
+            }
+          })
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    }
   }
 };
 </script>

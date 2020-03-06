@@ -35,8 +35,7 @@
         <el-form-item label="上传图片">
           <el-upload class="avatar-uploader" :data="{token: form.token}" :show-file-list="false"
                      action="http://59.44.27.201:9010/jjkj/sfj/api/support/uploadFileToLocal"
-                     :on-preview="uploadSuccess"
-          >
+                     :on-preview="uploadSuccess" :before-upload="beforeAvatarUpload">
             <img v-if="imageUrl" :src="imageUrl" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
@@ -414,12 +413,22 @@
       },
       // 图片上传成功的回调处理
       uploadSuccess(res, file) {
-        console.log(res);
         if (res.code === 200) {
           this.form.fileId = res.content.fileList.map(item => item.fileId).join();
           this.imageUrl = URL.createObjectURL(file.raw);
         }
-      }
+      },
+      beforeAvatarUpload(file) {
+        const isImg = file.type.indexOf("image/") > -1;
+        const isLt100M = file.size / 1024 / 1024 < 100;
+        if (!isImg) {
+          this.$message.error("只能上传照片");
+        }
+        if (!isLt100M) {
+          this.$message.error("上传头像图片大小不能超过 100MB!");
+        }
+        return isImg && isLt100M;
+      },
     },
     mounted() {
       this.form.token = this.$Cookies.get('token');

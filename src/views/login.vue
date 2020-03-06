@@ -55,7 +55,8 @@
                 this.$store.commit('authorityList', data.content.authorityList);
                 this.$store.commit('token', data.content.token);
                 this.$Cookies.set('token', data.content.token);
-                this.$router.push({path: this.$Cookies.get('toPath')});
+                const path = this.$Cookies.get('toPath') || '/';
+                this.$router.push({path});
               }
             })
           }
