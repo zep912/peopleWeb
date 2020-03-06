@@ -5,7 +5,7 @@
         <el-form-item label="标题" prop="questionTitle">
           <el-input v-model="form.questionTitle"></el-input>
         </el-form-item>
-        <el-form-item label="咨询类型" prop="consultType">
+        <el-form-item label="问题类型" prop="consultType">
           <el-radio-group v-model="form.consultType">
             <el-radio label="离婚" name="1"></el-radio>
             <el-radio label="交通事故" name="2"></el-radio>
@@ -33,7 +33,10 @@
           </el-row>
         </el-form-item>
         <el-form-item label="上传图片">
-          <el-upload class="avatar-uploader" :show-file-list="false" action="">
+          <el-upload class="avatar-uploader" :data="{token: form.token}" :show-file-list="false"
+                     action="http://59.44.27.201:9010/jjkj/sfj/api/support/uploadFileToLocal"
+                     :on-preview="uploadSuccess"
+          >
             <img v-if="imageUrl" :src="imageUrl" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
@@ -241,12 +244,6 @@
             </el-col>
           </el-row>
         </el-form-item>
-        <el-form-item label="上传图片">
-          <el-upload class="avatar-uploader" :show-file-list="false" action="">
-            <img v-if="imageUrl" :src="imageUrl" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-          </el-upload>
-        </el-form-item>
         <el-form-item>
           <el-button type="primary">提交</el-button>
           <el-button @click="cancel">取消</el-button>
@@ -265,13 +262,13 @@
       return {
         form: {
           areaArray: [],
-          token: "64d1d05f5ccb4670a6d342f3b3c002ce",                //类型：String  必有字段  备注：用户身份标识
+          token: "",                //类型：String  必有字段  备注：用户身份标识
           consultType: "",                //类型：String  必有字段  备注：咨询类型 1：免费咨询；2：针对性咨询
           questionType: "2",                //类型：String  必有字段  备注：问题类型
           questionTitle: "",                //类型：String  必有字段  备注：标题
           questionDesc: "",                //类型：String  必有字段  备注：问题描述
           lawyerId: "",                //类型：String  可有字段  备注：意向律师ID(当提交针对性咨询时，此字段必有，如果是免费咨询，后台要查出当前的值班律师ID)
-          fileId: "gcled0d99c3433a9b09218e599dhwq03,gcled0d99c3433a9b09218e5assqwq01"
+          fileId: ""
         },
         rules: {
           questionTitle: [
@@ -414,10 +411,19 @@
           questionType: "2",                //类型：String  必有字段  备注：问题类型
           fileId: ''
         };
+      },
+      // 图片上传成功的回调处理
+      uploadSuccess(res, file) {
+        console.log(res);
+        if (res.code === 200) {
+          this.form.fileId = res.content.fileList.map(item => item.fileId).join();
+          this.imageUrl = URL.createObjectURL(file.raw);
+        }
       }
     },
     mounted() {
-      this.getData()
+      this.form.token = this.$Cookies.get('token');
+      this.getData();
     }
   }
 </script>
