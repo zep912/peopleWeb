@@ -155,7 +155,7 @@ export default {
   },
   methods: {
     lawerClick(id) {
-      this.$router.push({ path: "/lawer/lawerInfo", query: { id: id } });
+      this.$router.push({ path: "/listLawer/lawerInfo", query: { id: id } });
     },
     getData() {
       let obj = {

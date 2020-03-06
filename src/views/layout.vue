@@ -25,7 +25,7 @@
         <router-link to="/" :class="{'router-link-exact-active': $route.path === '/'}">首页</router-link>
         <router-link to="/government" :class="{'router-link-exact-active': $route.path.indexOf('/government') > -1}">政务公开</router-link>
         <router-link to="/law" :class="{'router-link-exact-active': $route.path.indexOf('/law') > -1}">法律服务</router-link>
-        <router-link to="/lawer" :class="{'router-link-exact-active': $route.path.indexOf('/lawer')} > -1">律师信息</router-link>
+        <router-link to="/listLawer" :class="{'router-link-exact-active': $route.path.indexOf('/listLawer')} > -1">律师信息</router-link>
         <router-link to="/propaganda" :class="{'router-link-exact-active': $route.path.indexOf('/propaganda') > -1}">普法宣传</router-link>
         <router-link to="/map" :class="{'router-link-exact-active': $route.path.indexOf('/map')} > -1">司法地图</router-link>
         <router-link to="/mailbox" :class="{'router-link-exact-active': $route.path.indexOf('/mailbox')} > -1">局长信箱</router-link>

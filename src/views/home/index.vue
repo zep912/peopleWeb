@@ -110,7 +110,7 @@
         <el-tabs class="new-box" type="card">
           <el-tab-pane label="司法培训">
             <div class="serve-box train-box">
-              <div class="train-content" v-for="item in content.trainList" :key="item">
+              <div class="train-content" v-for="item in content.trainList" :key="item.couId">
                 <img :src="item.coverUrl" alt="">
                 <div class="train-title">{{item.trainTitle}}</div>
               </div>

@@ -26,7 +26,7 @@ const routes = [
         component: () => import('../views/law/')
       },
       {
-        path: '/lawer',
+        path: '/listLawer',
         name: '律师信息',
         component: () => import('../views/lawer/')
       },
@@ -61,7 +61,7 @@ const routes = [
         component: () => import('../views/userInfo/consult'),
       },
       {
-        path: '/lawer/lawerInfo',
+        path: '/listLawer/lawerInfo',
         name: '律师详情',
         component: () => import('../views/lawer/lawerInfo')
       },
