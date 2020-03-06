@@ -27,6 +27,23 @@
         ],
         total: 1
       }
+    },
+    methods: {
+      getOpenNewsList() {
+        const request = {
+          token: this.$Cookies.get('token'),
+          newsType: '8'
+        };
+        this.$ajaxPost("/doc/news/getOpenNewsList", request).then(({data}) => {
+          if (data.code === 200) {
+            this.list = data.content.dataList;
+            this.total = data.content.pageInfo.total;
+          }
+        });
+      }
+    },
+    mounted() {
+      this.getOpenNewsList();
     }
   }
 </script>
