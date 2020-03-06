@@ -44,7 +44,7 @@
           </el-upload>
         </el-form-item>
         <el-form-item style="text-align: center">
-          <el-button type="primary" @click="onSubmit">提交</el-button>
+          <el-button type="primary" @click="onSubmit('1')">提交</el-button>
           <el-button>取消</el-button>
         </el-form-item>
       </el-form>
@@ -251,7 +251,7 @@
           </el-row>
         </el-form-item>
         <el-form-item style="text-align: center">
-          <el-button type="primary" @click="onSubmit">提交</el-button>
+          <el-button type="primary" @click="onSubmit('2')">提交</el-button>
           <el-button @click="cancel">取消</el-button>
         </el-form-item>
       </el-form>
@@ -389,7 +389,7 @@
         }
         return isImg && isLt100M;
       },
-      onSubmit() {
+      onSubmit(consultType) {
         this.$refs['form'].validate((valid) => {
           if (valid) {
             const areaArray = this.form.areaArray;
@@ -401,7 +401,7 @@
             }
             this.$ajaxPost('/consult/saveConsultOnline', form).then(({data}) => {
               if (data.code === 200) {
-                this.form = {token: this.$store.getters.token, areaArray: []};
+                this.form = {token: this.$store.getters.token, areaArray: [], consultType};
                 this.imageUrl = "";
                 this.$nextTick(() => {
                   this.$refs['form'].clearValidate();

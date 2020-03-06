@@ -91,7 +91,7 @@ const router = new VueRouter({
 });
 
 // 需要登录的页面url
-const blackList = ['/law'];
+const blackList = ['/law', '/mailbox', '/user'];
 router.beforeEach((to, from, next) => {
   if (blackList.includes(to.path)) {
     if (Cookies.get('token')) { //判断本地是否存在token
