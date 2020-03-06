@@ -79,20 +79,20 @@
         <el-tabs class="new-box" type="card">
           <el-tab-pane label="法律服务">
             <div class="serve-box">
-              <div class="serve-content">
+              <div class="serve-content" @click="goLaw('refer')">
                 <i class="iconfont iconhtmal"></i>
                 <div>在线咨询</div>
               </div>
-              <div class="serve-content">
+              <div class="serve-content" @click="goLaw('booking')">
                 <i class="iconfont iconyuyuexuanzhong"></i>
                 <div>在线预约</div>
               </div>
-              <div class="serve-content">
-                <i class="iconfont iconxiaoxi"></i>
+              <div class="serve-content" @click="goLaw('exam')">
+                <i class="iconfont iconsifa"></i>
                 <div>司法考试</div>
               </div>
-              <div class="serve-content">
-                <i class="iconfont iconsifa"></i>
+              <div class="serve-content" @click="goLaw('feedback')">
+                <i class="iconfont iconxiaoxi"></i>
                 <div>群众批评意见</div>
               </div>
             </div>
@@ -110,8 +110,9 @@
         <el-tabs class="new-box" type="card">
           <el-tab-pane label="司法培训">
             <div class="serve-box train-box">
-              <div class="train-content" v-for="item in 8" :key="item">
-                <div class="train-title">暂无数据</div>
+              <div class="train-content" v-for="item in content.trainList" :key="item">
+                <img :src="item.coverUrl" alt="">
+                <div class="train-title">{{item.trainTitle}}</div>
               </div>
             </div>
           </el-tab-pane>
@@ -184,6 +185,9 @@ export default {
           this.content = data.content;
         }
       })
+    },
+    goLaw(type) {
+      this.$router.push({path: '/law', query: {type}});
     }
   },
   mounted() {
@@ -299,6 +303,7 @@ export default {
             padding: 20px 0 10px;
             text-align: center;
             border: 1px solid #ddd;
+            cursor: pointer;
             i {
               font-size: 36px;
               color: #3ba6d5;
@@ -322,6 +327,10 @@ export default {
             height: 100px;
             background-color: #ddd;
             position: relative;
+            > img {
+              width: 100%;
+              height: 100%;
+            }
             .train-title {
               position: absolute;
               left: 0;
