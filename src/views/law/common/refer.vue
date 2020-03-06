@@ -24,25 +24,10 @@
         </el-form-item>
         <el-form-item label="住所地">
           <el-row>
-            <el-col :span="6">
-              <el-select v-model="form.region" placeholder="请选择">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-              </el-select>
+            <el-col :span="12">
+              <area-list v-model="form.areaArray"></area-list>
             </el-col>
-            <el-col :span="6">
-              <el-select v-model="form.region" placeholder="请选择">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-              </el-select>
-            </el-col>
-            <el-col :span="6">
-              <el-select v-model="form.region" placeholder="请选择">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-              </el-select>
-            </el-col>
-            <el-col :span="6">
+            <el-col :span="12">
               <el-input v-model="form.desc"></el-input>
             </el-col>
           </el-row>
@@ -62,11 +47,11 @@
     <el-tab-pane label="针对性咨询">
       <div class="payHelp" v-if="!form.lawyerId">
         <div class="lawForm">
-          <el-form :model="form" label-width="80px">
+          <el-form :model="lawyerRequest" label-width="80px">
             <el-row>
               <el-col :span="5">
                 <el-form-item label="所属区域:">
-                  <el-select v-model="form.area" placeholder="请选择">
+                  <el-select v-model="lawyerRequest.areaRegionList" multiple placeholder="请选择">
                     <el-option
                             v-for="item in options"
                             :key="item.value"
@@ -78,7 +63,7 @@
               </el-col>
               <el-col :span="5" :offset="2">
                 <el-form-item label="擅长专业:">
-                  <el-select v-model="form.area" placeholder="请选择">
+                  <el-select v-model="lawyerRequest.adeptSpecialtyList" multiple placeholder="请选择">
                     <el-option
                             v-for="item in options"
                             :key="item.value"
@@ -90,7 +75,7 @@
               </el-col>
               <el-col :span="5" :offset="2">
                 <el-form-item label="关键字:">
-                  <el-input placeholder="输入查找的关键字"></el-input>
+                  <el-input placeholder="输入查找的关键字" v-model="lawyerRequest.keyWord"></el-input>
                 </el-form-item>
               </el-col>
               <el-col :span="3" :offset="1" style="margin-top:-3px">
@@ -248,25 +233,10 @@
         </el-form-item>
         <el-form-item label="住所地">
           <el-row>
-            <el-col :span="6">
-              <el-select v-model="form.region" placeholder="请选择">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-              </el-select>
+            <el-col :span="12">
+              <area-list v-model="form.areaArray"></area-list>
             </el-col>
-            <el-col :span="6">
-              <el-select v-model="form.region" placeholder="请选择">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-              </el-select>
-            </el-col>
-            <el-col :span="6">
-              <el-select v-model="form.region" placeholder="请选择">
-                <el-option label="区域一" value="shanghai"></el-option>
-                <el-option label="区域二" value="beijing"></el-option>
-              </el-select>
-            </el-col>
-            <el-col :span="6">
+            <el-col :span="12">
               <el-input v-model="form.desc"></el-input>
             </el-col>
           </el-row>
@@ -287,11 +257,14 @@
 </template>
 
 <script>
+  import areaList from '@/components/areaList';
   export default {
     name: "refer",
+    components: {areaList},
     data() {
       return {
         form: {
+          areaArray: [],
           token: "64d1d05f5ccb4670a6d342f3b3c002ce",                //类型：String  必有字段  备注：用户身份标识
           consultType: "",                //类型：String  必有字段  备注：咨询类型 1：免费咨询；2：针对性咨询
           questionType: "2",                //类型：String  必有字段  备注：问题类型
@@ -389,6 +362,10 @@
             label: "黄金糕"
           }
         ],
+        lawyerRequest: {
+          areaRegionList: [],
+          adeptSpecialtyList: []
+        },
         lawyerItem: {
           serviceData: {
             satisfaction: 0
@@ -433,6 +410,7 @@
       },
       cancel() {
         this.form = {
+          areaArray: [],
           questionType: "2",                //类型：String  必有字段  备注：问题类型
           fileId: ''
         };
