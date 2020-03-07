@@ -60,7 +60,7 @@ export default {
   data() {
     return {
       lawyerRequest:{
-total:'',
+        total: 0,
       },
       form: {
         feedbackCout: "",
@@ -75,7 +75,7 @@ total:'',
         pageSize:5,
         pageNum:1
       },
-      total:'',
+      total: 0,
       consultList:[]
     };
   },
@@ -101,11 +101,12 @@ total:'',
       let obj = {
         token:this.token,
         ...this.page
-      }
+      };
       this.$ajaxPost('/index/recentlyConsultList',obj).then(res=>{
-        console.log(res)
-        this.consultList = res.data.content.dataList;
-        // this.total = res.data.content.
+        if (res.code === 200) {
+          this.consultList = res.data.content.dataList;
+          // this.total = res.data.content.
+        }
       })
     }
   }

@@ -101,7 +101,7 @@
         </div>
         <div class="lawerList">
           <ul>
-            <li v-for="(item,index) in lawList" :key="index">
+            <li v-for="item in lawList" :key="item.lawyerId">
               <div class="lawerImg">
                 <img :src="item.photoUrl" alt />
                 <div class="lawerInfo">
