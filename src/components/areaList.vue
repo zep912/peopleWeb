@@ -43,6 +43,7 @@
     watch: {
       value(value) {
         this.myValue = value;
+        this.$emit('change', value);
       },
       myValue(value) {
         this.$emit('input', value);

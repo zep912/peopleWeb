@@ -42,4 +42,13 @@ li{
     width: 100px;
   }
 }
+.el-checkbox-group {
+  line-height: inherit!important;
+  .el-checkbox {
+    width: 100px;
+  }
+}
+.form-item-center {
+  text-align: center;
+}
 </style>
