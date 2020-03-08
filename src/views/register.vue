@@ -55,7 +55,7 @@
         </el-col>
       </el-row>
     </el-form>
-    <el-button type="primary" @click="onSubmit" style="margin-top:20px">注册</el-button>
+    <el-button type="primary" @click="onSubmit('rules')" style="margin-top:20px">注册</el-button>
   </div>
 </template>
 
@@ -119,10 +119,10 @@ export default {
   created() {},
   mounted() {},
   methods: {
-    onSubmit() {
+    onSubmit(formName) {
       // 校验身份证
       var idcardReg = /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/;
-      this.$refs["form"].validate(valid => {
+      this.$refs[formName].validate(valid => {
         if (valid) {
           if (idcardReg.test(this.form.identityCard)) {
             const areaArray = this.form.areaArray;
@@ -153,10 +153,10 @@ export default {
     },
     getCode() {
       if (this.form.phoneNum == "") {
-        this.$message.waring("手机号不能为空");
+        this.$message.warning("手机号不能为空");
         return;
       } else if (!/^1[3456789]\d{9}$/.test(this.form.phoneNum)) {
-        this.$message.waring('请填写正确的手机号码')
+        this.$message.warning('请填写正确的手机号码')
         return;
       } else {
         this.isCode = true;

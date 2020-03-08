@@ -5,7 +5,7 @@
         <el-row>
           <el-col :span="6">
             <el-form-item label="问题类型">
-              <el-select v-model="form.dictDataCode" placeholder="请选择">
+              <el-select v-model="form.questionType" placeholder="请选择">
                 <el-option
                   v-for="item in questionTypeList"
                   :key="item.dictDataCode"
@@ -52,7 +52,15 @@
         </li>
       </ul>
       <div class="footPage">
-        <el-pagination background layout="prev, pager, next" :total="total"></el-pagination>
+              <el-pagination
+        background
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="pageform.pageNum"
+        :page-size="pageform.pageSize"
+        layout="total, prev, pager, next"
+        :total="pageform.total"
+      >></el-pagination>
       </div>
     </div>
   </div>
@@ -70,8 +78,8 @@ export default {
         }
       ],
       form: {
-        consultStatus: "",
-        dictDataCode: ""
+        questionType: "",
+        questionTitle: ""
       },
       total: 0,
       questionTypeList: [],
@@ -105,6 +113,11 @@ export default {
       page: {
         pageSize: 10,
         pageNum: 1
+      },
+      pageform: {
+        pageSize: 10,
+        pageNum: 1,
+        total: 0
       }
     };
   },
@@ -114,18 +127,27 @@ export default {
   },
   methods: {
     search() {},
+    handleSizeChange(val) {
+      this.pageform.pageNum = val;
+      this.getData();
+    },
+    handleCurrentChange(val) {
+      this.pageform.pageNum = val;
+      this.getData();
+    },
     getOwnerConsultList() {
       let obj = {
         token: this.$store.state.token,
         consultType: "1",
         ...this.form,
+        consultStatus:'',
         createTime: "", //类型：String  可有字段  备注：咨询时间 格式yyyy-MM-dd
         ...this.page
       };
       this.$ajaxPost("/consult/getOwnerConsultList", obj).then(res => {
         console.log(res);
         this.list = res.data.content.dataList;
-        this.total = res.data.content.pageInfo.total;
+        this.pageform.total = res.data.content.pageInfo.total;
       });
     },
     type(n) {

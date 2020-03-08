@@ -19,7 +19,7 @@
       </div>
       <div class="login-footer">
         <el-button type="text" @click="$router.push('/register')">账号注册</el-button>
-        <el-button type="text">忘记密码？</el-button>
+        <el-button type="text" @click="forgetPwd">忘记密码？</el-button>
       </div>
     </div>
   </div>
@@ -61,6 +61,9 @@
             })
           }
         })
+      },
+      forgetPwd(){
+        this.$router.push('/forgetPassword')
       }
     },
   }

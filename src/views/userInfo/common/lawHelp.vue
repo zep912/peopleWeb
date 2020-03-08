@@ -37,19 +37,31 @@
 
     <div class="homeBox">
       <div class="homeAt">
-        <span class="homeNear">人民调解预约</span>
+        <span class="homeNear">法律援助预约</span>
         <span class="homeAccout">
           共有：
-          <span>{{total}}篇</span>
+          <span>{{pageform.total}}篇</span>
         </span>
       </div>
-      <ul>
-        <li v-for="(item,index) in list" :key="index">
+      <ul class="homeUl">
+        <li v-for="(item,index) in list" :key="index" @click="lawClick(item.applyId)">
           <span class="title">{{item.applyReason}}</span>
           <span class="time">{{item.appointmentDate}}</span>
           <span class="type" :class="item.applyStatus=='2'?'active':''">{{type(item.applyStatus)}}</span>
         </li>
       </ul>
+      <div style="text-align:right;margin-top:20px">
+<el-pagination
+        background
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="pageform.pageNum"
+        :page-size="pageform.pageSize"
+        layout="total, prev, pager, next"
+        :total="pageform.total"
+      >></el-pagination>
+      </div>
+      
     </div>
   </div>
 </template>
@@ -81,33 +93,42 @@ export default {
       resultList: [],
       value: "",
       list: [],
-      page: {
+      pageform: {
         pageSize: 10,
-        pageNum: 1
+        pageNum: 1,
+        total: 0
       },
-      total:0
     };
   },
   mounted() {
     this.getDict();
-    this.getData()
+    this.getData();
   },
   methods: {
+    handleSizeChange(val) {
+      this.pageform.pageNum = val;
+      this.getData();
+    },
+    handleCurrentChange(val) {
+      this.pageform.pageNum = val;
+      // this.active = this.proIndex
+      this.getData();
+    },
     type(n) {
       switch (n) {
         case 1:
           return "待响应";
         case 2:
           return "预约成功";
-          case 3:
-            return '预约失败'
+        case 3:
+          return "预约失败";
       }
     },
     getDict() {
       let obj = {
-        dictCode: "jiufenleixing", 
-        parentDictDataCode: "", 
-        userId: "111" 
+        dictCode: "jiufenleixing",
+        parentDictDataCode: "",
+        userId: "111"
       };
       this.$ajaxPost("/support/getDictionaryList", obj).then(res => {
         this.resultList = res.data.content.resultList;
@@ -115,17 +136,20 @@ export default {
     },
     getData() {
       let obj = {
-        token: this.$store.state.token, 
-        applyDate: "", 
-        applyStartDate: "", 
+        token: this.$store.state.token,
+        applyDate: "",
+        applyStartDate: "",
         applyEndDate: "",
         ...this.form,
         ...this.page
       };
-      this.$ajaxPost('/appointment/getOwnerLawAidList',obj).then(res=>{
-          this.list = res.data.content.dataList;
-          this.total = res.data.content.pageInfo.total;
-      })
+      this.$ajaxPost("/appointment/getOwnerLawAidList", obj).then(res => {
+        this.list = res.data.content.dataList;
+        this.pageform.total = res.data.content.pageInfo.total;
+      });
+    },
+    lawClick(id){
+      this.$router.push({path:'/user/lawConsult',query:{applyId:id}})
     }
   }
 };
@@ -178,7 +202,7 @@ export default {
       margin-right: 20px;
     }
   }
-  ul {
+  .homeUl {
     margin-top: 20px;
     li {
       height: 44px;
@@ -186,6 +210,7 @@ export default {
       overflow: hidden;
       border-bottom: 1px dashed #ccc;
       box-sizing: border-box;
+      cursor: pointer;
       // padding-right: 20px;
       .title {
         color: #10a1d4;

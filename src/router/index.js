@@ -61,6 +61,11 @@ const routes = [
         component: () => import('../views/userInfo/consult'),
       },
       {
+        path: '/user/lawConsult',
+        name: '调解预约',
+        component: () => import('../views/userInfo/lawConsult'),
+      },
+      {
         path: '/listLawer/lawerInfo',
         name: '律师详情',
         component: () => import('../views/lawer/lawerInfo')
@@ -74,6 +79,11 @@ const routes = [
         path: '/propaganda/video',
         name: '司法培训',
         component: () => import('../views/propaganda/video')
+      },
+      {
+        path: '/forgetPassword',
+        name: '忘记密码',
+        component: () => import('../views/forgetPwd')
       },
     ]
   },

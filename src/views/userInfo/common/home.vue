@@ -41,10 +41,10 @@
           <span>{{total}}篇</span>
         </span>
       </div>
-      <ul>
+      <ul class="homeUl">
         <li v-for="(item,index) in consultList" :key="index" @click="homeClick">
           <span>{{item.consultTitle}}</span>
-          <span class="time">{{item.consultDate}}</span>
+          <span class="time">{{item.consultDate.substring(0,10)}}</span>
         </li>
       </ul>
           <div class="footPage">
@@ -103,9 +103,9 @@ export default {
         ...this.page
       };
       this.$ajaxPost('/index/recentlyConsultList',obj).then(res=>{
-        if (res.code === 200) {
+        if (res.data.code === 200) {
           this.consultList = res.data.content.dataList;
-          // this.total = res.data.content.
+          console.log(this.consultList)
         }
       })
     }
@@ -167,7 +167,7 @@ export default {
       margin-right: 20px;
     }
   }
-  ul {
+  .homeUl {
     margin-top: 20px;
     li {
       height: 44px;

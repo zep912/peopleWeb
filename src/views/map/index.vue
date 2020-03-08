@@ -245,6 +245,7 @@ export default {
       this.boxShow = !this.boxShow;
     },
     getLawList() {
+      
       let obj = {
         token:this.$store.state.token,
         orgType: this.lawCommand, //类型：String  可有字段  备注：机构类型 1.律师事务所；2.法律援助中心；3.调委组织；4.司法鉴定；5.公证处；6.基层法律服务所；
