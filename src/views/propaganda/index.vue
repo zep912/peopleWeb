@@ -24,7 +24,7 @@
               <span class="lawTitles">{{navTitle}}</span>
               <span>
                 共计：
-                <span>{{num}}</span>篇
+                <span>{{pageform.total}}</span>篇
               </span>
             </div>
             <ul class="lawUl">
@@ -33,7 +33,15 @@
                 <span class="time">{{item.execDate}}</span>
               </li>
             </ul>
-            <el-pagination background layout="prev, pager, next" :total="total"></el-pagination>
+            <el-pagination
+              background
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :current-page="pageform.pageNum"
+              :page-size="pageform.pageSize"
+              layout="total, prev, pager, next"
+              :total="pageform.total"
+            >></el-pagination>
           </div>
           <Judicial v-show="!isShow"></Judicial>
         </el-col>
@@ -76,44 +84,62 @@ export default {
       num: 0,
       list: [],
       navTitle: "法律法规",
-      page: {
-        pageSize: 10,
-        pageNum: 1
-      }
+      pageform: {
+        pageSize:10,
+        pageNum: 1,
+        total: 0
+      },
+      types:'',
+      proIndex:''
     };
   },
   created() {},
   mounted() {
-    this.navClick({ name: "法律法规" }, 0);
+    this.navClick({ name: "法律法规" }, 1);
     this.active = 0;
   },
   methods: {
+    handleSizeChange(val) {
+      this.pageform.pageNum = val;
+      this.getData()
+    },
+    handleCurrentChange(val) {
+      this.pageform.pageNum = val;
+      this.active = this.proIndex
+      this.getData()
+    },
     lawClick(id) {
-      this.$router.push({path:'/propaganda/getInfo',query:{id:id}})
+      this.$router.push({ path: "/propaganda/getInfo", query: { id: id } });
     },
     navClick(n, type, index) {
+      this.types = type;
+      this.proIndex = index
       this.active = index;
+      this.pageform.pageNum=1
       if (type != 4) {
         this.isShow = true;
         this.navTitle = n.name;
-        let obj = {
-          scopeLevel: "",
-          lawTimeliness: "",
-          lawTitle: "",
-          docType: type,
-          ...this.page
-        };
-        this.$ajaxPost("/doc/lawRegulations/getLawRegulationsList", obj).then(
-          res => {
-            this.list = res.data.content.dataList;
-            this.total = res.data.content.pageInfo.total;
-            this.num = this.total
-          }
-        );
+        this.getData()
       } else {
         this.isShow = false;
         return;
       }
+    },
+    getData(){
+      let obj = {
+          scopeLevel: "",
+          lawTimeliness: "",
+          lawTitle: "",
+          docType: this.types,
+          pageNum: this.pageform.pageNum,
+          pageSize: this.pageform.pageSize
+        };
+        this.$ajaxPost("/doc/lawRegulations/getLawRegulationsList", obj).then(
+          res => {
+            this.list = res.data.content.dataList;
+            this.pageform.total = res.data.content.pageInfo.total;
+          }
+        );
     }
   }
 };

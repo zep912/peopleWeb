@@ -21,7 +21,7 @@
               <span class="lawTitles">{{navTitle}}</span>
               <span>
                 共计：
-                <span>{{num}}</span>篇
+                <span>{{pageform.total}}</span>篇
               </span>
             </div>
             <ul class="lawUl">
@@ -30,7 +30,15 @@
                 <span class="time">{{item.publishTime}}</span>
               </li>
             </ul>
-            <el-pagination background layout="prev, pager, next" :total="total"></el-pagination>
+            <el-pagination
+              background
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :current-page="pageform.pageNum"
+              :page-size="pageform.pageSize"
+              layout="total, prev, pager, next"
+              :total="pageform.total"
+            >></el-pagination>
           </div>
         </el-col>
       </el-row>
@@ -75,11 +83,13 @@ export default {
       num: "1000",
       list: [],
       navTitle: "组织机构",
-      page: {
-        pageSize: 10,
-        pageNum: 1
+      pageform: {
+        pageSize:10,
+        pageNum: 1,
+        total: 0
       },
-      total:0
+      types:'',
+      proIndex:''
     };
   },
   created() {},
@@ -90,19 +100,32 @@ export default {
     lawClick(id) {
       this.$router.push({path:'/propaganda/getInfo',query:{id:id}})
     },
+    handleSizeChange(val) {
+      this.pageform.pageNum = val;
+      this.getData()
+    },
+    handleCurrentChange(val) {
+      this.pageform.pageNum = val;
+      this.active = this.proIndex
+      this.getData()
+    },
     navClick(n,index,type) {
       this.active = index;
       this.navTitle = n.name;
-        let obj = {
-          token: "64d1d05f5ccb4670a6d342f3b3c002ce", //类型：String  可有字段  备注：token 用户身份标识
-          newsType: type, //类型：String  必有字段  备注：资讯类型 1：组织机构；2：公示信息；3：通知公告；4：新闻资讯；5：办事指南；6：征求意见；7：政务公开
-          ...this.page
+      this.types = type;
+      this.proIndex = index
+      this.pageform.pageNum=1;
+      this.getData()
+    },
+    getData(){
+      let obj = {
+          newsType: this.types, //类型：String  必有字段  备注：资讯类型 1：组织机构；2：公示信息；3：通知公告；4：新闻资讯；5：办事指南；6：征求意见；7：政务公开
+          pageNum: this.pageform.pageNum,
+          pageSize: this.pageform.pageSize
         };
         this.$ajaxPost("/doc/news/getOpenNewsList", obj).then(res => {
-          console.log(res);
           this.list = res.data.content.dataList;
-          this.num = res.data.content.pageInfo.total;
-          this.total = this.num;
+          this.pageform.total = res.data.content.pageInfo.total;
         });
     }
   }

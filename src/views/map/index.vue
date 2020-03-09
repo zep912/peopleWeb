@@ -5,7 +5,7 @@
         <el-col :span="8" v-show="boxShow">
           <el-input
             placeholder="请输入想要搜索机构名称"
-            v-model="input1"
+            v-model="form.orgName"
             prefix-icon="el-icon-search"
             style="width:75%"
           ></el-input>
@@ -20,13 +20,17 @@
                 <el-dropdown-item>黄金糕</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-            <el-dropdown>
+            <el-dropdown @command="handleCommand">
               <span class="el-dropdown-link">
                 机构类别
                 <i class="el-icon-arrow-down el-icon--right"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>黄金糕</el-dropdown-item>
+                <el-dropdown-item
+                  v-for="(item,index) in orgList"
+                  :key="index"
+                  :command="item.value"
+                >{{item.label}}</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
             <span class="maparea-arrow">
@@ -89,13 +93,6 @@
           </el-form>
         </el-col>
         <el-col :span="16">
-          <!-- <baidu-map
-            class="bm-view"
-            ak="u6vzTey4WMBeVAbC3SokRMGT3br2sejy"
-            :center="center"
-            :zoom="zoom"
-            @ready="handler"
-          ></baidu-map> -->
           <baseMap></baseMap>
         </el-col>
       </el-row>
@@ -104,17 +101,16 @@
 </template>
 
 <script>
-// import BaiduMap from "vue-baidu-map/components/map/Map.vue";
-import baseMap from '@/components/map'
+import baseMap from "@/components/map";
 export default {
   components: {
-    // BaiduMap,
     baseMap
   },
   data() {
     return {
       form: {
-        name: "诚信泰律师事务所"
+        orgName: "",
+        orgType: ""
       },
       boxShow: true,
       organShow: true,
@@ -126,6 +122,32 @@ export default {
         lat: "39.915"
       },
       zoom: 3,
+      orgList: [
+        {
+          value: "1",
+          label: "律师事务所"
+        },
+        {
+          value: "2",
+          label: "法律援助中心"
+        },
+        {
+          value: "3",
+          label: "调委组织"
+        },
+        {
+          value: "4",
+          label: "司法鉴定"
+        },
+        {
+          value: "5",
+          label: "公证处"
+        },
+        {
+          value: "6",
+          label: "基层法律事务所"
+        }
+      ],
       mapTreeList: [
         {
           city: "宏伟区",
@@ -191,10 +213,18 @@ export default {
           num: 100,
           title: "基层法律服务所"
         }
-      ]
+      ],
+      lawCommand:0,
+      pageform: {
+        pageSize:10,
+        pageNum: 1,
+        total: 0
+      },
     };
   },
-  mounted() {},
+  mounted() {
+    this.getLawList()
+  },
   methods: {
     handler({ BMap, map }) {
       console.log(BMap, map);
@@ -206,9 +236,28 @@ export default {
       console.log(id);
       this.organShow = !this.organShow;
     },
+    handleCommand(n) {
+      this.lawCommand = n,
+      this.getLawList()
+    },
     organClick(id) {
       console.log(id);
       this.boxShow = !this.boxShow;
+    },
+    getLawList() {
+      
+      let obj = {
+        token:this.$store.state.token,
+        orgType: this.lawCommand, //类型：String  可有字段  备注：机构类型 1.律师事务所；2.法律援助中心；3.调委组织；4.司法鉴定；5.公证处；6.基层法律服务所；
+        orgName: this.form.orgName, //类型：String  可有字段  备注：名称
+        areaRegionId: "", //类型：String  可有字段  备注：所属区ID
+        areaStreetId: "", //类型：String  可有字段  备注：所属街道ID
+        pageNum: this.pageform.pageNum,
+        pageSize: this.pageform.pageSize
+      };
+      this.$ajaxPost('/lawOrg/getLawOrgList',obj).then(res=>{
+        console.log(res)
+      })
     }
   }
 };

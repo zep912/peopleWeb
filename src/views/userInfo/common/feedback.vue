@@ -1,17 +1,17 @@
 <template>
   <div class="feedback">
     <span class="title">意见反馈</span>
-    <el-form label-width="80px" :model="form">
-      <el-form-item label="标题:">
+    <el-form label-width="100px" :model="form" ref="ruleForm" :rules="ruleForm">
+      <el-form-item label="标题:" prop="feeTitle">
         <el-input placeholder="请输入" v-model="form.feeTitle"></el-input>
       </el-form-item>
-      <el-form-item label="反馈内容:">
+      <el-form-item label="反馈内容:" prop="feeContent">
         <el-input type="textarea" :rows="10" v-model="form.feeContent"></el-input>
       </el-form-item>
     </el-form>
     <div class="footBtn">
-      <el-button class="save" @click="save">提交</el-button>
-      <el-button class="quit">取消</el-button>
+      <el-button class="save" @click="save('ruleForm')">提交</el-button>
+      <el-button class="quit" @click="quit('ruleForm')">取消</el-button>
     </div>
   </div>
 </template>
@@ -24,28 +24,36 @@ export default {
       form: {
         feeTitle: "",
         feeContent: ""
+      },
+      ruleForm: {
+        feeTitle: [{ required: true, message: "请填写标题", trigger: "blur" }],
+        feeContent: [{ required: true, message: "请填写标题", trigger: "blur" }]
       }
     };
   },
   methods: {
-    save() {
-      let obj = {
-        token: this.$store.state.token, //类型：String  必有字段  备注：用户身份标识
-        ...this.form,
-        feeModel: "1" //类型：String  必有字段  备注：固定值填1
-      };
-      this.$ajaxPost("/suggest/saveSuggestFeedback", obj).then(res => {
-        if (res.data.code == 200) {
-          this.$message({
-            message: "提交成功",
-            center: true
+    save(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          let obj = {
+            token: this.$store.state.token, //类型：String  必有字段  备注：用户身份标识
+            ...this.form,
+            feeModel: "1" //类型：String  必有字段  备注：固定值填1
+          };
+          this.$ajaxPost("/suggest/saveSuggestFeedback", obj).then(res => {
+            if (res.data.code == 200) {
+              this.$message.success("提交成功");
+              this.$refs[formName].resetFields();
+            }
           });
-          this.form = {
-             feeTitle: "",
-        feeContent: ""
-          }
+        } else {
+          console.log("error submit!!");
+          return false;
         }
       });
+    },
+    quit(formName){
+      this.$refs[formName].resetFields();
     }
   }
 };
