@@ -407,12 +407,12 @@
             }
           });
         } else {
-          // const {appointmentDate, appointmentTime, token, lawOrgId} = this.appointment;
-          // const res = await this.$ajaxPost('/appointment/getAppointmentTime', {appointmentDate, appointmentTime, lawOrgId, token});
-          // if (res.data.code === 200) {
-          //   if (res.data.dataList && res.data.dataList.length && res.data.dataList[0].appointmentCount > 0) {
-              let appointment = Object.assign({}, this.appointment);
-              appointment.appointmentDate = appointment.appointmentDate.slice(0, 10);
+          let appointment = Object.assign({}, this.appointment);
+          const {appointmentDate, appointmentTime, token, lawOrgId} = appointment;
+          appointment.appointmentDate = appointment.appointmentDate.slice(0, 10);
+          const res = await this.$ajaxPost('/appointment/getAppointmentTime', {appointmentDate, appointmentTime, lawOrgId, token});
+          if (res.data.code === 200) {
+            if (res.data.dataList && res.data.dataList.length && res.data.dataList[0].appointmentCount > 0) {
               const applyArray = this.appointment.appelleeArray;
               const appelleeArray = this.appointment.appelleeArray;
               if (applyArray && applyArray.length) {
@@ -426,13 +426,13 @@
                 appointment.appelleeStreetId = appelleeArray[2];
               }
               this.submit(formName, appointment);
-            // } else {
-            //   this.$message.error('该机构这个时间已约满');
-            //   return false;
-            // }
-          // } else {
-          //   return false;
-          // }
+            } else {
+              this.$message.error('该机构这个时间已约满');
+              return false;
+            }
+          } else {
+            return false;
+          }
         }
       },
       submit(formName, form) {
