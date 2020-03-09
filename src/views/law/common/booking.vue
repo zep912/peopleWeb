@@ -5,7 +5,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="申请人">
-              <el-input v-model="form.userName" disabled></el-input>
+              <el-input v-model="form.applyName" disabled></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -407,11 +407,12 @@
             }
           });
         } else {
-          const {appointmentDate, appointmentTime, token, lawOrgId} = this.appointment;
-          const res = await this.$ajaxPost('/appointment/getAppointmentTime', {appointmentDate, appointmentTime, lawOrgId, token});
-          if (res.data.code === 200) {
-            if (res.data.dataList && res.data.dataList.length && res.data.dataList[0].appointmentCount > 0) {
+          // const {appointmentDate, appointmentTime, token, lawOrgId} = this.appointment;
+          // const res = await this.$ajaxPost('/appointment/getAppointmentTime', {appointmentDate, appointmentTime, lawOrgId, token});
+          // if (res.data.code === 200) {
+          //   if (res.data.dataList && res.data.dataList.length && res.data.dataList[0].appointmentCount > 0) {
               let appointment = Object.assign({}, this.appointment);
+              appointment.appointmentDate = appointment.appointmentDate.slice(0, 10);
               const applyArray = this.appointment.appelleeArray;
               const appelleeArray = this.appointment.appelleeArray;
               if (applyArray && applyArray.length) {
@@ -425,13 +426,13 @@
                 appointment.appelleeStreetId = appelleeArray[2];
               }
               this.submit(formName, appointment);
-            } else {
-              this.$message.error('该机构这个时间已约满');
-              return false;
-            }
-          } else {
-            return false;
-          }
+            // } else {
+            //   this.$message.error('该机构这个时间已约满');
+            //   return false;
+            // }
+          // } else {
+          //   return false;
+          // }
         }
       },
       submit(formName, form) {
@@ -439,13 +440,14 @@
           if (valid) {
             this.$ajaxPost(`/appointment/${formName === 'form' ? 'saveLawAidAppointment' : 'saveAppointmentMediate'}`, form).then(({data}) => {
               if (data.code === 200) {
+                const {applyName, applyPhone} = form;
                 if (this.tabName !== 'law') {
-                  this.form = {token: this.$store.getters.token, identityTypeList: '', areaArray: [], fileList: [], appelleeArray: []};
-                } else {
-                  this.form = {token: this.$store.getters.token, identityTypeList: '', areaArray: [], fileList: [], appelleeArray: []};
+                  this.appointment = {token: this.$store.getters.token, applyName, applyPhone, identityTypeList: [], areaArray: [], fileList: []};
                   this.imageUrls = {idCard: '', dibao: '', hard: '', rest: ''};
-                  this.params = {pageNum: 1, pageSize: 4, total: 0};
                   this.fileObj = {idCard: {}, dibao: {}, hard: {}, rest: {}};
+                } else {
+                  this.form = {token: this.$store.getters.token, applyName, applyPhone, aplayArray: [], appelleeArray: []};
+                  this.params = {pageNum: 1, pageSize: 4, total: 0};
                 }
                 this.$nextTick(() => {
                   this.$refs[formName].clearValidate();
@@ -469,7 +471,7 @@
       this.getDictionaryList('jiufenqingkuang', 'disputeTypeList');
       this.form.token = this.$Cookies.get('token');
       const {userName, mobilePhone} = this.$store.state.userInfo;
-      this.form.userName = userName;
+      this.form.applyName = userName;
       this.form.applyPhone = mobilePhone;
       this.appointment.applyName = userName;
       this.appointment.applyPhone = mobilePhone;
