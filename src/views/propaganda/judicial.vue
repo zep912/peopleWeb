@@ -100,18 +100,18 @@
         :key="index"
         ref="judLi"
         :class="imgShow?'':'lump'"
-        @click="toVideo(item.id)"
+        @click="toVideo(item.planId)"
       >
-        <img :src="item.img" alt />
+        <img :src="item.couCover?item.couCover:''" alt />
         <div class="judi-cours">
           <p>
             <span v-show="imgShow">课件标题:</span>
-            <span>{{item.title}}</span>
+            <span>{{item.couName}}</span>
           </p>
 
           <div class="judic-info" v-show="imgShow">
             <span>课件简介:</span>
-            <span>{{item.contentTypeList}}</span>
+            <span>{{item.cusDesc}}</span>
           </div>
         </div>
       </li>
@@ -150,38 +150,7 @@ export default {
         orderType: ""
       },
       imgShow: true,
-      list: [
-        {
-          img:
-            "http://59.44.27.201:8888/group1/M00/00/70/wKgAaF41W06APFbDAA5Ar5VE-d0142.jpg    ",
-          title: "施工安全生产责任和安全生产教育培训制度",
-          contentTypeList: "XXXXX"
-        },
-        {
-          img:
-            "http://59.44.27.201:8888/group1/M00/00/70/wKgAaF41W06APFbDAA5Ar5VE-d0142.jpg    ",
-          title: "施工安全生产责任和安全生产教育培训制度",
-          contentTypeList: "XXXXX"
-        },
-        {
-          img:
-            "http://59.44.27.201:8888/group1/M00/00/70/wKgAaF41W06APFbDAA5Ar5VE-d0142.jpg    ",
-          title: "施工安全生产责任和安全生产教育培训制度",
-          contentTypeList: "XXXXX"
-        },
-        {
-          img:
-            "http://59.44.27.201:8888/group1/M00/00/70/wKgAaF41W06APFbDAA5Ar5VE-d0142.jpg    ",
-          title: "施工安全生产责任和安全生产教育培训制度",
-          contentTypeList: "XXXXX"
-        },
-        {
-          img:
-            "http://59.44.27.201:8888/group1/M00/00/70/wKgAaF41W06APFbDAA5Ar5VE-d0142.jpg    ",
-          title: "施工安全生产责任和安全生产教育培训制度",
-          contentTypeList: "XXXXX"
-        }
-      ],
+      list: [],
       page: {
         pageNum: 1,
         pageSize: 10
@@ -258,6 +227,8 @@ export default {
       };
       this.$ajaxPost("/train/getPublicTrainList", obj).then(res => {
         console.log(res, 111);
+        this.list = res.data.content.dataList
+
       });
     },
     toVideo(id) {
@@ -335,11 +306,17 @@ export default {
 }
 .judicial-ul {
   margin-top: 20px;
+  overflow: hidden;
   .lump {
     width: 32%;
     float: left;
-    background: inherit;
+    background: #fff;
     padding: 0;
+    padding-bottom: 10px;
+    border-top: 0;
+    border-bottom:0;
+    overflow: hidden;
+    padding-top: 10px;
     .judi-cours {
       margin-left: 0;
     }
@@ -372,8 +349,17 @@ export default {
   }
 }
 .judicial-ul li img {
-  width: 250px;
+  width: 150px;
   height: 150px;
   float: left;
+}
+.judicial-ul .lump img {
+  width: 150px;
+  height: 150px;
+  display: block;
+  margin: 0 auto;
+  float: initial;
+  margin-bottom: 10px;
+  // float: left;
 }
 </style>

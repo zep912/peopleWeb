@@ -1,9 +1,9 @@
 <template>
   <div class="video">
-    <h2>{{form.title}}</h2>
+    <h2>{{form.couName}}</h2>
     <el-row>
       <el-col :span="16">
-        <video :src="form.video"></video>
+        <video :src="form.playUrl" :poster="form.cusCover"></video>
       </el-col>
       <el-col :span="6">
         <h4>课件信息</h4>
@@ -17,10 +17,10 @@
         </p>
         <p>
           <span>视频时长:</span>
-          <span>{{form.duration}}</span>
+          <span>{{form.videoDuration}}</span>
         </p>
-        <p>课程简介</p>
-        <p>{{form.content}}</p>
+        <p>课程简介:</p>
+        <p>{{form.cusDesc}}</p>
       </el-col>
     </el-row>
   </div>
@@ -42,8 +42,20 @@ export default {
     };
   },
   created() {},
-  mounted() {},
-  methods: {}
+  mounted() {
+    this.getData()
+  },
+  methods: {
+    getData(){
+      let obj = {
+        planId:this.$router.currentRoute.query.id
+      };
+      this.$ajaxPost('/train/getPublicTrainVideo',obj).then(res=>{
+        console.log(res)
+        this.form = res.data.content
+      })
+    }
+  }
 };
 </script>
 

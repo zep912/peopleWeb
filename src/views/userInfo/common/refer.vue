@@ -40,11 +40,11 @@
         <span class="homeNear">免费咨询</span>
         <span class="homeAccout">
           共有：
-          <span>{{total}}篇</span>
+          <span>{{pageform.total}}篇</span>
         </span>
       </div>
       <ul class="referUl">
-        <li v-for="(item,index) in list" :key="index">
+        <li v-for="(item,index) in list" :key="index" @click="referConsultClick(item.consultId,item.consultStatus)">
           <span>{{item.questionTitle}}</span>
           <span class="time">{{item.createTime}}</span>
 
@@ -52,15 +52,15 @@
         </li>
       </ul>
       <div class="footPage">
-              <el-pagination
-        background
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="pageform.pageNum"
-        :page-size="pageform.pageSize"
-        layout="total, prev, pager, next"
-        :total="pageform.total"
-      >></el-pagination>
+        <el-pagination
+          background
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="pageform.pageNum"
+          :page-size="pageform.pageSize"
+          layout="total, prev, pager, next"
+          :total="pageform.total"
+        >></el-pagination>
       </div>
     </div>
   </div>
@@ -71,12 +71,6 @@ export default {
   name: "refer",
   data() {
     return {
-      options: [
-        {
-          value: "选项1",
-          label: "黄金糕"
-        }
-      ],
       form: {
         questionType: "",
         questionTitle: ""
@@ -129,26 +123,30 @@ export default {
     search() {},
     handleSizeChange(val) {
       this.pageform.pageNum = val;
-      this.getData();
+      this.getOwnerConsultList();
     },
     handleCurrentChange(val) {
       this.pageform.pageNum = val;
-      this.getData();
+      this.getOwnerConsultList();
     },
     getOwnerConsultList() {
       let obj = {
         token: this.$store.state.token,
         consultType: "1",
         ...this.form,
-        consultStatus:'',
+        consultStatus: "",
         createTime: "", //类型：String  可有字段  备注：咨询时间 格式yyyy-MM-dd
-        ...this.page
+        pageNum:this.pageform.pageNum,
+        pageSize:this.pageform.pageSize,
       };
       this.$ajaxPost("/consult/getOwnerConsultList", obj).then(res => {
         console.log(res);
         this.list = res.data.content.dataList;
         this.pageform.total = res.data.content.pageInfo.total;
       });
+    },
+    referConsultClick(id,status){
+      this.$router.push({path:'/user/consult',query:{id:id,token:this.$store.state.token,status:status}})
     },
     type(n) {
       switch (n) {

@@ -41,10 +41,22 @@
     <!-- 选择 -->
     <div class="lawSec">
       <div class="lawSecFour">
-        <span :class="setClass('1')" @click="searchSort('1')">咨询量<i class="el-icon-caret-bottom"></i></span>
-        <span :class="setClass('2')" @click="searchSort('2')">满意度<i class="el-icon-caret-bottom"></i></span>
-        <span :class="setClass('3')" @click="searchSort('3')">接案率<i class="el-icon-caret-bottom"></i></span>
-        <span :class="setClass('4')" @click="searchSort('4')">结案率<i class="el-icon-caret-bottom"></i></span>
+        <span :class="setClass('1')" @click="searchSort('1')">
+          咨询量
+          <i class="el-icon-caret-bottom"></i>
+        </span>
+        <span :class="setClass('2')" @click="searchSort('2')">
+          满意度
+          <i class="el-icon-caret-bottom"></i>
+        </span>
+        <span :class="setClass('3')" @click="searchSort('3')">
+          接案率
+          <i class="el-icon-caret-bottom"></i>
+        </span>
+        <span :class="setClass('4')" @click="searchSort('4')">
+          结案率
+          <i class="el-icon-caret-bottom"></i>
+        </span>
       </div>
       <div class="lawTotal">
         <span>共计：</span>
@@ -53,7 +65,7 @@
     </div>
     <!-- 律师信息 -->
     <div class="lawerList">
-      <ul>
+      <ul class="lawerUl">
         <li v-for="(item,index) in lawList" :key="index" @click="lawerClick(item.lawyerId)">
           <div class="lawerImg">
             <img :src="item.photoUrl" alt />
@@ -88,9 +100,17 @@
           </div>
         </li>
       </ul>
-    </div>
-    <div class="footPage">
-      <el-pagination background layout="prev, pager, next" :total="lawyerRequest.total"></el-pagination>
+      <div class="footPage">
+        <el-pagination
+          background
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="lawyerRequest.pageNum"
+          :page-size="lawyerRequest.pageSize"
+          layout="total, prev, pager, next"
+          :total="lawyerRequest.total"
+        >></el-pagination>
+      </div>
     </div>
   </div>
 </template>
@@ -107,12 +127,12 @@ export default {
       list: [],
       areaRegionList: [],
       lawyerRequest: {
-        pageNum: '1',
-        pageSize: '12',
+        pageNum: 1,
+        pageSize: 12,
         total: 0,
-        keyWord: '',
-        sortModel: '1',
-        sortType: '1'
+        keyWord: "",
+        sortModel: "1",
+        sortType: "1"
       },
       lawList: [],
       adeptSpecialtyList: []
@@ -125,8 +145,16 @@ export default {
     this.getDictionaryList("shanchangzhuangye", "adeptSpecialtyList", true);
   },
   methods: {
+    handleSizeChange(val) {
+      this.lawyerRequest.pageNum = val;
+      this.getValidLawyerList();
+    },
+    handleCurrentChange(val) {
+      this.lawyerRequest.pageNum = val;
+      this.getValidLawyerList();
+    },
     search() {
-      this.lawyerRequest.pageNum = '1';
+      this.lawyerRequest.pageNum = "1";
       this.getValidLawyerList();
     },
     getDictionaryList(dictCode, typeName, flag) {
@@ -143,14 +171,20 @@ export default {
       });
     },
     setClass(sortModel) {
-      return {active: this.lawyerRequest.sortModel === sortModel, 'sort-bottom': this.lawyerRequest.sortModel === sortModel && this.lawyerRequest.sortType === '2'}
+      return {
+        active: this.lawyerRequest.sortModel === sortModel,
+        "sort-bottom":
+          this.lawyerRequest.sortModel === sortModel &&
+          this.lawyerRequest.sortType === "2"
+      };
     },
     searchSort(sortModel) {
       if (this.lawyerRequest.sortModel === sortModel) {
-        this.lawyerRequest.sortType = this.lawyerRequest.sortType === '1' ? '2' : '1';
+        this.lawyerRequest.sortType =
+          this.lawyerRequest.sortType === "1" ? "2" : "1";
       } else {
         this.lawyerRequest.sortModel = sortModel;
-        this.lawyerRequest.sortType = '1';
+        this.lawyerRequest.sortType = "1";
       }
       this.getValidLawyerList();
     },
@@ -178,9 +212,7 @@ export default {
             );
           }
         }
-
       );
-
     },
     lawerClick(id) {
       this.$router.push({ path: "./listLawer/lawerInfo", query: { id: id } });
@@ -197,6 +229,7 @@ export default {
 .lawer {
   width: 85%;
   margin: 0 auto;
+  overflow: hidden;
   .lawer-menu {
     margin-top: 20px;
     margin-bottom: 20px;
@@ -233,7 +266,7 @@ export default {
         border: 1px solid #ccc;
         cursor: pointer;
         &.active {
-          color: #1982C6;
+          color: #1982c6;
         }
         &.sort-bottom {
           i {
@@ -251,10 +284,10 @@ export default {
 }
 .lawerList {
   padding-bottom: 20px;
-  ul {
+  .lawerUl {
     overflow: hidden;
   }
-  ul li {
+  .lawerUl li {
     width: 33%;
     background: #fff;
     border: 1px solid #ccc;
@@ -265,7 +298,7 @@ export default {
     margin-bottom: 0.5%;
     font-size: 14px;
   }
-  ul li:nth-of-type(3n) {
+  .lawerUl li:nth-of-type(3n) {
     margin-right: 0;
   }
   .lawerImg {

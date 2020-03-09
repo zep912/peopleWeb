@@ -38,18 +38,26 @@
         <span class="homeNear">近期咨询</span>
         <span class="homeAccout">
           共有：
-          <span>{{total}}篇</span>
+          <span>{{pageform.total}}篇</span>
         </span>
       </div>
       <ul class="homeUl">
-        <li v-for="(item,index) in consultList" :key="index" @click="homeClick">
+        <li v-for="(item,index) in consultList" :key="index">
           <span>{{item.consultTitle}}</span>
           <span class="time">{{item.consultDate.substring(0,10)}}</span>
         </li>
       </ul>
-          <div class="footPage">
-      <el-pagination background layout="prev, pager, next" :total="lawyerRequest.total"></el-pagination>
-    </div>
+      <div class="footPage">
+        <el-pagination
+          background
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="pageform.pageNum"
+          :page-size="pageform.pageSize"
+          layout="total, prev, pager, next"
+          :total="pageform.total"
+        >></el-pagination>
+      </div>
     </div>
   </div>
 </template>
@@ -59,8 +67,8 @@ export default {
   name: "home",
   data() {
     return {
-      lawyerRequest:{
-        total: 0,
+      lawyerRequest: {
+        total: 0
       },
       form: {
         feedbackCout: "",
@@ -70,44 +78,55 @@ export default {
         mediateCout: ""
       },
       list: [],
-      token:'',
-      page:{
-        pageSize:5,
-        pageNum:1
+      token: "",
+      pageform: {
+        pageSize: 5,
+        pageNum: 1,
+        total: 0
       },
-      total: 0,
-      consultList:[]
+      consultList: []
     };
   },
   mounted() {
-    this.token = this.$store.state.token
-    // this.getIndexData();
-    this.getCousultList()
+    this.token = this.$store.state.token;
+    this.getIndexData();
+    this.getCousultList();
   },
   methods: {
-    homeClick() {
-      this.$router.push("/user/consult");
+    handleSizeChange(val) {
+      this.pageform.pageNum = val;
+      this.getCousultList();
+    },
+    handleCurrentChange(val) {
+      this.pageform.pageNum = val;
+      this.getCousultList();
     },
     getIndexData() {
       this.$ajaxPost("/index/indexData", {
         token: this.token
       }).then(res => {
         if (res.data.code == 200) {
-          this.form = res.data.content.countData;
+          if (JSON.stringify(res.data.content) == "{}") {
+            this.form = {};
+          } else {
+            this.form = res.data.content.countData;
+          }
         }
       });
     },
-    getCousultList(){
+    getCousultList() {
       let obj = {
-        token:this.token,
-        ...this.page
+        token: this.token,
+        pageSize: this.pageform.pageSize,
+        pageNum: this.pageform.pageNum
       };
-      this.$ajaxPost('/index/recentlyConsultList',obj).then(res=>{
+      this.$ajaxPost("/index/recentlyConsultList", obj).then(res => {
         if (res.data.code === 200) {
           this.consultList = res.data.content.dataList;
-          console.log(this.consultList)
+          console.log(this.consultList);
+          this.pageform.total = res.data.content.pageInfo.total;
         }
-      })
+      });
     }
   }
 };
@@ -193,7 +212,7 @@ export default {
     }
   }
 }
-.footPage{
+.footPage {
   text-align: right;
 }
 </style>
