@@ -27,8 +27,10 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="10" :offset="1" class="referInput">
-            <el-input placeholder="请输入" style="width:220px" v-model="form.questionTitle"></el-input>
+          <el-col :span="8" :offset="1" class="referInput">
+            <el-input placeholder="请输入" v-model="form.questionTitle"></el-input>
+          </el-col>
+          <el-col :span="3">
             <el-button class="referBtn" @click="search">搜索</el-button>
           </el-col>
         </el-row>
@@ -92,7 +94,7 @@ export default {
           value: "3"
         },
         {
-          label: "已评价",
+          label: "已完结",
           value: "4"
         },
         {
@@ -145,8 +147,8 @@ export default {
         this.pageform.total = res.data.content.pageInfo.total;
       });
     },
-    referConsultClick(id,status){
-      this.$router.push({path:'/user/consult',query:{id:id,token:this.$store.state.token,status:status}})
+    referConsultClick(id, status){
+      if (![1, 4].includes(status)) this.$router.push({path:'/user/consult',query:{id, status, isPay: false}})
     },
     type(n) {
       switch (n) {
@@ -157,7 +159,7 @@ export default {
         case 3:
           return "待评价";
         case 4:
-          return "已评价";
+          return "已完结";
         case 5:
           return "律师拒绝";
         case 6:
@@ -241,6 +243,7 @@ export default {
       overflow: hidden;
       border-bottom: 1px dashed #ccc;
       box-sizing: border-box;
+      cursor: pointer;
       // padding-right: 20px;
       .type {
         float: right;

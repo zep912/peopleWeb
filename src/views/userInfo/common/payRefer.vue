@@ -27,8 +27,10 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="10" :offset="1" class="referInput">
-            <el-input placeholder="请输入" style="width:220px" v-model="form.questionTitle"></el-input>
+          <el-col :span="8" :offset="1" class="referInput">
+            <el-input placeholder="请输入" v-model="form.questionTitle"></el-input>
+          </el-col>
+          <el-col :span="3">
             <el-button class="referBtn" @click="search">搜索</el-button>
           </el-col>
         </el-row>
@@ -44,7 +46,7 @@
         </span>
       </div>
       <ul class="referUl">
-        <li v-for="(item,index) in list" :key="index">
+        <li v-for="(item,index) in list" :key="index" @click="referConsultClick(item.consultId,item.consultStatus)">
           <span>{{item.questionTitle}}</span>
           <span class="time">{{item.createTime}}</span>
 
@@ -90,7 +92,7 @@ export default {
           value: "3"
         },
         {
-          label: "已评价",
+          label: "已完结",
           value: "4"
         },
         {
@@ -137,7 +139,7 @@ export default {
         case 3:
           return "待评价";
         case 4:
-          return "已评价";
+          return "已完结";
         case 5:
           return "律师拒绝";
         case 6:
@@ -156,7 +158,10 @@ export default {
           this[typeName] = defaultArr.concat(data.content.resultList);
         }
       });
-    }
+    },
+    referConsultClick(id,status){
+      if (![1, 4].includes(status)) this.$router.push({path:'/user/consult',query:{id, status, isPay: true}})
+    },
   }
 };
 </script>
@@ -221,6 +226,7 @@ export default {
       overflow: hidden;
       border-bottom: 1px dashed #ccc;
       box-sizing: border-box;
+      cursor: pointer;
       // padding-right: 20px;
       .type {
         float: right;

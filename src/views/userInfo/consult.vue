@@ -3,50 +3,39 @@
     <div class="consultHead">
       <div class="stepTitle">
         <span v-for='(item,index) in form.flowAxis' :key='index'>[{{item.taskName}}]</span>
-        <!-- <span>[{{form.flowAxis[0].taskName}}]</span>
-        <span>[{{form.flowAxis[1].taskName}}]</span>
-        <span>[服务评价]</span> -->
       </div>
       <el-steps :active="2" align-center :space="200">
         <el-step :title="item.disposeName" v-for='(item,index) in form.flowAxis' :key='index' :description='item.disposeTime.substring(0,10)' ></el-step>
-        <!-- <el-step :title="form.flowAxis[0].disposeName" description="2020-01-01 10:10"></el-step>
-        <el-step :title="form.flowAxis[1].disposeName" description="2020-01-01 10:10"></el-step>
-        <el-step title="张三" description="2020-01-01 10:10"></el-step>
-        <div style></div> -->
       </el-steps>
     </div>
     <div style="width:100%;height:20px;"></div>
     <div class="userConsultContent">
-      <!-- 免费咨询 -->
+      <!-- 我的咨询问题 -->
       <div class="freeConsult consultBox" style="margin-top:0">
-        <h3>免费咨询</h3>
+        <h3>{{$route.query.isPay ? '针对咨询' : '免费咨询'}}</h3>
         <div class="freeBox borderTop">
           <el-form :model="form" label-width="80px">
             <el-row>
-              <el-form-item label="标题:">{{form.consultInfo?form.consultInfo.questionTitle:''}}</el-form-item>
+              <el-form-item label="标题:">{{form.consultInfo.questionTitle}}</el-form-item>
             </el-row>
             <el-row>
-              <el-form-item label="问题类型:">{{form.consultInfo?form.consultInfo.questionType:''}}</el-form-item>
+              <el-form-item label="问题类型:">{{form.consultInfo.questionType}}</el-form-item>
             </el-row>
             <el-row>
               <el-form-item label="问题描述:">
-                <el-input
-                  type="textarea"
-                  :rows="6"
-                  :model="form.consultInfo?form.consultInfo.questionDesc:''"
-                ></el-input>
+                <el-input type="textarea" :rows="6" disabled v-model="form.consultInfo.questionDesc"></el-input>
               </el-form-item>
             </el-row>
             <el-row>
               <el-col :span="6">
-                <el-form-item label="姓名:">{{form.name}}</el-form-item>
+                <el-form-item label="姓名:">{{}}</el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="手机号码:">{{form.consultInfo?form.consultInfo.personPhone:''}}</el-form-item>
+                <el-form-item label="手机号码:">{{form.consultInfo.personPhone}}</el-form-item>
               </el-col>
             </el-row>
             <el-row>
-              <el-form-item label="住址:">{{form.address}}</el-form-item>
+              <el-form-item label="住址:">{{}}</el-form-item>
             </el-row>
             <el-row>
               <el-form-item label="照片:">
@@ -57,28 +46,29 @@
         </div>
       </div>
       <!-- 律师确认 -->
-      <div class="lawerAnswer consultBox" v-show="lawerShow">
+      <div class="lawerAnswer consultBox" v-if="$route.query.isPay">
         <h3>律师确认</h3>
         <div class="lawerAnwserBox borderTop">
           <el-form label-width="80px">
-            <el-form-item label="确认结果:">{{}}</el-form-item>
-            <el-row v-show="lawerTypeShow">
+            <el-form-item label="确认结果:">{{consultStatusEnum[form.consultInfo.consultStatus - 1]}}</el-form-item>
+            <el-row v-if="form.consultInfo.consultStatus < 5">
               <el-col :span="12">
-                <el-form-item label="答复方式:">{{form.type}}</el-form-item>
+                <el-form-item label="答复方式:">{{form.consultAnswer.answerModel == '1' ? '即时答复' : '指定咨询时间'}}</el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="咨询时间:">{{form.time}}</el-form-item>
+                <el-form-item label="咨询时间:">{{form.consultInfo.createTime}}</el-form-item>
+              </el-col>
+              <el-col :span="24">
+                <el-form-item label="律师解答:">
+                  <el-input type="textarea" disabled v-model="form.consultAnswer.answerContent" :rows="10"></el-input>
+                </el-form-item>
               </el-col>
             </el-row>
-
-            <el-form-item label="律师解答:" v-show="lawerRusult">
-              <el-input type="textarea" v-model="form.lawerAnwer" :rows="10"></el-input>
-            </el-form-item>
           </el-form>
         </div>
       </div>
       <!-- 选择咨询律师 -->
-      <div class="seclectLawer consultBox" v-show="selectLawerShow">
+      <div class="seclectLawer consultBox" v-if="$route.query.isPay && $route.query.status > 4">
         <h3>选择咨询律师</h3>
         <div class="borderTop">
           <div class="lawForm">
@@ -147,7 +137,7 @@
           <!-- 律师信息 -->
           <div class="lawerList">
             <ul>
-              <li v-for="(item,index) in lawList" :key="index" @click="lawerClick(item.lawyerId)">
+              <li v-for="(item,index) in lawList" :key="index">
                 <div class="lawerImg">
                   <img :src="item.photoUrl" alt />
                   <div class="lawerInfo">
@@ -192,7 +182,7 @@
         </div>
       </div>
       <!-- 咨询沟通 -->
-      <div class="lawerAnswer consultBox" v-show="consultShow">
+      <div class="lawerAnswer consultBox" v-if="$route.query.isPay && $route.query.status <= 4">
         <h3>咨询沟通</h3>
         <div class="lawerAnwserBox borderTop">
           <el-form label-width="80px">
@@ -205,7 +195,7 @@
         </div>
       </div>
       <!-- 律师解答 -->
-      <div class="lawerAnswer consultBox" v-show="lawerAwserShow">
+      <div class="lawerAnswer consultBox" v-if="!$route.query.isPay">
         <h3>律师解答</h3>
         <div class="lawerAnwserBox borderTop">
           <el-form label-width="80px">
@@ -230,7 +220,7 @@
         </div>
       </div>
       <!-- 服务评价 -->
-      <div class="evaluate consultBox" v-show="serveShow">
+      <div class="evaluate consultBox" v-if="!$route.query.isPay || $route.query.status == 4">
         <h3>服务评价</h3>
         <div class="borderTop consultEva">
           <el-form label-width="80px">
@@ -251,8 +241,8 @@
       </div>
     </div>
     <div class="consultBtn">
-      <el-button class="question" v-show="closelyLawer">追问律师</el-button>
-      <el-button class="save">提交</el-button>
+      <el-button class="question" @click="nextQuery" v-if="$route.query.status == 2">追问律师</el-button>
+      <el-button class="save" @click="save">提交</el-button>
       <el-button class="quit" @click="quit">取消</el-button>
     </div>
   </div>
@@ -263,12 +253,12 @@ export default {
   data() {
     return {
       form: {
-        title: "",
-        type: "",
-        content: "",
-        name: "",
-        mobile: "",
-        address: ""
+        flowAxis: [],
+        consultInfo: {
+          consultStatus: 0
+        },
+        consultAnswer: {},
+        msgRecordList: []
       },
       radio: 1,
       proposal: "",
@@ -286,14 +276,6 @@ export default {
           content: "阿斯顿发送到大幅度"
         }
       ],
-      lawerShow: false, //律师确认
-      selectLawerShow: false, //选择律师
-      serveShow: false, //服务评价
-      consultShow: false, //咨询沟通
-      lawerRusult: false,
-      lawerTypeShow: false,
-      lawerAwserShow: false, //律师解答
-      closelyLawer: true,
       adeptSpecialtyList: [],
       lawyerRequest: {
         pageNum: 1,
@@ -305,81 +287,38 @@ export default {
       },
       lawList: [],
       areaRegionList: [],
-      imgList: []
+      imgList: [],
+      consultStatusEnum: ['待确认', '解答中', '待评价', '已评价', '律师拒绝', '系统拒绝']
     };
   },
   created() {},
   mounted() {
     this.getData();
-    this.getValidLawyerList();
-    this.getAreaList();
-    this.getDictionaryList("shanchangzhuangye", "adeptSpecialtyList", true);
-    this.status = this.$router.currentRoute.query.status;
     //  1：待确认；2：解答中；3；待评价；4：已评价；5：律师拒绝；6：系统拒绝；
-    switch (this.status) {
-      case 1: //待确认
-        this.lawerShow = true; //律师确认
-        this.selectLawerShow = false; //选择律师
-        this.serveShow = false; //服务评价
-        this.consultShow = false; //咨询沟通
-        this.lawerTypeShow = true;
-        this.lawerAwserShow = false;
-        return;
-      case 2: //解答中
-        this.lawerAwserShow = true;
-        this.serveShow = true; //服务评价
-        this.lawerShow = false; //律师确认
-        this.selectLawerShow = false; //选择律师
-        this.consultShow = false; //咨询沟通
-        return;
-      case 3: //待评价
-        this.lawerShow = true; //律师确认
-        this.selectLawerShow = false; //选择律师
-        this.serveShow = true; //服务评价
-        this.consultShow = true; //咨询沟通
-        this.lawerTypeShow = true;
-        this.closelyLawer = false;
-        return;
-      case 4: //已评价
-        return;
-      case 5: //律师拒绝
-        this.lawerShow = true;
-        this.selectLawerShow = true;
-        this.serveShow = false;
-        this.consultShow = false;
-        this.lawerAwserShow = false;
-        return;
-      case 6: //系统拒绝
-        this.lawerShow = true;
-        this.selectLawerShow = true;
-        this.serveShow = false;
-        this.consultShow = false;
-        this.lawerAwserShow = false;
-        return;
+    if (this.$route.query.status > 4) {
+      this.getValidLawyerList();
+      this.getAreaList();
+      this.getDictionaryList("shanchangzhuangye", "adeptSpecialtyList", true);
     }
   },
   methods: {
     payRefer(item) {
-      // this.lawyerItem = item;
-      console.log(item)
+      console.log(item);
+      this.lawyerId = item.lawyerId;
       // this.form = Object.assign({},this.form, {lawyerId: item.lawyerId});
-    },
-    lawerClick(id) {
-      console.log(id);
     },
     quit() {
       this.$router.back();
     },
     getData() {
       let obj = {
-        token: this.$router.currentRoute.query.token,
-        consultId: this.$router.currentRoute.query.id
+        token: this.$store.state.token,
+        consultId: this.$route.query.id
       };
       this.$ajaxPost("/consult/getConsultDetail", obj).then(res => {
-        console.log(res);
         this.form = res.data.content;
-        if (this.form.consultInfo) {
-          this.imgList = this.form.consultInfo.imgList;
+        if (this.content.consultInfo) {
+          this.imgList = this.content.consultInfo.imgList;
         }
       });
     },
@@ -388,6 +327,7 @@ export default {
         res => {
           const dataList = res.data.content.dataList;
           this.lawList = dataList;
+          this.lawyerId = dataList[0].lawyerId;
           this.lawyerRequest.total = res.data.content.pageInfo.total;
         }
       );
@@ -443,6 +383,15 @@ export default {
         this.lawyerRequest.sortType = "1";
       }
       this.getValidLawyerList();
+    },
+    saveInteractionMsg() {
+
+    },
+    nextQuery() {
+
+    },
+    save() {
+
     }
   }
 };
