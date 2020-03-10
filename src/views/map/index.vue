@@ -9,15 +9,19 @@
             prefix-icon="el-icon-search"
             style="width:75%"
           ></el-input>
-          <el-button type="primary" class="mapBtn">搜索</el-button>
+          <el-button type="primary" class="mapBtn" @click="search">搜索</el-button>
           <div class="maparea">
-            <el-dropdown>
+            <el-dropdown @command="handleAreaCommand">
               <span class="el-dropdown-link">
                 所属区域
                 <i class="el-icon-arrow-down el-icon--right"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>黄金糕</el-dropdown-item>
+                <el-dropdown-item
+                  v-for="item in areaRegionList"
+                  :key="item.areaId"
+                  :command="item.areaId"
+                >{{item.areaName}}</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
             <el-dropdown @command="handleCommand">
@@ -29,8 +33,8 @@
                 <el-dropdown-item
                   v-for="(item,index) in orgList"
                   :key="index"
-                  :command="item.value"
-                >{{item.label}}</el-dropdown-item>
+                  :command="item.dictDataCode"
+                >{{item.dictDataName}}</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
             <span class="maparea-arrow">
@@ -39,8 +43,11 @@
           </div>
           <ul class="mapUl">
             <li v-for="(item,index) in organList" :key="index">
-              <div class>{{item.num}}</div>
-              <span>{{item.title}}</span>
+              <div
+                :class="{active:active==index}"
+                @click="orgListClick(item.orgType,index)"
+              >{{item.orgCount||item.orgCunt}}</div>
+              <span>{{item.allOrg||item.orgName}}</span>
             </li>
           </ul>
           <!-- 树形 -->
@@ -48,52 +55,77 @@
             <div class="mapTreeMain">
               <span>
                 <img src="../../assets/img/tree1.png" alt />
-                {{main}}
+                {{mapTreeList[0]?mapTreeList[0].areaRegionName:''}}
               </span>
               <span>
                 数量:
-                <span>{{treeNum}}</span>
+                <span>{{mapTreeList[0]?mapTreeList[0].areaOrgCount:''}}</span>
               </span>
             </div>
 
             <ul v-show="!organShow">
-              <li v-for="(item,index) in organArr" :key="index" @click="organClick(item.id)">
-                <span>{{item.title}}</span>
+              <li
+                v-for="(item,index) in lawOrgList"
+                :key="index"
+                @click="organClick(item.lawOrgId)"
+              >
+                <span>{{item.orgName}}</span>
                 <i class="el-icon-arrow-right" style="line-height:48px"></i>
               </li>
             </ul>
 
             <ul v-show="organShow">
-              <li v-for="(item,index) in mapTreeList" :key="index" @click="orgClick(item.id)">
+              <li
+                v-for="(item,index) in organArr"
+                :key="index"
+                @click="orgClick(item.areaRegionId)"
+              >
                 <span>
                   <img src="../../assets/img/tree2.png" alt />
-                  {{item.city}}
+                  {{item.areaRegionName?item.areaRegionName:''}}
                 </span>
                 <span>
                   数量:
-                  <span>{{item.num}}</span>
+                  <span>{{item.areaOrgCount}}</span>
                 </span>
               </li>
             </ul>
           </div>
         </el-col>
         <el-col :span="8" v-show="!boxShow">
-          <el-form>
-            <el-form-item label="律所名称:">{{form.name}}</el-form-item>
-            <el-form-item label="机构代码:">{{form.name}}</el-form-item>
-            <el-form-item label="成立时间:">{{form.name}}</el-form-item>
-            <el-form-item label="负责人:">{{form.name}}</el-form-item>
-            <el-form-item label="注册地址:">{{form.name}}</el-form-item>
-            <el-form-item label="手机号码:">{{form.name}}</el-form-item>
-            <el-form-item label="律师人数:">{{form.name}}</el-form-item>
-            <el-form-item label="律所简介:">{{form.name}}</el-form-item>
+          <el-form :model="formItem">
+            <el-form-item label="律所名称:">{{formItem.orgName}}</el-form-item>
+            <el-form-item label="机构代码:">{{formItem.orgCode}}</el-form-item>
+            <el-form-item label="成立时间:">{{formItem.year}}</el-form-item>
+            <el-form-item label="负责人:">{{formItem.orgPrincipalName}}</el-form-item>
+            <el-form-item label="注册地址:">{{formItem.orgFullAddress}}</el-form-item>
+            <el-form-item label="手机号码:">{{formItem.orgTelephone}}</el-form-item>
+            <el-form-item label="律师人数:">{{formItem.personTotal}}</el-form-item>
+            <el-form-item label="律所简介:">{{formItem.orgDesc}}</el-form-item>
             <el-form-item label="照片:">
-              <img :src="item.img" alt v-for="(item,index) in form.imgList" :key="index" />
+              <img :src="item.img" alt v-for="(item,index) in form.orgImgList" :key="index" />
             </el-form-item>
           </el-form>
         </el-col>
         <el-col :span="16">
-          <baseMap></baseMap>
+          <baidu-map
+            class="bm-view"
+            ak="u6vzTey4WMBeVAbC3SokRMGT3br2sejy"
+            :center="center"
+            :zoom="zoom"
+            @ready="handler"
+          >
+            <my-overlay
+              :position="{lng: item.lng, lat: item.lat}"
+              :text="item.areaRegionName"
+              :active="active"
+              :info="item.lawCount"
+              @mouseover.native="actives = true"
+              @mouseleave.native="actives = false"
+              v-for="(item,index) in mapList"
+              :key="index"
+            ></my-overlay>
+          </baidu-map>
         </el-col>
       </el-row>
     </div>
@@ -101,163 +133,173 @@
 </template>
 
 <script>
-import baseMap from "@/components/map";
+import MyOverlay from "@/components/myOverlay";
 export default {
   components: {
-    baseMap
+    MyOverlay
   },
   data() {
     return {
+      formItem: {
+        orgName: "",
+        orgCode: "",
+        year: "",
+        orgPrincipalName: "",
+        orgFullAddress: "",
+        orgTelephone: "",
+        personTotal: "",
+        orgDesc: ""
+      },
+      mapList: [],
+      active: 0,
       form: {
         orgName: "",
-        orgType: ""
+        orgType: "",
+        areaRegionId: ""
       },
       boxShow: true,
       organShow: true,
       input1: "",
       main: "辽阳市",
       treeNum: 100,
-      center: {
-        lng: "116.404",
-        lat: "39.915"
-      },
-      zoom: 3,
-      orgList: [
-        {
-          value: "1",
-          label: "律师事务所"
-        },
-        {
-          value: "2",
-          label: "法律援助中心"
-        },
-        {
-          value: "3",
-          label: "调委组织"
-        },
-        {
-          value: "4",
-          label: "司法鉴定"
-        },
-        {
-          value: "5",
-          label: "公证处"
-        },
-        {
-          value: "6",
-          label: "基层法律事务所"
-        }
-      ],
-      mapTreeList: [
-        {
-          city: "宏伟区",
-          num: 100
-        },
-        {
-          city: "宏伟区",
-          num: 100
-        },
-        {
-          city: "宏伟区",
-          num: 100
-        },
-        {
-          city: "宏伟区",
-          num: 100
-        }
-      ],
-      organArr: [
-        {
-          title: "辽阳市灯塔市法律援助中心",
-          id: "1"
-        },
-        {
-          title: "辽阳市灯塔市法律援助中心",
-          id: "1"
-        },
-        {
-          title: "辽阳市灯塔市法律援助中心",
-          id: "1"
-        },
-        {
-          title: "辽阳市灯塔市法律援助中心",
-          id: "1"
-        }
-      ],
-      organList: [
-        {
-          num: 100,
-          title: "全部"
-        },
-        {
-          num: 100,
-          title: "律师事务所"
-        },
-        {
-          num: 100,
-          title: "法律援助中心"
-        },
-        {
-          num: 100,
-          title: "调委组织"
-        },
-        {
-          num: 100,
-          title: "司法鉴定"
-        },
-        {
-          num: 100,
-          title: "公证处"
-        },
-        {
-          num: 100,
-          title: "基层法律服务所"
-        }
-      ],
-      lawCommand:0,
+      orgList: [],
+      mapTreeList: [],
+      organArr: [],
+      organList: [],
+      lawCommand: "",
       pageform: {
-        pageSize:10,
+        pageSize: 10,
         pageNum: 1,
         total: 0
       },
+      areaRegionList: [],
+      lawOrgList: [],
+      center: {
+        lng: "123.17",
+        lat: "41.27"
+      },
+      zoom: 3
     };
   },
   mounted() {
-    this.getLawList()
+    this.getLawList();
+    this.getOrgList();
+    this.getAreaList();
+    this.getFaYuan();
   },
   methods: {
+    getFaYuan() {
+      let obj = {
+        dictCode: "fayuanjigou",
+        parentDictDataCode: "",
+        userId: "111"
+      };
+      this.$ajaxPost("/support/getDictionaryList", obj).then(res => {
+        this.orgList = res.data.content.resultList;
+      });
+    },
     handler({ BMap, map }) {
       console.log(BMap, map);
-      this.center.lng = 116.404;
-      this.center.lat = 39.915;
+      this.center.lng = 123.17;
+      this.center.lat = 41.27;
       this.zoom = 15;
     },
+    orgListClick(n, index) {
+      this.form.orgType = n || "";
+      this.active = index;
+      this.getOrgList();
+    },
+    search() {
+      this.getOrgList();
+    },
     orgClick(id) {
-      console.log(id);
+      this.form.areaRegionId = id;
       this.organShow = !this.organShow;
+      this.getLawList();
     },
     handleCommand(n) {
-      this.lawCommand = n,
-      this.getLawList()
+      this.form.orgType = n;
+      this.getOrgList();
+    },
+    handleAreaCommand(id) {
+      this.form.areaRegionId = id;
+      this.getOrgList();
     },
     organClick(id) {
-      console.log(id);
+      this.mapList = []
       this.boxShow = !this.boxShow;
+      let obj = {
+        token: this.$store.state.token,
+        lawOrgId: id
+      };
+      this.$ajaxPost("/lawOrg/getLawOrgInfo", obj).then(res => {
+        this.formItem = res.data.content;
+        let obj = {};
+        obj.areaRegionName = this.formItem.orgName;
+        obj.lng = this.formItem.areaX;
+        obj.lat = this.formItem.areaY;
+        obj.credentialCode = this.formItem.credentialCode;
+        obj.orgTelephone = this.formItem.orgTelephone;
+        obj.orgFullAddress = this.formItem.orgFullAddress;
+        this.mapList.push(obj)
+      });
+      console.log(this.mapList,333)
     },
     getLawList() {
-      
       let obj = {
-        token:this.$store.state.token,
-        orgType: this.lawCommand, //类型：String  可有字段  备注：机构类型 1.律师事务所；2.法律援助中心；3.调委组织；4.司法鉴定；5.公证处；6.基层法律服务所；
-        orgName: this.form.orgName, //类型：String  可有字段  备注：名称
-        areaRegionId: "", //类型：String  可有字段  备注：所属区ID
+        token: this.$store.state.token,
+        ...this.form,
         areaStreetId: "", //类型：String  可有字段  备注：所属街道ID
         pageNum: this.pageform.pageNum,
         pageSize: this.pageform.pageSize
       };
-      this.$ajaxPost('/lawOrg/getLawOrgList',obj).then(res=>{
-        console.log(res)
-      })
+      this.$ajaxPost("/lawOrg/getLawOrgList", obj).then(res => {
+        this.lawOrgList = res.data.content.dataList;
+      });
+      
+      this.mapList = [];
+      this.lawOrgList.forEach(el => {
+        let lawObj = {};
+        lawObj.lng = el.areaX;
+        lawObj.lat = el.areaY;
+        lawObj.areaRegionName = el.orgName;
+        this.mapList.push(lawObj);
+      });
+      console.log(this.mapList,1111)
+    },
+    getOrgList() {
+      let obj = {
+        token: this.$store.state.token,
+        ...this.form
+      };
+      this.$ajaxPost("/lawOrg/getOrgCollectData", obj).then(res => {
+        this.organList = res.data.content.collectData.orgList;
+        this.mapTreeList = res.data.content.areaOrgList;
+        this.organArr = this.mapTreeList.slice(0);
+        this.organArr = this.organArr.slice(1);
+        this.mapList = this.organArr;
+        this.mapList.forEach(el => {
+          el.lng = el.areaCoordinate.split(",")[0];
+          el.lat = el.areaCoordinate.split(",")[1];
+        });
+      });
+    },
+    getAreaList() {
+      this.$ajaxPost("/support/getAreaList", { areaLevel: "3" }).then(
+        ({ data }) => {
+          if (data.code === 200) {
+            this.areaRegionList = [{ areaId: "", areaName: "全部" }].concat(
+              data.content.dataList.reduce((res, item) => {
+                if (!res.some(val => val.areaId === item.areaId)) {
+                  item.leaf = item.areaLevel === "4";
+                  res.push(item);
+                }
+                return res;
+              }, [])
+            );
+          }
+        }
+      );
     }
   }
 };
@@ -325,6 +367,10 @@ export default {
 }
 .mapUl {
   overflow: hidden;
+  .active {
+    background: linear-gradient(to right, #109ed3, #1a7fc5);
+    color: #fff;
+  }
   li:last-of-type {
     margin-right: 0;
   }
