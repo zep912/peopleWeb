@@ -77,7 +77,7 @@
   background-size: 100% 100%;
   position: relative;
   .login-content {
-    width: 560px;
+    width: 600px;
     position: absolute;
     left: 50%;
     top: 50%;
