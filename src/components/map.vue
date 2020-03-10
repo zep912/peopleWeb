@@ -1,62 +1,44 @@
 <template>
-  <div class="maps">
-    <baidu-map
-      class="bm-view"
-      ak="u6vzTey4WMBeVAbC3SokRMGT3br2sejy"
-      :center="center"
-      :zoom="zoom"
-      @ready="handler"
-    >
-    <!-- <my-overlay
-      :position="{lng: 116.404, lat: 39.915}"
-      :text="item.name"
-      :active="active"
-      @mouseover.native="active = true"
-      @mouseleave.native="active = false"
-      v-for='(item,index) in list' :key=index>
-    </my-overlay> -->
-    </baidu-map>
+  <div id="map">
+    <div class="mapBox" id="container"></div>
   </div>
 </template>
 
 <script>
-// import MyOverlay from '/myOverlay'
 export default {
-  components: {
-    // MyOverlay
-  },
   data() {
-    return {
-      center: {
-        lng: "123.17",
-        lat: "41.27"
-      },
-      zoom: 3,
-      show:false,
-      list:[
-        {
-          lanlng:'{lng: 123.15, lat: 41.27}',
-          name:'问好',
-        }
-      ]
-    };
+    return {};
+  },
+  prop:{
+    center:''
+  },
+  created() {},
+  mounted() {
+    let timer = this.$nextTick(() => {
+      setTimeout(() => {
+        this.getMap();
+      }, 500);
+    });
+    console.log(this.center)
   },
   methods: {
-    handler({ BMap, map }) {
-      console.log(BMap, map);
-      this.center.lng = 123.17;
-      this.center.lat =41.27 ;
-      this.zoom = 15;
-    },
-    infoWindowClose () {
-      this.show = false
-    },
-    infoWindowOpen () {
-      this.show = true
+    getMap() {
+      var map = new BMapGL.Map("container");
+      map.centerAndZoom(new BMapGL.Point(this.center.lng, this.center.lat), 19); // 初始化地图,设置中心点坐标和地图级别
+      map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
+      map.setHeading(64.5);
+      map.setTilt(73);
     }
   }
 };
 </script>
 
 <style>
+#map {
+  width: 100%;
+}
+.mapBox {
+  height: 800px;
+  width: 100%;
+}
 </style>
