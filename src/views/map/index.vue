@@ -211,34 +211,34 @@ export default {
     this.getOrgList();
     this.getAreaList();
     this.getFaYuan();
-    let timer = this.$nextTick(() => {
-      setTimeout(() => {
-        this.getMap();
-      }, 500);
-    });
+    // let timer = this.$nextTick(() => {
+    //   setTimeout(() => {
+    //     this.getMap();
+    //   }, 500);
+    // });
   },
   methods: {
-    getMap() {
-      var map = new BMapGL.Map("container");
-      var point = new BMapGL.Point(this.center.lng, this.center.lat);
-      map.centerAndZoom(point, 13); // 初始化地图,设置中心点坐标和地图级别
-      map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
-      map.setHeading(64.5);
-      map.setTilt(73);
-      var opts = {
-        position: point, // 指定文本标注所在的地理位置
-        offset: new BMapGL.Size(30, -30) //设置文本偏移量
-      };
-      var label = new BMapGL.Label("欢迎使用百度地图JSAPI WebGL版本", opts); // 创建文本标注对象
-      label.setStyle({
-        color: "red",
-        fontSize: "12px",
-        height: "20px",
-        lineHeight: "20px",
-        fontFamily: "微软雅黑"
-      });
-      map.addOverlay(label);
-    },
+    // getMap() {
+    //   var map = new BMapGL.Map("container");
+    //   var point = new BMapGL.Point(this.center.lng, this.center.lat);
+    //   map.centerAndZoom(point, 13); // 初始化地图,设置中心点坐标和地图级别
+    //   map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
+    //   map.setHeading(64.5);
+    //   map.setTilt(73);
+    //   var opts = {
+    //     position: point, // 指定文本标注所在的地理位置
+    //     offset: new BMapGL.Size(30, -30) //设置文本偏移量
+    //   };
+    //   var label = new BMapGL.Label("欢迎使用百度地图JSAPI WebGL版本", opts); // 创建文本标注对象
+    //   label.setStyle({
+    //     color: "red",
+    //     fontSize: "12px",
+    //     height: "20px",
+    //     lineHeight: "20px",
+    //     fontFamily: "微软雅黑"
+    //   });
+    //   map.addOverlay(label);
+    // },
     getFaYuan() {
       let obj = {
         dictCode: "fayuanjigou",
