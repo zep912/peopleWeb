@@ -141,7 +141,7 @@
               @mouseleave.native="actives = false"
               v-for="(item,index) in mapList"
               :key="'info'+index"
-              v-show="lawOrgListShow"  
+              v-show="lawOrgListShow"
             ></my-overlay>
           </baidu-map>
           <!-- <myMap :center='center'></myMap> -->
@@ -250,8 +250,9 @@ export default {
       });
     },
 
-    handler({ BMap, map }) {
-      console.log(BMap, map);
+    // handler({ BMap, map }) {
+    handler() {
+      // console.log(BMap, map);
       this.center.lng = 123.17;
       this.center.lat = 41.27;
       this.zoom = 15;
@@ -302,7 +303,7 @@ export default {
           lat: this.mapList[0].lat
         };
         this.zoom = 8;
-        console.log(this.mapList,888)
+        // console.log(this.mapList,888)
       });
     },
     getLawList() {

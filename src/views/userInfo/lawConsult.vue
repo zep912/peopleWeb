@@ -185,7 +185,6 @@ export default {
   created() {},
   mounted() {
     this.applyId = this.$router.currentRoute.query.applyId;
-    console.log(this.applyId);
     this.getData()
   },
   methods: {
@@ -204,10 +203,9 @@ export default {
           let obj = {
               token:this.$store.state.token,
               applyId:this.applyId
-          }
-          this.$ajaxPost('/appointment/getLawAidDetail',obj).then(res=>{
+          };
+          this.$ajaxPost('/appointment/getLawAidDetail',obj).then(res =>{
               this.form.applyData = res.data.content.applyData;
-              console.log(this.form.applyData)
           })
       }
   }
