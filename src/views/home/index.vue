@@ -4,7 +4,7 @@
       <el-col :span="16">
         <el-carousel height="360px">
           <el-carousel-item v-for="item in content.bannerList1" :key="item.bannerId">
-            <img :src="item.imgPath">
+            <img :src="item.imgPath" />
           </el-carousel-item>
         </el-carousel>
       </el-col>
@@ -12,12 +12,14 @@
         <el-tabs v-model="activeName" type="card" stretch>
           <el-tab-pane label="通知公告" name="first">
             <el-card>
-              <div v-for="(item, index) in content.noticeList.slice(0, 6)" :key="item.newsId" class="item">
+              <div
+                v-for="(item, index) in content.noticeList.slice(0, 6)"
+                :key="item.newsId"
+                class="item"
+              >
                 <div class="header-top" v-if="index === 0">
                   <h3>{{item.newsContent}}</h3>
-                  <p>
-                    {{item.newsTitle}}
-                  </p>
+                  <p>{{item.newsTitle}}</p>
                 </div>
                 <div class="text" v-else>{{item.newsContent}}</div>
               </div>
@@ -25,12 +27,14 @@
           </el-tab-pane>
           <el-tab-pane label="公示信息" name="second">
             <el-card>
-              <div v-for="(item, index) in content.publicityList.slice(0, 6)" :key="item.newsId" class="item">
+              <div
+                v-for="(item, index) in content.publicityList.slice(0, 6)"
+                :key="item.newsId"
+                class="item"
+              >
                 <div class="header-top" v-if="index === 0">
                   <h3>{{item.newsContent}}</h3>
-                  <p>
-                    {{item.newsTitle}}
-                  </p>
+                  <p>{{item.newsTitle}}</p>
                 </div>
                 <div class="text" v-else>{{item.newsContent}}</div>
               </div>
@@ -38,12 +42,14 @@
           </el-tab-pane>
           <el-tab-pane label="新闻资讯" name="third">
             <el-card>
-              <div v-for="(item, index) in content.newsList.slice(0, 6)" :key="item.newsId" class="item">
+              <div
+                v-for="(item, index) in content.newsList.slice(0, 6)"
+                :key="item.newsId"
+                class="item"
+              >
                 <div class="header-top" v-if="index === 0">
                   <h3>{{item.newsContent}}</h3>
-                  <p>
-                    {{item.newsTitle}}
-                  </p>
+                  <p>{{item.newsTitle}}</p>
                 </div>
                 <div class="text" v-else>{{item.newsContent}}</div>
               </div>
@@ -102,7 +108,7 @@
     </el-row>
     <el-carousel height="120px" style="margin: 10px 0">
       <el-carousel-item v-for="item in content.bannerList1" :key="item.bannerId">
-        <img :src="item.imgPath">
+        <img :src="item.imgPath" />
       </el-carousel-item>
     </el-carousel>
     <el-row :gutter="10">
@@ -111,7 +117,7 @@
           <el-tab-pane label="司法培训">
             <div class="serve-box train-box">
               <div class="train-content" v-for="item in content.trainList" :key="item.couId">
-                <img :src="item.coverUrl" alt="">
+                <img :src="item.coverUrl" alt />
                 <div class="train-title">{{item.trainTitle}}</div>
               </div>
             </div>
@@ -119,18 +125,23 @@
         </el-tabs>
       </el-col>
       <el-col :span="8">
-        <img src="../../assets/img/csfb.png" class="img-content" alt="">
-        <img src="../../assets/img/sft.png" class="img-content" alt="">
-        <img src="../../assets/img/pfw.png" class="img-content" alt="">
+        <img src="../../assets/img/csfb.png" class="img-content" alt />
+        <img src="../../assets/img/sft.png" class="img-content" alt />
+        <img src="../../assets/img/pfw.png" class="img-content" alt />
       </el-col>
     </el-row>
     <el-row :gutter="10" style="margin-top: 10px">
       <el-col :span="16">
         <el-tabs type="card" class="new-box">
           <el-tab-pane label="司法地图">
-            <!--<div style="background-color: red; height: 320px;">-->
-            <!--</div>-->
-            <baseMap></baseMap>
+            <baidu-map class="bm-view" :center="center" :zoom="zoom" @ready="handler">
+              <bm-marker
+                :position="center"
+                :dragging="true"
+                animation="BMAP_ANIMATION_BOUNCE"
+              >
+              </bm-marker>
+            </baidu-map>
           </el-tab-pane>
         </el-tabs>
       </el-col>
@@ -149,16 +160,16 @@
 </template>
 
 <script>
-import baseMap from '@/components/map'
+// import baseMap from '@/components/map'
 export default {
-  name: 'Home',
+  name: "Home",
   components: {
-    baseMap
+    // baseMap
   },
   data() {
     return {
-      activeName: 'first',
-      activeName1: 'first',
+      activeName: "first",
+      activeName1: "first",
       content: {
         bannerList1: [],
         bannerList2: [],
@@ -167,221 +178,234 @@ export default {
         noticeList: [],
         trainList: [],
         examLink: {
-          linkUrl: '',
-          imgId: '',
-          imgUrl: ''
+          linkUrl: "",
+          imgId: "",
+          imgUrl: ""
         },
         lawList: [],
         judicialList: [],
         publicityList: [],
         internationalList: []
-      }
-    }
+      },
+      center: { lng: 0, lat: 0 },
+      zoom: 3
+    };
   },
   methods: {
+    handler({ BMap, map }) {
+      console.log(BMap, map);
+      console.log(this.center);
+      this.center.lng = 123.17;
+      this.center.lat = 41.27;
+      this.zoom = 15;
+    },
     getData() {
-      this.$ajaxPost('/index/mainData', {request: 123}).then(({data}) => {
+      this.$ajaxPost("/index/mainData", { request: 123 }).then(({ data }) => {
         if (data.code === 200) {
           this.content = data.content;
         }
-      })
+      });
     },
     goLaw(type) {
-      this.$router.push({path: '/law', query: {type}});
+      this.$router.push({ path: "/law", query: { type } });
     }
   },
   mounted() {
     this.getData();
   }
-}
+};
 </script>
 <style lang="scss">
-  .content {
-    width: 85%;
-    margin: 10px auto;
-    font-size: 14px;
-    .el-tabs__header {
-      margin: 0;
+.bm-view {
+  width: 100%;
+  height: 235px;
+}
+.content {
+  width: 85%;
+  margin: 10px auto;
+  font-size: 14px;
+  .el-tabs__header {
+    margin: 0;
+  }
+  .el-tabs__item {
+    height: 50px;
+    line-height: 50px;
+    font-size: 16px;
+    font-weight: 700;
+    &.is-active {
+      color: #fff;
+      background: #409eff;
     }
-    .el-tabs__item {
-      height: 50px;
-      line-height: 50px;
-      font-size: 16px;
-      font-weight: 700;
-      &.is-active {
-        color: #fff;
-        background: #409EFF;
-      }
-    }
-    .el-card__body {
-      padding: 0;
-      .item {
-        width: 100%;
-        .header-top {
-          padding: 10px;
-          border-bottom: 1px dashed #ccc;
-          h3 {
-            width: 100%;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
-            font-size: 20px;
-          }
-          p {
-            margin-top: 10px;
-            width: 100%;
-            min-height: 40px;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 2;
-          }
-        }
-        .text {
+  }
+  .el-card__body {
+    padding: 0;
+    .item {
+      width: 100%;
+      .header-top {
+        padding: 10px;
+        border-bottom: 1px dashed #ccc;
+        h3 {
+          width: 100%;
           text-overflow: ellipsis;
           white-space: nowrap;
           overflow: hidden;
-          padding: 0 20px;
-          height: 36px;
-          line-height: 36px;
-          &:before {
-            content: '';
-            display: inline-block;
-            width: 5px;
-            height: 5px;
-            margin-right: 5px;
-            background-color: black;
-            border-radius: 50%;
-            vertical-align: middle;
-          }
+          font-size: 20px;
         }
-        &:nth-of-type(2) {
-          margin-top: 14px;
+        p {
+          margin-top: 10px;
+          width: 100%;
+          min-height: 40px;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
         }
-        &:last-of-type {
-          margin-bottom: 14px;
+      }
+      .text {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        padding: 0 20px;
+        height: 36px;
+        line-height: 36px;
+        &:before {
+          content: "";
+          display: inline-block;
+          width: 5px;
+          height: 5px;
+          margin-right: 5px;
+          background-color: black;
+          border-radius: 50%;
+          vertical-align: middle;
         }
+      }
+      &:nth-of-type(2) {
+        margin-top: 14px;
+      }
+      &:last-of-type {
+        margin-bottom: 14px;
       }
     }
-    .new-box {
-      overflow: hidden;
-      height: 300px;
-      background-color: #fff;
-      padding: 15px!important;
-      border-top: 2px solid #449efe;
-      box-sizing: border-box;
-      .el-tabs__item {
+  }
+  .new-box {
+    overflow: hidden;
+    height: 300px;
+    background-color: #fff;
+    padding: 15px !important;
+    border-top: 2px solid #449efe;
+    box-sizing: border-box;
+    .el-tabs__item {
+      height: 40px;
+      line-height: 40px;
+    }
+    .el-tab-pane {
+      .tab-content {
+        display: flex;
         height: 40px;
         line-height: 40px;
+        .tab-left {
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+          flex: 1;
+          padding-right: 30px;
+          font-size: 16px;
+        }
+        .tab-right {
+          text-align: right;
+          width: 120px;
+          color: #666;
+        }
       }
-      .el-tab-pane {
-        .tab-content {
-          display: flex;
-          height: 40px;
-          line-height: 40px;
-          .tab-left {
+      .serve-box {
+        padding: 15px 0;
+        display: grid;
+        grid-gap: 15px 15px;
+        grid-template-columns: repeat(3, 1fr);
+        .serve-content {
+          padding: 20px 0 10px;
+          text-align: center;
+          border: 1px solid #ddd;
+          cursor: pointer;
+          i {
+            font-size: 36px;
+            color: #3ba6d5;
+          }
+          div {
+            padding: 5px 0;
+          }
+          &:hover {
+            background: #3ba6d5;
+            font-weight: 700;
+            color: #fff;
+            i {
+              color: #fff;
+            }
+          }
+        }
+      }
+      .train-box {
+        grid-template-columns: repeat(4, 1fr);
+        .train-content {
+          height: 100px;
+          background-color: #ddd;
+          position: relative;
+          > img {
+            width: 100%;
+            height: 100%;
+          }
+          .train-title {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 30px;
+            line-height: 30px;
+            padding: 0 6px;
+            box-sizing: border-box;
+            font-size: 14px;
+            font-weight: 700;
+            background: rgba(0, 0, 0, 0.5);
+            color: #fff;
             text-overflow: ellipsis;
             white-space: nowrap;
             overflow: hidden;
-            flex: 1;
-            padding-right: 30px;
-            font-size: 16px;
-          }
-          .tab-right {
-            text-align: right;
-            width: 120px;
-            color: #666;
-          }
-        }
-        .serve-box {
-          padding: 15px 0;
-          display: grid;
-          grid-gap: 15px 15px;
-          grid-template-columns: repeat(3, 1fr);
-          .serve-content {
-            padding: 20px 0 10px;
-            text-align: center;
-            border: 1px solid #ddd;
-            cursor: pointer;
-            i {
-              font-size: 36px;
-              color: #3ba6d5;
-            }
-            div {
-              padding: 5px 0;
-            }
-            &:hover {
-              background: #3ba6d5;
-              font-weight: 700;
-              color: #fff;
-              i {
-                color: #fff;
-              }
-            }
-          }
-        }
-        .train-box {
-          grid-template-columns: repeat(4, 1fr);
-          .train-content {
-            height: 100px;
-            background-color: #ddd;
-            position: relative;
-            > img {
-              width: 100%;
-              height: 100%;
-            }
-            .train-title {
-              position: absolute;
-              left: 0;
-              bottom: 0;
-              width: 100%;
-              height: 30px;
-              line-height: 30px;
-              padding: 0 6px;
-              box-sizing: border-box;
-              font-size: 14px;
-              font-weight: 700;
-              background: rgba(0, 0, 0, 0.5);
-              color: #fff;
-              text-overflow: ellipsis;
-              white-space: nowrap;
-              overflow: hidden;
-            }
-          }
-        }
-      }
-    }
-    .img-content {
-      width: 100%;
-      /*height: 90px;*/
-      background-color: red;
-      margin-bottom: 15px;
-      &:last-of-type {
-        margin-bottom: 0;
-      }
-    }
-    .map-list {
-      .map-content {
-        display: flex;
-        font-size: 16px;
-        padding: 0 20px;
-        border: 1px solid #ccc;
-        height: 48px;
-        line-height: 48px;
-        .map-left {
-          flex: 1;
-        }
-        .map-right {
-          text-align: right;
-          width: 80px;
-          span {
-            font-size: 28px;
-            color: red;
-            margin-right: 20px;
           }
         }
       }
     }
   }
+  .img-content {
+    width: 100%;
+    /*height: 90px;*/
+    background-color: red;
+    margin-bottom: 15px;
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+  .map-list {
+    .map-content {
+      display: flex;
+      font-size: 16px;
+      padding: 0 20px;
+      border: 1px solid #ccc;
+      height: 48px;
+      line-height: 48px;
+      .map-left {
+        flex: 1;
+      }
+      .map-right {
+        text-align: right;
+        width: 80px;
+        span {
+          font-size: 28px;
+          color: red;
+          margin-right: 20px;
+        }
+      }
+    }
+  }
+}
 </style>
