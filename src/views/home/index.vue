@@ -15,13 +15,12 @@
               <div
                 v-for="(item, index) in content.noticeList.slice(0, 6)"
                 :key="item.newsId"
-                class="item"
-              >
+                class="item" @click="goNews(item.newsId)">
                 <div class="header-top" v-if="index === 0">
-                  <h3>{{item.newsContent}}</h3>
-                  <p>{{item.newsTitle}}</p>
+                  <h3>{{item.newsTitle}}</h3>
+                  <p>{{item.newsContent}}</p>
                 </div>
-                <div class="text" v-else>{{item.newsContent}}</div>
+                <div class="text" v-else>{{item.newsTitle}}</div>
               </div>
             </el-card>
           </el-tab-pane>
@@ -30,13 +29,12 @@
               <div
                 v-for="(item, index) in content.publicityList.slice(0, 6)"
                 :key="item.newsId"
-                class="item"
-              >
+                class="item" @click="goNews(item.newsId)">
                 <div class="header-top" v-if="index === 0">
-                  <h3>{{item.newsContent}}</h3>
-                  <p>{{item.newsTitle}}</p>
+                  <h3>{{item.newsTitle}}</h3>
+                  <p>{{item.newsContent}}</p>
                 </div>
-                <div class="text" v-else>{{item.newsContent}}</div>
+                <div class="text" v-else>{{item.newsTitle}}</div>
               </div>
             </el-card>
           </el-tab-pane>
@@ -45,13 +43,12 @@
               <div
                 v-for="(item, index) in content.newsList.slice(0, 6)"
                 :key="item.newsId"
-                class="item"
-              >
+                class="item" @click="goNews(item.newsId)">
                 <div class="header-top" v-if="index === 0">
-                  <h3>{{item.newsContent}}</h3>
-                  <p>{{item.newsTitle}}</p>
+                  <h3>{{item.newsTitle}}</h3>
+                  <p>{{item.newsContent}}</p>
                 </div>
-                <div class="text" v-else>{{item.newsContent}}</div>
+                <div class="text" v-else>{{item.newsTitle}}</div>
               </div>
             </el-card>
           </el-tab-pane>
@@ -62,19 +59,19 @@
       <el-col :span="16">
         <el-tabs class="new-box" type="card">
           <el-tab-pane label="法律法规">
-            <div class="tab-content" v-for="item in content.lawList" :key="item.lawId">
+            <div class="tab-content" v-for="item in content.lawList" :key="item.lawId" @click="goInfo(item.lawId)">
               <div class="tab-left">{{item.lawTitle}}</div>
               <div class="tab-right">{{item.execDate}}</div>
             </div>
           </el-tab-pane>
           <el-tab-pane label="司法解释">
-            <div class="tab-content" v-for="item in content.judicialList" :key="item.lawId">
+            <div class="tab-content" v-for="item in content.judicialList" :key="item.lawId" @click="goInfo(item.lawId)">
               <div class="tab-left">{{item.lawTitle}}</div>
               <div class="tab-right">{{item.publishDate}}</div>
             </div>
           </el-tab-pane>
           <el-tab-pane label="国际条约惯例">
-            <div class="tab-content" v-for="item in content.internationalList" :key="item.lawId">
+            <div class="tab-content" v-for="item in content.internationalList" :key="item.lawId" @click="goInfo(item.lawId)">
               <div class="tab-left">{{item.lawTitle}}</div>
               <div class="tab-right">{{item.publishDate}}</div>
             </div>
@@ -116,7 +113,7 @@
         <el-tabs class="new-box" type="card">
           <el-tab-pane label="司法培训">
             <div class="serve-box train-box">
-              <div class="train-content" v-for="item in content.trainList" :key="item.couId">
+              <div class="train-content" v-for="item in content.trainList" :key="item.couId" @click="goVideo(item.planId)">
                 <img :src="item.coverUrl" alt />
                 <div class="train-title">{{item.trainTitle}}</div>
               </div>
@@ -208,6 +205,15 @@ export default {
     },
     goLaw(type) {
       this.$router.push({ path: "/law", query: { type } });
+    },
+    goVideo(id) {
+      this.$router.push({ path: "/propaganda/video", query: { id } });
+    },
+    goInfo(id) {
+      this.$router.push({ path: "/propaganda/getInfo", query: { id } });
+    },
+    goNews(newId) {
+      this.$router.push({ path: "/government/info", query: { newId } });
     }
   },
   mounted() {
@@ -244,6 +250,7 @@ export default {
       .header-top {
         padding: 10px;
         border-bottom: 1px dashed #ccc;
+        cursor: pointer;
         h3 {
           width: 100%;
           text-overflow: ellipsis;
@@ -260,6 +267,7 @@ export default {
           display: -webkit-box;
           -webkit-box-orient: vertical;
           -webkit-line-clamp: 2;
+          white-space: pre-wrap;
         }
       }
       .text {
@@ -269,6 +277,7 @@ export default {
         padding: 0 20px;
         height: 36px;
         line-height: 36px;
+        cursor: pointer;
         &:before {
           content: "";
           display: inline-block;
@@ -304,6 +313,7 @@ export default {
         display: flex;
         height: 40px;
         line-height: 40px;
+        cursor: pointer;
         .tab-left {
           text-overflow: ellipsis;
           white-space: nowrap;
@@ -351,6 +361,7 @@ export default {
           height: 100px;
           background-color: #ddd;
           position: relative;
+          cursor: pointer;
           > img {
             width: 100%;
             height: 100%;

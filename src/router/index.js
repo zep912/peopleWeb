@@ -85,6 +85,11 @@ const routes = [
         name: '忘记密码',
         component: () => import('../views/forgetPwd')
       },
+      {
+        path: '/government/info',
+        name: '政务详情',
+        component: () => import('../views/government/info')
+      },
     ]
   },
   {

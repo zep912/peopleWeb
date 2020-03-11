@@ -97,8 +97,8 @@ export default {
     this.navClick({ name: "组织机构" }, 0,1);
   },
   methods: {
-    lawClick(id) {
-      this.$router.push({path:'/propaganda/getInfo',query:{id:id}})
+    lawClick(newId) {
+      this.$router.push({path:'/government/info',query:{newId}})
     },
     handleSizeChange(val) {
       this.pageform.pageNum = val;
