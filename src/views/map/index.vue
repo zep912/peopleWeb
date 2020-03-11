@@ -114,18 +114,38 @@
             :center="center"
             :zoom="zoom"
             @ready="handler"
+            mapType="BMAP_NORMAL_MAP"
+            anchor="BMAP_ANCHOR_TOP_RIGHT"
+            :scroll-wheel-zoom=true
+            :double-click-zoom=false
           >
             <my-overlay
               :position="{lng: item.lng, lat: item.lat}"
-              :text="item.areaRegionName"
+              :text="item.areaRegionName+'('+item.areaOrgCount+')'"
               :active="active"
-              :info="item.lawCount"
+              :info="item"
+              :lawMsg = item.lawMsg
               @mouseover.native="actives = true"
               @mouseleave.native="actives = false"
               v-for="(item,index) in mapList"
               :key="index"
+              v-show='orgListShow'
+            ></my-overlay>
+            <my-overlay
+              :position="{lng: item.lng, lat: item.lat}"
+              :text="item.areaRegionName"
+              :active="active"
+              :info="item"
+              :lawMsg = item.lawMsg
+              @mouseover.native="actives = true"
+              @mouseleave.native="actives = false"
+              v-for="(item,index) in mapList"
+              :key="'info'+index"
+              v-show="lawOrgListShow"  
             ></my-overlay>
           </baidu-map>
+          <!-- <myMap :center='center'></myMap> -->
+          <!-- <div class="mapBox" id="container"></div> -->
         </el-col>
       </el-row>
     </div>
@@ -134,12 +154,16 @@
 
 <script>
 import MyOverlay from "@/components/myOverlay";
+// import myMap from "@/components/map";
 export default {
   components: {
-    MyOverlay
+    MyOverlay,
+    // myMap
   },
   data() {
     return {
+      orgListShow:true,
+      lawOrgListShow:false,
       formItem: {
         orgName: "",
         orgCode: "",
@@ -178,7 +202,8 @@ export default {
         lng: "123.17",
         lat: "41.27"
       },
-      zoom: 3
+      zoom: 3,
+      show: false
     };
   },
   mounted() {
@@ -186,8 +211,34 @@ export default {
     this.getOrgList();
     this.getAreaList();
     this.getFaYuan();
+    let timer = this.$nextTick(() => {
+      setTimeout(() => {
+        this.getMap();
+      }, 500);
+    });
   },
   methods: {
+    getMap() {
+      var map = new BMapGL.Map("container");
+      var point = new BMapGL.Point(this.center.lng, this.center.lat);
+      map.centerAndZoom(point, 13); // 初始化地图,设置中心点坐标和地图级别
+      map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
+      map.setHeading(64.5);
+      map.setTilt(73);
+      var opts = {
+        position: point, // 指定文本标注所在的地理位置
+        offset: new BMapGL.Size(30, -30) //设置文本偏移量
+      };
+      var label = new BMapGL.Label("欢迎使用百度地图JSAPI WebGL版本", opts); // 创建文本标注对象
+      label.setStyle({
+        color: "red",
+        fontSize: "12px",
+        height: "20px",
+        lineHeight: "20px",
+        fontFamily: "微软雅黑"
+      });
+      map.addOverlay(label);
+    },
     getFaYuan() {
       let obj = {
         dictCode: "fayuanjigou",
@@ -198,6 +249,7 @@ export default {
         this.orgList = res.data.content.resultList;
       });
     },
+
     handler({ BMap, map }) {
       console.log(BMap, map);
       this.center.lng = 123.17;
@@ -226,7 +278,7 @@ export default {
       this.getOrgList();
     },
     organClick(id) {
-      this.mapList = []
+      this.mapList = [];
       this.boxShow = !this.boxShow;
       let obj = {
         token: this.$store.state.token,
@@ -241,9 +293,17 @@ export default {
         obj.credentialCode = this.formItem.credentialCode;
         obj.orgTelephone = this.formItem.orgTelephone;
         obj.orgFullAddress = this.formItem.orgFullAddress;
-        this.mapList.push(obj)
+        obj.orgImg = this.formItem.orgImgList[0]
+        obj.lawMsg = false;
+        obj.infoMsg =true
+        this.mapList.push(obj);
+        this.center = {
+          lng: this.mapList[0].lng,
+          lat: this.mapList[0].lat
+        };
+        this.zoom = 8;
+        console.log(this.mapList,888)
       });
-      console.log(this.mapList,333)
     },
     getLawList() {
       let obj = {
@@ -256,16 +316,19 @@ export default {
       this.$ajaxPost("/lawOrg/getLawOrgList", obj).then(res => {
         this.lawOrgList = res.data.content.dataList;
       });
-      
+
       this.mapList = [];
       this.lawOrgList.forEach(el => {
         let lawObj = {};
         lawObj.lng = el.areaX;
         lawObj.lat = el.areaY;
         lawObj.areaRegionName = el.orgName;
+        lawObj.lawMsg = false
+        lawObj.infoMsg =false
         this.mapList.push(lawObj);
       });
-      console.log(this.mapList,1111)
+      this.orgListShow = false;
+      this.lawOrgListShow = true;
     },
     getOrgList() {
       let obj = {
@@ -281,6 +344,8 @@ export default {
         this.mapList.forEach(el => {
           el.lng = el.areaCoordinate.split(",")[0];
           el.lat = el.areaCoordinate.split(",")[1];
+          el.lawMsg = true
+          el.infoMsg = false
         });
       });
     },
@@ -306,6 +371,10 @@ export default {
 </script>
 
 <style lang='scss'>
+#container {
+  width: 100%;
+  height: 800px;
+}
 .mapTree {
   margin-top: 20px;
   .mapTreeMain {
