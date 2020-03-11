@@ -19,23 +19,23 @@
               <el-form-item label="标题:">{{form.consultInfo.questionTitle}}</el-form-item>
             </el-row>
             <el-row>
-              <el-form-item label="问题类型:">{{form.consultInfo.questionType}}</el-form-item>
+              <el-form-item label="问题类型:">{{form.consultInfo.questionTypeName}}</el-form-item>
             </el-row>
             <el-row>
               <el-form-item label="问题描述:">
-                <el-input type="textarea" :rows="6" disabled v-model="form.consultInfo.questionDesc"></el-input>
+                <el-input type="textarea" :rows="6" v-model="form.consultInfo.questionDesc" disabled></el-input>
               </el-form-item>
             </el-row>
             <el-row>
               <el-col :span="6">
-                <el-form-item label="姓名:">{{}}</el-form-item>
+                <el-form-item label="姓名:">{{form.consultInfo.personName}}</el-form-item>
               </el-col>
               <el-col :span="6">
                 <el-form-item label="手机号码:">{{form.consultInfo.personPhone}}</el-form-item>
               </el-col>
             </el-row>
             <el-row>
-              <el-form-item label="住址:">{{}}</el-form-item>
+              <el-form-item label="住址:">{{form.consultInfo.personAddress}}</el-form-item>
             </el-row>
             <el-row>
               <el-form-item label="照片:">
@@ -53,9 +53,11 @@
             <el-form-item label="确认结果:">{{consultStatusEnum[form.consultInfo.consultStatus - 1]}}</el-form-item>
             <el-row v-if="form.consultInfo.consultStatus < 5">
               <el-col :span="12">
-                <el-form-item label="答复方式:">{{form.consultAnswer.answerModel == '1' ? '即时答复' : '指定咨询时间'}}</el-form-item>
+                <el-form-item label="答复方式:">
+                  {{form.consultAnswer.answerModel == '1' ? '即时答复' : form.consultAnswer.answerModel == '2' ? '指定咨询时间' : ''}}
+                </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :span="12" v-if="form.consultAnswer.answerModel == '2'">
                 <el-form-item label="咨询时间:">{{form.consultInfo.createTime}}</el-form-item>
               </el-col>
               <el-col :span="24">
@@ -177,7 +179,7 @@
             </ul>
           </div>
           <div class="footPage">
-            <el-pagination background layout="prev, pager, next" :total="total"></el-pagination>
+            <el-pagination background layout="prev, pager, next" :total="lawyerRequest.total"></el-pagination>
           </div>
         </div>
       </div>
@@ -187,10 +189,14 @@
         <div class="lawerAnwserBox borderTop">
           <el-form label-width="80px">
             <el-form-item
-              :label="item.type==1?'我的追问':'律师回复'"
-              v-for="(item,index) in formList"
-              :key="index"
-            >{{item.content}}</el-form-item>
+              :label="item.msgSource==2?'我的追问':'律师回复'"
+              v-for="(item, index) in form.msgRecordList"
+              :key="index">
+              <span v-if="item.msgType == '1'">{{item.msgContent}}</span>
+              <audio controls="controls">
+                <source :src="item.voiceUrl" type="audio/amr">
+              </audio>
+            </el-form-item>
           </el-form>
         </div>
       </div>
@@ -199,23 +205,23 @@
         <h3>律师解答</h3>
         <div class="lawerAnwserBox borderTop">
           <el-form label-width="80px">
-            <el-form-item label="审核结果:">{{form.result}}</el-form-item>
+            <el-form-item label="审核结果:">{{form.consultAnswer.approveFlag == 1 ? '通过' : form.consultAnswer.approveFlag == 2 ? '不通过' : ''}}</el-form-item>
             <el-form-item label="律师解答:">
-              <el-input type="textarea" v-model="form.lawerAnwer" :rows="10"></el-input>
+              <el-input type="textarea" v-model="form.consultAnswer.answerContent" :rows="3"></el-input>
             </el-form-item>
             <ul>
-              <li v-for="(item,index) in lawerList" :key="index">
+              <li v-for="(item,index) in form.msgRecordList" :key="index">
                 <el-form>
-                  <el-form-item :label="item.title">{{item.content}}</el-form-item>
+                  <el-form-item :label="item.msgSource==2?'我的追问':'律师回复'">
+                    <span v-if="item.msgType == '1'">{{item.msgContent}}</span>
+                    <audio controls="controls">
+                      <source :src="item.voiceUrl" type="audio/amr">
+                    </audio>
+                  </el-form-item>
                 </el-form>
               </li>
             </ul>
-            <el-input
-              type="textarea"
-              :rows="6"
-              v-model="form.lawerContent"
-              style="margin-left:80px;width:80%"
-            ></el-input>
+            <!--<el-input disabled type="textarea" :rows="6" v-model="form.msgContent" style="margin-left:80px;width:80%"></el-input>-->
           </el-form>
         </div>
       </div>
@@ -223,9 +229,9 @@
       <div class="evaluate consultBox" v-if="!$route.query.isPay || $route.query.status == 4">
         <h3>服务评价</h3>
         <div class="borderTop consultEva">
-          <el-form label-width="80px">
-            <el-form-item label="满意度:">
-              <el-radio-group v-model="radio">
+          <el-form label-width="80px" :rules="rules">
+            <el-form-item label="满意度:" prop="evaResult">
+              <el-radio-group v-model="evaluation.evaResult">
                 <el-radio :label="1">非常满意</el-radio>
                 <el-radio :label="2">满意</el-radio>
                 <el-radio :label="3">一般</el-radio>
@@ -234,7 +240,7 @@
               </el-radio-group>
             </el-form-item>
             <el-form-item label="意见建议:">
-              <el-input type="textarea" :rows="6" v-model="proposal"></el-input>
+              <el-input type="textarea" :rows="6" v-model="evaluation.evaSuggest"></el-input>
             </el-form-item>
           </el-form>
         </div>
@@ -242,9 +248,16 @@
     </div>
     <div class="consultBtn">
       <el-button class="question" @click="nextQuery" v-if="$route.query.status == 2">追问律师</el-button>
-      <el-button class="save" @click="save">提交</el-button>
+      <el-button class="save" v-if="$route.query.isPay && $route.query.status == 2" @click="saveConsultResolved">已解答</el-button>
+      <el-button class="save" v-if="!$route.query.isPay || [3, 5, 6].includes($route.query.status)" @click="save">提交</el-button>
       <el-button class="quit" @click="quit">取消</el-button>
     </div>
+    <el-dialog title="追问律师" :visible.sync="dialogVisible" width="40%">
+      <el-input type="textarea" :rows="8" placeholder="问题没有问清楚？输入您的问题继续咨询律师。" v-model="msgContent"></el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" size="medium" @click="submit">提交</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -260,23 +273,18 @@ export default {
         consultAnswer: {},
         msgRecordList: []
       },
-      radio: 1,
-      proposal: "",
-      lawerList: [],
-      list: [],
-      options: [],
-      total: 0,
-      formList: [
-        {
-          type: 1,
-          content: "你的阿的发送到发送到"
-        },
-        {
-          type: 2,
-          content: "阿斯顿发送到大幅度"
-        }
-      ],
+      evaluation: {
+        evaResult: '1',
+        evaSuggest: ''
+      },
+      rules: {
+        evaResult: [
+          { required: true, message: "请选择满意度", trigger: "change" }
+        ],
+      },
+      questionTypeList: [],
       adeptSpecialtyList: [],
+      dialogVisible: false,
       lawyerRequest: {
         pageNum: 1,
         pageSize: 12,
@@ -288,12 +296,14 @@ export default {
       lawList: [],
       areaRegionList: [],
       imgList: [],
-      consultStatusEnum: ['待确认', '解答中', '待评价', '已评价', '律师拒绝', '系统拒绝']
+      consultStatusEnum: ['待确认', '解答中', '待评价', '已评价', '律师拒绝', '系统拒绝'],
+      msgContent: ''
     };
   },
   created() {},
   mounted() {
     this.getData();
+    this.getDictionaryList('wentileixing', 'questionTypeList');
     //  1：待确认；2：解答中；3；待评价；4：已评价；5：律师拒绝；6：系统拒绝；
     if (this.$route.query.status > 4) {
       this.getValidLawyerList();
@@ -316,6 +326,8 @@ export default {
         consultId: this.$route.query.id
       };
       this.$ajaxPost("/consult/getConsultDetail", obj).then(res => {
+        const questionType = res.data.content.consultInfo.questionType;
+        res.data.content.consultInfo.questionTypeName = (this.questionTypeList.find(val => val.dictDataCode == questionType) || {dictDataName: ''}).dictDataName;
         this.form = res.data.content;
         if (this.content.consultInfo) {
           this.imgList = this.content.consultInfo.imgList;
@@ -384,14 +396,53 @@ export default {
       }
       this.getValidLawyerList();
     },
-    saveInteractionMsg() {
-
+    saveInteractionMsg(msgContent = '') {
+      const lawyerId = msgContent ? this.form.consultInfo.lawyerId : this.lawyerId;
+      const reqest = {msgSource: '2', lawyerId, consultId: this.$route.query.id, token: this.$store.state.token, msgContent };
+      this.$ajaxPost('/consult/saveInteractionMsg', reqest).then(({data}) => {
+        if (data.code == 200) {
+          this.$message.success("提交成功", 3000);
+          this.$nextTick(() => {
+            if (msgContent) {
+              this.dialogVisible = false;
+              this.msgContent = '';
+            } else {
+              this.quit();
+            }
+          });
+        }
+      })
+    },
+    saveLawyerEvaluation() {
+      const reqest = Object.assign({evaType: '1', consultId: this.$route.query.id, token: this.$store.state.token}, this.evaluation);
+      this.$ajaxPost('/lawyer/saveLawyerEvaluation', reqest).then(({data}) => {
+        if (data.code == 200) {
+          this.$message.success("提交成功", 3000);
+          this.$nextTick(() => {
+            this.quit();
+          });
+        }
+      })
     },
     nextQuery() {
-
+      this.dialogVisible = true;
+    },
+    submit() {
+      this.saveInteractionMsg(this.msgContent);
+    },
+    saveConsultResolved() {
+      this.$ajaxPost('/lawyer/saveLawyerEvaluation', {token: this.$store.state.token, consultId: this.$route.query.id}).then(({data}) => {
+        if (data.code == 200) {
+          this.$message.success("提交成功", 3000);
+          this.$nextTick(() => {
+            this.quit();
+          });
+        }
+      })
     },
     save() {
-
+      if (this.$route.query.status > 4) this.saveInteractionMsg();
+      if (this.$route.query.status === 4) this.saveLawyerEvaluation();
     }
   }
 };
@@ -647,5 +698,28 @@ export default {
     cursor: pointer;
   }
   // line-height: 70px;
+}
+.el-dialog__header {
+  background: linear-gradient(135deg, rgba(13, 169, 215, 1) 0%, rgba(13, 169, 215, 1) 0%, rgba(29, 115, 192, 1) 100%, rgba(29, 115, 192, 1) 100%);
+  padding: 10px;
+  text-align: center;
+  font-weight: 700;
+  .el-dialog__title {
+    color: white;
+  }
+  .el-dialog__headerbtn {
+    top: 10px;
+    .el-dialog__close {
+      color: #1d73c0;
+      font-size: 24px;
+      font-weight: 700;
+      background-color: white;
+      border-radius: 50%;
+    }
+  }
+}
+.el-dialog__footer {
+  padding: 0 10px 10px;
+  text-align: center;
 }
 </style>

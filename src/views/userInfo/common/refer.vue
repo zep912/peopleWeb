@@ -46,7 +46,7 @@
         </span>
       </div>
       <ul class="referUl">
-        <li v-for="(item,index) in list" :key="index" @click="referConsultClick(item.consultId,item.consultStatus)">
+        <li v-for="(item,index) in list" :class="{cursor: [2, 3].includes(item.consultStatus)}" :key="index" @click="referConsultClick(item.consultId,item.consultStatus)">
           <span>{{item.questionTitle}}</span>
           <span class="time">{{item.createTime}}</span>
 
@@ -148,7 +148,7 @@ export default {
       });
     },
     referConsultClick(id, status){
-      if (![1, 4].includes(status)) this.$router.push({path:'/user/consult',query:{id, status, isPay: false}})
+      if ([2, 3].includes(status)) this.$router.push({path:'/user/consult',query:{id, status, isPay: false}})
     },
     type(n) {
       switch (n) {
@@ -243,7 +243,6 @@ export default {
       overflow: hidden;
       border-bottom: 1px dashed #ccc;
       box-sizing: border-box;
-      cursor: pointer;
       // padding-right: 20px;
       .type {
         float: right;
