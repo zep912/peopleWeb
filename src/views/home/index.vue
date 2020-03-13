@@ -240,7 +240,7 @@ export default {
     font-weight: 700;
     &.is-active {
       color: #fff;
-      background: #409eff;
+      // background: #409eff;
     }
   }
   .el-card__body {
@@ -418,5 +418,14 @@ export default {
       }
     }
   }
+}
+.content .el-tabs__item.is-active{
+  background: linear-gradient(to right, #10a0d3, #1b79c3);
+}
+.content .el-tabs__header{
+  border-bottom:0 !important;  
+}
+.el-tabs__item{
+  background: #f1f1f1;
 }
 </style>

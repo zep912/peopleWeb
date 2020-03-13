@@ -159,7 +159,7 @@ export default {
   overflow: hidden;
 }
 .avatar-uploader .el-upload:hover {
-  border-color: #409eff;
+  // border-color: #409eff;
 }
 .avatar-uploader-icon {
   font-size: 28px;

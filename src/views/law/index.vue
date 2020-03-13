@@ -91,7 +91,7 @@ export default {
         font-weight: 700;
         &.is-active {
           color: #fff;
-          background: #409EFF;
+          // background: #409EFF;
         }
       }
   }

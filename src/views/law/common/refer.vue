@@ -406,6 +406,12 @@
 </script>
 
 <style lang="scss">
+.law-body .el-tabs__header{
+  border-bottom:0 !important;  
+}
+.el-tabs__item{
+  background: #f1f1f1;
+}
 .payHelp {
   .lawForm {
     padding-top: 22px;
@@ -533,5 +539,8 @@
   .el-form-item__content {
     line-height: initial;
   }
+}
+ .law .law-body .el-tabs__item.is-active{
+  background: linear-gradient(to right, #10a0d3, #1b79c3);
 }
 </style>

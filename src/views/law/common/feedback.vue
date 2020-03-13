@@ -3,17 +3,17 @@
     <el-tab-pane label="群众批评意见">
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-row>
-        <el-form-item label="反馈部门" prop="deptName">
+        <el-form-item label="选择部门" prop="deptName">
           <el-input v-model="form.deptName"></el-input>
         </el-form-item>
-        <el-form-item label="反馈事项" prop="feeTitle">
+        <el-form-item label="事项" prop="feeTitle">
           <el-input v-model="form.feeTitle"></el-input>
         </el-form-item>
-        <el-form-item label="问题描述" prop="feeContent">
-          <el-input type="textarea" v-model="form.feeContent"></el-input>
+        <el-form-item label="遇到的问题" prop="feeContent">
+          <el-input type="textarea" v-model="form.feeContent" :rows='7'></el-input>
         </el-form-item>
         <el-form-item label="意见和建议" prop="feeSuggest">
-          <el-input type="textarea" v-model="form.feeSuggest"></el-input>
+          <el-input type="textarea" v-model="form.feeSuggest" :rows='7'></el-input>
         </el-form-item>
         <el-row>
           <el-col :span="12">
@@ -38,8 +38,8 @@
           </el-row>
         </el-form-item>
         </el-row>
-        <el-form-item style="text-align: center">
-          <el-button type="primary" @click="onSubmit">提交</el-button>
+        <el-form-item style="text-align: center" class="btn">
+          <el-button @click="onSubmit" class="saveBtn">提交</el-button>
           <el-button>取消</el-button>
         </el-form-item>
       </el-form>
@@ -116,5 +116,12 @@
 </script>
 
 <style lang="scss">
-
+.saveBtn{
+  background: linear-gradient(to right, #10a0d3, #1b79c3);
+  color: #fff;
+}
+.btn .el-button{
+  width: 130px;
+  height: 48px;
+}
 </style>
