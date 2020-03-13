@@ -390,12 +390,13 @@ export default {
             lawObj.areaRegionName = el.orgName;
             lawObj.lawMsg = false;
             lawObj.infoMsg = false;
-            this.mapList.push(lawObj);
+            this.$nextTick(() => {
+              this.mapList.push(lawObj);
+            })
           });
         }
       })
       });
-
     },
     getOrgList() {
       let obj = {
