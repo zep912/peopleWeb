@@ -2,7 +2,7 @@
   <div class="map">
     <div class="mapbox">
       <el-row>
-        <el-col :span="8" v-show="boxShow">
+        <el-col :span="8" v-show="boxShow" style="position:relative;padding-bottom:40px">
           <el-input
             placeholder="请输入想要搜索机构名称"
             v-model="form.orgName"
@@ -62,8 +62,8 @@
                 <span>{{mapTreeList[0]?mapTreeList[0].areaOrgCount:''}}</span>
               </span>
             </div>
-
-            <ul v-show="!organShow">
+            <!-- 具体律所 -->
+            <ul v-show="!organShow" class="organUl">
               <li
                 v-for="(item,index) in lawOrgList"
                 :key="index"
@@ -73,8 +73,8 @@
                 <i class="el-icon-arrow-right" style="line-height:48px"></i>
               </li>
             </ul>
-
-            <ul v-show="organShow">
+            <!-- 地区 -->
+            <ul v-show="organShow" class="organUl">
               <li
                 v-for="(item,index) in organArr"
                 :key="index"
@@ -90,6 +90,19 @@
                 </span>
               </li>
             </ul>
+            <!-- 分页 -->
+          </div>
+          <div class="organDivList">
+            <el-pagination
+              background
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :current-page="pageform.pageNum"
+              :page-size="pageform.pageSize"
+              layout="total, prev, pager, next"
+              :total="pageform.total"
+              v-show="!organShow"
+            >></el-pagination>
           </div>
         </el-col>
         <el-col :span="8" v-show="!boxShow">
@@ -103,11 +116,17 @@
             <el-form-item label="律师人数:">{{formItem.personTotal}}</el-form-item>
             <el-form-item label="律所简介:">{{formItem.orgDesc}}</el-form-item>
             <el-form-item label="照片:">
-              <img :src="item.img" alt v-for="(item,index) in form.orgImgList" :key="index" />
+              <img
+                :src="item"
+                alt
+                v-for="(item,index) in formItem.orgImgList"
+                :key="index"
+                class="orgImgDsc"
+              />
             </el-form-item>
           </el-form>
         </el-col>
-        <el-col :span="16">
+        <el-col :span="16" style="position:relative">
           <baidu-map
             class="bm-view"
             ak="u6vzTey4WMBeVAbC3SokRMGT3br2sejy"
@@ -116,36 +135,47 @@
             @ready="handler"
             mapType="BMAP_NORMAL_MAP"
             anchor="BMAP_ANCHOR_TOP_RIGHT"
-            :scroll-wheel-zoom=true
-            :double-click-zoom=false
+            :scroll-wheel-zoom="true"
+            :double-click-zoom="false"
           >
             <my-overlay
               :position="{lng: item.lng, lat: item.lat}"
               :text="item.areaRegionName+'('+item.areaOrgCount+')'"
               :active="active"
               :info="item"
-              :lawMsg = item.lawMsg
+              :lawMsg="item.lawMsg"
               @mouseover.native="actives = true"
               @mouseleave.native="actives = false"
               v-for="(item,index) in mapList"
               :key="index"
-              v-show='orgListShow'
+              v-show="orgListShow"
             ></my-overlay>
             <my-overlay
               :position="{lng: item.lng, lat: item.lat}"
               :text="item.areaRegionName"
               :active="active"
               :info="item"
-              :lawMsg = item.lawMsg
+              :lawMsg="item.lawMsg"
               @mouseover.native="actives = true"
               @mouseleave.native="actives = false"
               v-for="(item,index) in mapList"
               :key="'info'+index"
               v-show="lawOrgListShow"
             ></my-overlay>
+
+            <div class="mapDiv" style="position:absolute;left:0;bottom:0;" v-show="labelBoxShow">
+              <h3>{{centerForm.areaRegionName}}</h3>
+              <div class="mapDivBox">
+                <img :src="centerForm.orgImg" alt />
+                <div class="mapOrg">
+                  <p>执业证号：{{centerForm.credentialCode}}</p>
+                  <p>手机号码：{{centerForm.orgTelephone}}</p>
+                  <p>执政律师：{{centerForm.year?centerForm.year:''}}</p>
+                  <p>注册地址：{{centerForm.orgFullAddress}}</p>
+                </div>
+              </div>
+            </div>
           </baidu-map>
-          <!-- <myMap :center='center'></myMap> -->
-          <!-- <div class="mapBox" id="container"></div> -->
         </el-col>
       </el-row>
     </div>
@@ -157,13 +187,23 @@ import MyOverlay from "@/components/myOverlay";
 // import myMap from "@/components/map";
 export default {
   components: {
-    MyOverlay,
+    MyOverlay
     // myMap
   },
   data() {
     return {
-      orgListShow:true,
-      lawOrgListShow:false,
+      centerForm: {
+        areaRegionName: "",
+        orgImg: "",
+        credentialCode: "",
+        year: "",
+        orgFullAddress: ""
+      },
+      labelBoxShow: false,
+      baseMapShow: true,
+      organBaiShow: false,
+      orgListShow: true,
+      lawOrgListShow: false,
       formItem: {
         orgName: "",
         orgCode: "",
@@ -207,7 +247,7 @@ export default {
     };
   },
   mounted() {
-    this.getLawList();
+    // this.getLawList();
     this.getOrgList();
     this.getAreaList();
     this.getFaYuan();
@@ -218,6 +258,11 @@ export default {
     // });
   },
   methods: {
+    draw({ el, BMap, map }) {
+      const pixel = map.pointToOverlayPixel(new BMap.Point(116.404, 39.915));
+      el.style.left = pixel.x - 60 + "px";
+      el.style.top = pixel.y - 20 + "px";
+    },
     // getMap() {
     //   var map = new BMapGL.Map("container");
     //   var point = new BMapGL.Point(this.center.lng, this.center.lat);
@@ -239,6 +284,15 @@ export default {
     //   });
     //   map.addOverlay(label);
     // },
+    handleSizeChange(val) {
+      this.pageform.pageNum = val;
+      this.getLawList();
+    },
+    handleCurrentChange(val) {
+      this.pageform.pageNum = val;
+      this.active = this.proIndex;
+      this.getLawList();
+    },
     getFaYuan() {
       let obj = {
         dictCode: "fayuanjigou",
@@ -278,6 +332,7 @@ export default {
       this.form.areaRegionId = id;
       this.getOrgList();
     },
+    // 点击具体律所
     organClick(id) {
       this.mapList = [];
       this.boxShow = !this.boxShow;
@@ -294,19 +349,27 @@ export default {
         obj.credentialCode = this.formItem.credentialCode;
         obj.orgTelephone = this.formItem.orgTelephone;
         obj.orgFullAddress = this.formItem.orgFullAddress;
-        obj.orgImg = this.formItem.orgImgList[0]
+        obj.orgImg = this.formItem.orgImgList[0];
         obj.lawMsg = false;
-        obj.infoMsg =true
+        obj.infoMsg = true;
+        this.centerForm = obj;
+        this.baseMapShow = false;
+        this.labelBoxShow = true;
         this.mapList.push(obj);
+
         this.center = {
           lng: this.mapList[0].lng,
           lat: this.mapList[0].lat
         };
         this.zoom = 8;
-        // console.log(this.mapList,888)
       });
     },
+    // 点击某区获取区内的律所
     getLawList() {
+      if(this.orgListShow){
+        this.orgListShow = false;
+        this.lawOrgListShow = true;
+      }
       let obj = {
         token: this.$store.state.token,
         ...this.form,
@@ -316,20 +379,23 @@ export default {
       };
       this.$ajaxPost("/lawOrg/getLawOrgList", obj).then(res => {
         this.lawOrgList = res.data.content.dataList;
+        this.pageform.total = res.data.content.pageInfo.total;
+        this.$nextTick(()=>{
+        if (this.lawOrgList.length != 0) {
+          this.mapList = [];
+          this.lawOrgList.forEach(el => {
+            let lawObj = {};
+            lawObj.lng = el.areaX;
+            lawObj.lat = el.areaY;
+            lawObj.areaRegionName = el.orgName;
+            lawObj.lawMsg = false;
+            lawObj.infoMsg = false;
+            this.mapList.push(lawObj);
+          });
+        }
+      })
       });
 
-      this.mapList = [];
-      this.lawOrgList.forEach(el => {
-        let lawObj = {};
-        lawObj.lng = el.areaX;
-        lawObj.lat = el.areaY;
-        lawObj.areaRegionName = el.orgName;
-        lawObj.lawMsg = false
-        lawObj.infoMsg =false
-        this.mapList.push(lawObj);
-      });
-      this.orgListShow = false;
-      this.lawOrgListShow = true;
     },
     getOrgList() {
       let obj = {
@@ -345,8 +411,8 @@ export default {
         this.mapList.forEach(el => {
           el.lng = el.areaCoordinate.split(",")[0];
           el.lat = el.areaCoordinate.split(",")[1];
-          el.lawMsg = true
-          el.infoMsg = false
+          el.lawMsg = true;
+          el.infoMsg = false;
         });
       });
     },
@@ -372,12 +438,53 @@ export default {
 </script>
 
 <style lang='scss'>
+.mapDiv {
+  position: absolute;
+  left: 10px;
+  bottom: 40px;
+  width: 438px;
+  height: 290px;
+  background: rgba(0, 0, 0, 0.4);
+  color: #fff;
+  h3 {
+    height: 40px;
+    background: rgba(0, 0, 0, 0.6);
+    font-size: 18px;
+    line-height: 40px;
+    box-sizing: border-box;
+    padding-left: 5%;
+  }
+  .mapDivBox {
+    overflow: hidden;
+    margin-left: 20px;
+    display: flex;
+    margin-top: 10px;
+    img {
+      width: 100px;
+      height: 130px;
+      margin-right: 20px;
+    }
+    .mapOrg {
+      line-height: 24px;
+    }
+  }
+}
 #container {
   width: 100%;
   height: 800px;
 }
+.organDivList {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  width: 100%;
+  text-align: right;
+}
 .mapTree {
   margin-top: 20px;
+  margin-bottom: 10px;
+  position: relative;
+
   .mapTreeMain {
     border-top: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
@@ -403,7 +510,7 @@ export default {
       }
     }
   }
-  ul {
+  .organUl {
     li {
       height: 48px;
       border-bottom: 1px solid #ccc;
@@ -494,5 +601,11 @@ export default {
     width: 10%;
     text-align: center;
   }
+}
+.orgImgDsc {
+  width: 130px;
+  height: 170px;
+  float: left;
+  margin-right: 15px;
 }
 </style>
