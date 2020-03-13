@@ -380,22 +380,15 @@ export default {
       this.$ajaxPost("/lawOrg/getLawOrgList", obj).then(res => {
         this.lawOrgList = res.data.content.dataList;
         this.pageform.total = res.data.content.pageInfo.total;
-        this.$nextTick(()=>{
-        if (this.lawOrgList.length != 0) {
+        if (res.data.content.dataList && res.data.content.dataList.length !== 0) {
           this.mapList = [];
-          this.lawOrgList.forEach(el => {
-            let lawObj = {};
-            lawObj.lng = el.areaX;
-            lawObj.lat = el.areaY;
-            lawObj.areaRegionName = el.orgName;
-            lawObj.lawMsg = false;
-            lawObj.infoMsg = false;
-            this.$nextTick(() => {
-              this.mapList.push(lawObj);
-            })
-          });
+          this.$nextTick(() => {
+            this.mapList = res.data.content.dataList.map(el => {
+              const {areaX, areaY, orgName} = el;
+              return {lng: areaX, lat: areaY, areaRegionName: orgName, lawMsg: false, infoMsg: false};
+            });
+          })
         }
-      })
       });
     },
     getOrgList() {
@@ -408,12 +401,15 @@ export default {
         this.mapTreeList = res.data.content.areaOrgList;
         this.organArr = this.mapTreeList.slice(0);
         this.organArr = this.organArr.slice(1);
-        this.mapList = this.organArr;
-        this.mapList.forEach(el => {
-          el.lng = el.areaCoordinate.split(",")[0];
-          el.lat = el.areaCoordinate.split(",")[1];
-          el.lawMsg = true;
-          el.infoMsg = false;
+        this.mapList = [];
+        this.$nextTick(() => {
+          this.mapList = this.organArr.map(el => {
+            el.lng = el.areaCoordinate.split(",")[0];
+            el.lat = el.areaCoordinate.split(",")[1];
+            el.lawMsg = true;
+            el.infoMsg = false;
+            return el
+          });
         });
       });
     },
