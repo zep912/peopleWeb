@@ -201,4 +201,8 @@ export default {
     color: #fff;
   }
 }
+.mail-box .el-cascader-menu__wrap{
+  margin-bottom: 0;
+  margin-left: 0;
+}
 </style>

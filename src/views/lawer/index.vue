@@ -1,5 +1,5 @@
 <template>
-  <div class="lawer">
+  <div class="lawer" id="lawer">
     <div class="lawForm">
       <el-form :model="lawyerRequest" label-width="80px">
         <el-row>
@@ -359,5 +359,10 @@ export default {
       border-left: 1px solid #ccc;
     }
   }
+}
+#lawer .active {
+  background: linear-gradient(to right, #0ea4d5, #1c78c2);
+  color: #fff;
+  font-weight: 600;
 }
 </style>

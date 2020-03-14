@@ -167,7 +167,9 @@ export default {
 }
 .homeBox {
   background: #fff;
-  border-top: 1px solid #1787c8;
+  // border-top: 1px solid #1787c8;
+    border-top: 1px solid #ccc;
+  border-image:linear-gradient(to right,#10a0d3,#1b79c3) 1 10;
   padding: 20px;
   box-sizing: border-box;
   margin-top: 20px;

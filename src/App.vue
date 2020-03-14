@@ -54,4 +54,9 @@ li{
 .el-button--primary {
   background: linear-gradient(to right, #10a1d4, #1b7bc3)!important;
 }
+.content .new-box{
+  border-top: 1px solid #ccc;
+  border-image:linear-gradient(to right,#10a0d3,#1b79c3) 1 10;
+  // border-top:linear-gradient(to right, #10a0d3, #1b79c3);;
+}
 </style>

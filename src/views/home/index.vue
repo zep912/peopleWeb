@@ -432,6 +432,7 @@ export default {
 .el-carousel__item {
   img {
     width: 100%;
+    height: 100%;
   }
 }
 .el-carousel__indicators--horizontal {
@@ -462,5 +463,8 @@ export default {
     line-height: 40px;
     background-color: #00000080;
     padding: 0 10px;
+  }
+  .el-carousel--horizontal {
+    overflow: hidden;
   }
 </style>

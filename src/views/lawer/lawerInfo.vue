@@ -18,12 +18,17 @@
           </p>
         </div>
       </div>
-
+      <div class="wx">
+        <img src="../../assets/img/wx.png" alt />
+        <p>微信扫码，及时咨询</p>
+      </div>
       <!-- 进度条 -->
       <div class="progress">
         <div class="progressBox">
           <p>咨询量</p>
-          <p style="margin-top:37px">{{form.evaluationResult?form.evaluationResult.consultAmount:''}}</p>
+          <p
+            style="margin-top:37px"
+          >{{form.evaluationResult?form.evaluationResult.consultAmount:''}}</p>
           <!-- <el-progress type="circle" :percentage="10" :stroke-width=20 color="#0da9d7"></el-progress> -->
         </div>
         <div class="progressBox">
@@ -54,10 +59,6 @@
           ></el-progress>
         </div>
       </div>
-      <div class="wx">
-        <img src="../../assets/img/wx.png" alt />
-        <p>微信扫码，及时咨询</p>
-      </div>
     </div>
 
     <div class="lawerMsg">
@@ -71,10 +72,14 @@
                 <el-form-item label="性别:">{{form.baseInfo?form.baseInfo.sexDesc:''}}</el-form-item>
                 <el-form-item label="居住地址:">{{form.baseInfo?form.baseInfo.fullAreaAddres:''}}</el-form-item>
                 <el-form-item label="政治面貌:">{{form.baseInfo?form.baseInfo.politicsStatusDesc:''}}</el-form-item>
-                <el-form-item label="学历:">{{form.baseInfo?form.baseInfo.educationCertificationDesc:''}}</el-form-item>
+                <el-form-item
+                  label="学历:"
+                >{{form.baseInfo?form.baseInfo.educationCertificationDesc:''}}</el-form-item>
                 <el-form-item label="专业:">{{form.baseInfo?form.baseInfo.major:''}}</el-form-item>
                 <el-form-item label="执行类别:">{{form.baseInfo?form.baseInfo.professionTypeDesc:''}}</el-form-item>
-                <el-form-item label="资格证类型:">{{form.baseInfo?form.baseInfo.certificationTypeDesc:''}}</el-form-item>
+                <el-form-item
+                  label="资格证类型:"
+                >{{form.baseInfo?form.baseInfo.certificationTypeDesc:''}}</el-form-item>
                 <el-form-item label="首次执业:">{{form.baseInfo?form.baseInfo.firstOperation:''}}</el-form-item>
                 <el-form-item label="执业机构:">{{form.baseInfo?form.baseInfo.orgName:''}}</el-form-item>
                 <!-- <el-form-item label="人员类型:">{{form.baseInfo.lawerName}}</el-form-item> -->
@@ -168,7 +173,7 @@ export default {
   mounted() {
     this.id = this.$router.currentRoute.query.id;
     this.getLawerInfo();
-    this.getConsultByLawyer()
+    this.getConsultByLawyer();
   },
   methods: {
     handleSizeChange(val) {
@@ -187,12 +192,11 @@ export default {
         lawyerId: this.id
       };
       this.$ajaxPost("/lawyer/getValidLawyerInfo", obj).then(res => {
-        if(res.data.code==200){
+        if (res.data.code == 200) {
           this.form = res.data.content;
-        }else{
-          console.log('error')
+        } else {
+          console.log("error");
         }
-        
       });
     },
     getConsultByLawyer() {
@@ -219,8 +223,8 @@ export default {
           return "律师拒绝";
       }
     },
-    focusComment(){
-      this.$router.push('/law')
+    focusComment() {
+      this.$router.push("/law");
     }
   }
 };
@@ -285,10 +289,20 @@ export default {
     }
   }
 }
+.wx {
+  float: right;
+  margin-right: 130px;
+  text-align: center;
+  img {
+    width: 130px;
+    height: 130px;
+    margin-bottom: 10px;
+  }
+}
 .progress {
-  float: left;
+  float: right;
   overflow: hidden;
-  margin-left: 110px;
+  margin-right: 110px;
   margin-top: 30px;
   .progressBox {
     float: left;
@@ -303,16 +317,7 @@ export default {
   width: 70px !important;
   height: 70px !important;
 }
-.wx {
-  float: left;
-  margin-left: 130px;
-  text-align: center;
-  img {
-    width: 130px;
-    height: 130px;
-    margin-bottom: 10px;
-  }
-}
+
 .lawerMsg-btn {
   position: absolute;
   right: 22px;

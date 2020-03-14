@@ -59,7 +59,7 @@ export default {
       this.$router.push("/register");
     },
     user() {
-      this.$router.push("./user");
+      this.$router.push("/user");
     },
     btn() {},
     quit(){

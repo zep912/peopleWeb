@@ -140,7 +140,9 @@ export default {
   padding: 20px;
   background: #fff;
   margin-left: 20px;
-  border-top: 1px solid #0ea5d5;
+  // border-top: 1px solid #0ea5d5;
+  border-top: 1px solid #ccc;
+  border-image:linear-gradient(to right,#10a0d3,#1b79c3) 1 10;
   .lawTitles {
     display: inline-block;
     width: 150px;

@@ -56,6 +56,7 @@ export default {
       margin-right: 20px;
       text-align: center;
       border: 1px solid #ddd;
+      background: #fff;
       cursor: pointer;
       i {
         font-size: 60px;
@@ -79,7 +80,9 @@ export default {
     width: 100%;
     background-color: #fff;
     padding: 15px!important;
-    border-top: 2px solid #449efe;
+    // border-top: 2px solid #449efe;
+    border-top: 1px solid #ccc;
+  border-image:linear-gradient(to right,#10a0d3,#1b79c3) 1 10;
     box-sizing: border-box;
     .el-tabs__header {
         margin: 0 0 15px;
