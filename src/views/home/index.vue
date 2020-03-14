@@ -347,7 +347,7 @@ export default {
             padding: 5px 0;
           }
           &:hover {
-            background: #3ba6d5;
+            background: linear-gradient(to right, #10a0d3, #1b79c3);
             font-weight: 700;
             color: #fff;
             i {
