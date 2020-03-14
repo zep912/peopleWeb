@@ -2,7 +2,7 @@
   <div class="content">
     <el-row :gutter="10">
       <el-col :span="16">
-        <el-carousel height="360px" :autoplay="false">
+        <el-carousel height="360px">
           <el-carousel-item v-for="item in content.bannerList1" :key="item.bannerId">
             <img :src="item.imgPath" />
             <div class="bannerTitle">{{item.bannerTitle}}</div>
