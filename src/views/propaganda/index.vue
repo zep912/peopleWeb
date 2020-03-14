@@ -109,7 +109,7 @@ export default {
       this.getData()
     },
     lawClick(id) {
-      this.$router.push({ path: "/propaganda/getInfo", query: { id: id } });
+      this.$router.push({ path: "/propaganda/getInfo", query: { id } });
     },
     navClick(n, type, index) {
       this.types = type;

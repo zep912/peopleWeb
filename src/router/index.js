@@ -26,7 +26,7 @@ const routes = [
         component: () => import('../views/law/')
       },
       {
-        path: '/listLawer',
+        path: '/listLaywer',
         name: '律师信息',
         component: () => import('../views/lawer/')
       },
@@ -66,13 +66,13 @@ const routes = [
         component: () => import('../views/userInfo/lawConsult'),
       },
       {
-        path: '/listLawer/lawerInfo',
+        path: '/listLaywer/info',
         name: '律师详情',
         component: () => import('../views/lawer/lawerInfo')
       },
       {
         path: '/propaganda/getInfo',
-        name: '',
+        name: '普法宣传详情',
         component: () => import('../views/propaganda/getInfo')
       },
       {
