@@ -51,4 +51,7 @@ li{
 .form-item-center {
   text-align: center;
 }
+.el-button--primary {
+  background: linear-gradient(to right, #10a1d4, #1b7bc3)!important;
+}
 </style>

@@ -6,11 +6,11 @@
         <div class="topRight">
 
           <el-button-group>
-            <el-button type="primary" @click="register" v-show='isLogin'>注册</el-button>
-            <el-button type="primary" @click="$router.push({path: '/login'})" v-show='isLogin'>登录</el-button>
-            <el-button type='primary' v-show='!isLogin'>您好 {{userName}}</el-button>
-            <el-button type='primary' v-show='!isLogin' @click="quit">注销</el-button>
-            <el-button type="primary" @click="user">个人中心</el-button>
+            <el-button type="text" @click="register" v-show='isLogin'>注册</el-button>
+            <el-button type="text" @click="$router.push({path: '/login'})" v-show='isLogin'>登录</el-button>
+            <el-button type='text' v-show='!isLogin' @click="user">您好 {{userName}}</el-button>
+            <el-button type='text' v-show='!isLogin' @click="quit">注销</el-button>
+            <!--<el-button type="text" @click="user">个人中心</el-button>-->
           </el-button-group>
           <div class="topBtn">
             <el-input v-model="keyWord" placeholder="请输入关键字查询"></el-input>
@@ -133,8 +133,16 @@ export default {
   .topRight {
     text-align: right;
     .el-button-group {
-      .el-button {
-        background: #0fa1d4;
+      background: linear-gradient(to right, #10a0d3, #1b79c3);
+      padding: 10px 0;
+      border-radius: 5px;
+      .el-button--text {
+        color: #fff!important;
+        padding: 0 10px 0;
+        border-right: 1px solid #fff;
+        &:last-of-type {
+          border-right: none;
+        }
       }
     }
   }
@@ -160,7 +168,7 @@ export default {
 }
 #nav {
   width: 100%;
-  background: #0ea6d6;
+  background: linear-gradient(to right, #10a0d3, #1b79c3);
   font-size: 16px;
   height: 60px;
   a {
@@ -176,7 +184,7 @@ export default {
 }
 #nav .router-link-exact-active {
   color: #fff;
-  background: #58bde0;
+  background: rgba(255, 255, 255, 0.4);
 }
 .navList {
   width: 85%;

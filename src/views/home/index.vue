@@ -2,9 +2,10 @@
   <div class="content">
     <el-row :gutter="10">
       <el-col :span="16">
-        <el-carousel height="360px">
+        <el-carousel height="360px" :autoplay="false">
           <el-carousel-item v-for="item in content.bannerList1" :key="item.bannerId">
             <img :src="item.imgPath" />
+            <div class="bannerTitle">{{item.bannerTitle}}</div>
           </el-carousel-item>
         </el-carousel>
       </el-col>
@@ -104,7 +105,7 @@
       </el-col>
     </el-row>
     <el-carousel height="120px" style="margin: 10px 0">
-      <el-carousel-item v-for="item in content.bannerList1" :key="item.bannerId">
+      <el-carousel-item v-for="item in content.bannerList2" :key="item.bannerId">
         <img :src="item.imgPath" />
       </el-carousel-item>
     </el-carousel>
@@ -423,9 +424,43 @@ export default {
   background: linear-gradient(to right, #10a0d3, #1b79c3);
 }
 .content .el-tabs__header{
-  border-bottom:0 !important;  
+  border-bottom:0 !important;
 }
 .el-tabs__item{
   background: #f1f1f1;
 }
+.el-carousel__item {
+  img {
+    width: 100%;
+  }
+}
+.el-carousel__indicators--horizontal {
+  left: auto;
+  right: 10px;
+  bottom: -2px;
+  transform: translateX(0);
+  .el-carousel__button {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #fff;
+    opacity: 1;
+  }
+  .is-active {
+    .el-carousel__button {
+      background-color: #3b9dd8;
+    }
+  }
+}
+  .bannerTitle {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    color: #fff;
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    background-color: #00000080;
+    padding: 0 10px;
+  }
 </style>
