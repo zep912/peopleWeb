@@ -7,7 +7,11 @@
         </el-form-item>
         <el-form-item label="问题类型" prop="questionType">
           <el-radio-group v-model="form.questionType">
-            <el-radio v-for="item in questionTypeList" :key="item.dictDataCode" :label="item.dictDataCode">{{item.dictDataName}}</el-radio>
+            <el-radio
+              v-for="item in questionTypeList"
+              :key="item.dictDataCode"
+              :label="item.dictDataCode"
+            >{{item.dictDataName}}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="问题描述" prop="questionDesc">
@@ -36,10 +40,15 @@
           </el-row>
         </el-form-item>
         <el-form-item label="上传图片">
-          <el-upload class="avatar-uploader" :data="{token: form.token}" :show-file-list="false"
-                     action="http://59.44.27.201:9010/jjkj/sfj/api/support/uploadFileToLocal"
-                     :on-success="uploadSuccess" :before-upload="beforeAvatarUpload">
-            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+          <el-upload
+            class="avatar-uploader"
+            :data="{token: form.token}"
+            :show-file-list="false"
+            action="http://59.44.27.201:9010/jjkj/sfj/api/support/uploadFileToLocal"
+            :on-success="uploadSuccess"
+            :before-upload="beforeAvatarUpload"
+          >
+            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
@@ -57,9 +66,11 @@
               <el-col :span="6">
                 <el-form-item label="所属区域:">
                   <el-select v-model="lawyerRequest.areaRegionId" placeholder="请选择">
-                    <el-option v-for="item in areaRegionList" :key="item.areaId"
-                            :label="item.areaName"
-                            :value="item.areaId"
+                    <el-option
+                      v-for="item in areaRegionList"
+                      :key="item.areaId"
+                      :label="item.areaName"
+                      :value="item.areaId"
                     ></el-option>
                   </el-select>
                 </el-form-item>
@@ -68,10 +79,10 @@
                 <el-form-item label="擅长专业:">
                   <el-select v-model="lawyerRequest.adeptSpecialty" placeholder="请选择">
                     <el-option
-                            v-for="item in adeptSpecialtyList"
-                            :key="item.dictDataCode"
-                            :label="item.dictDataName"
-                            :value="item.dictDataCode"
+                      v-for="item in adeptSpecialtyList"
+                      :key="item.dictDataCode"
+                      :label="item.dictDataName"
+                      :value="item.dictDataCode"
                     ></el-option>
                   </el-select>
                 </el-form-item>
@@ -89,10 +100,22 @@
         </div>
         <div class="lawSec">
           <div class="lawSecFour">
-            <span :class="setClass('1')" @click="searchSort('1')">咨询量<i class="el-icon-caret-bottom"></i></span>
-            <span :class="setClass('2')" @click="searchSort('2')">满意度<i class="el-icon-caret-bottom"></i></span>
-            <span :class="setClass('3')" @click="searchSort('3')">接案率<i class="el-icon-caret-bottom"></i></span>
-            <span :class="setClass('4')" @click="searchSort('4')">结案率<i class="el-icon-caret-bottom"></i></span>
+            <span :class="setClass('1')" @click="searchSort('1')">
+              咨询量
+              <i class="el-icon-caret-bottom"></i>
+            </span>
+            <span :class="setClass('2')" @click="searchSort('2')">
+              满意度
+              <i class="el-icon-caret-bottom"></i>
+            </span>
+            <span :class="setClass('3')" @click="searchSort('3')">
+              接案率
+              <i class="el-icon-caret-bottom"></i>
+            </span>
+            <span :class="setClass('4')" @click="searchSort('4')">
+              结案率
+              <i class="el-icon-caret-bottom"></i>
+            </span>
           </div>
           <div class="lawTotal">
             <span>共计：</span>
@@ -107,8 +130,14 @@
                 <div class="lawerInfo">
                   <div class="info-box">
                     <div class="info-left">
-                      <h3 class="info-title">{{item.lawyerName}}律师<span>(执业{{item.operationYears}}年)</span></h3>
-                      <div class="info-phone">电话：<span>{{item.lawyerPhone}}</span></div>
+                      <h3 class="info-title">
+                        {{item.lawyerName}}律师
+                        <span>(执业{{item.operationYears}}年)</span>
+                      </h3>
+                      <div class="info-phone">
+                        电话：
+                        <span>{{item.lawyerPhone}}</span>
+                      </div>
                     </div>
                     <div class="info-right">
                       <el-button @click="payRefer(item)">点击咨询</el-button>
@@ -138,24 +167,39 @@
           </ul>
         </div>
         <div class="footPage">
-          <el-pagination background layout="prev, pager, next" :total="lawyerRequest.total" @size-change="sizeChange"></el-pagination>
+          <el-pagination
+            background
+            layout="prev, pager, next"
+            :total="lawyerRequest.total"
+            @size-change="sizeChange"
+          ></el-pagination>
         </div>
       </div>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px" class="payHelpClass" v-if="form.lawyerId">
+      <el-form
+        ref="form"
+        :model="form"
+        :rules="rules"
+        label-width="80px"
+        class="payHelpClass"
+        v-if="form.lawyerId"
+      >
         <el-form-item label="意见律师" prop="lawyerId">
-          <div class="lawerList">
-            <ul>
-              <li style="width: 40%">
+          <div class="lawerList" style="position:relative">
+            <ul style="width:40%;float:left">
+              <li style="width: 100%">
                 <div class="lawerImg">
                   <img :src="lawyerItem.photoUrl" alt />
                   <div class="lawerInfo">
                     <div class="info-box">
                       <div class="info-left">
-                        <h3 class="info-title">{{lawyerItem.lawyerName}}律师<span>(执业{{lawyerItem.operationYears}}年)</span></h3>
-                        <div class="info-phone">电话：<span>{{lawyerItem.lawyerPhone}}</span></div>
-                      </div>
-                      <div class="info-right">
-                        <el-button @click="modLawyer">修改</el-button>
+                        <h3 class="info-title">
+                          {{lawyerItem.lawyerName}}律师
+                          <span>(执业{{lawyerItem.operationYears}}年)</span>
+                        </h3>
+                        <div class="info-phone">
+                          电话：
+                          <span>{{lawyerItem.lawyerPhone}}</span>
+                        </div>
                       </div>
                     </div>
                     <p>
@@ -180,6 +224,9 @@
                 </div>
               </li>
             </ul>
+            <div class="info-right" style="margin-left:20px;position:absolute;bottom:20px;left:40%">
+              <el-button @click="modLawyer">修改</el-button>
+            </div>
           </div>
         </el-form-item>
         <el-form-item label="标题" prop="questionTitle">
@@ -187,7 +234,11 @@
         </el-form-item>
         <el-form-item label="咨询类型" prop="questionType">
           <el-radio-group v-model="form.questionType">
-            <el-radio v-for="item in questionTypeList" :key="item.dictDataCode" :label="item.dictDataCode">{{item.dictDataName}}</el-radio>
+            <el-radio
+              v-for="item in questionTypeList"
+              :key="item.dictDataCode"
+              :label="item.dictDataCode"
+            >{{item.dictDataName}}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="问题描述" prop="questionDesc">
@@ -225,191 +276,212 @@
 </template>
 
 <script>
-  import areaList from '@/components/areaList';
-  export default {
-    name: "refer",
-    components: {areaList},
-    data() {
-      return {
-        questionTypeList: [],
-        userInfo: {},
-        form: {
-          areaArray: [],
-          token: "",                //类型：String  必有字段  备注：用户身份标识
-          consultType: "1",                //类型：String  必有字段  备注：咨询类型 1：免费咨询；2：针对性咨询
-          questionType: "",                //类型：String  必有字段  备注：问题类型
-          questionTitle: "",                //类型：String  必有字段  备注：标题
-          questionDesc: "",                //类型：String  必有字段  备注：问题描述
-          lawyerId: "",                //类型：String  可有字段  备注：意向律师ID(当提交针对性咨询时，此字段必有，如果是免费咨询，后台要查出当前的值班律师ID)
-          fileId: ""
-        },
-        rules: {
-          questionTitle: [
-            {required: true, message: '请填写标题', trigger: 'change'}
-          ],
-          questionType: [
-            {required: true, message: '请选择问题类型', trigger: 'change'}
-          ],
-          questionDesc: [
-            {required: true, message: '请填写问题描述', trigger: 'change'}
-          ],
-          lawyerId: [
-            {required: true, message: '请选择律师', trigger: 'change'}
-          ]
-        },
-        lawList: [],
-        imageUrl: '',
-        adeptSpecialtyList: [],
-        areaRegionList: [],
-        lawyerRequest: {
-          pageNum: '1',
-          pageSize: '12',
-          total: 0,
-          keyWord: '',
-          sortModel: '1',
-          sortType: '1'
-        },
-        lawyerItem: {
-          serviceData: {
-            satisfaction: 0
+import areaList from "@/components/areaList";
+export default {
+  name: "refer",
+  components: { areaList },
+  data() {
+    return {
+      questionTypeList: [],
+      userInfo: {},
+      form: {
+        areaArray: [],
+        token: "", //类型：String  必有字段  备注：用户身份标识
+        consultType: "1", //类型：String  必有字段  备注：咨询类型 1：免费咨询；2：针对性咨询
+        questionType: "", //类型：String  必有字段  备注：问题类型
+        questionTitle: "", //类型：String  必有字段  备注：标题
+        questionDesc: "", //类型：String  必有字段  备注：问题描述
+        lawyerId: "", //类型：String  可有字段  备注：意向律师ID(当提交针对性咨询时，此字段必有，如果是免费咨询，后台要查出当前的值班律师ID)
+        fileId: ""
+      },
+      rules: {
+        questionTitle: [
+          { required: true, message: "请填写标题", trigger: "change" }
+        ],
+        questionType: [
+          { required: true, message: "请选择问题类型", trigger: "change" }
+        ],
+        questionDesc: [
+          { required: true, message: "请填写问题描述", trigger: "change" }
+        ],
+        lawyerId: [{ required: true, message: "请选择律师", trigger: "change" }]
+      },
+      lawList: [],
+      imageUrl: "",
+      adeptSpecialtyList: [],
+      areaRegionList: [],
+      lawyerRequest: {
+        pageNum: "1",
+        pageSize: "12",
+        total: 0,
+        keyWord: "",
+        sortModel: "1",
+        sortType: "1"
+      },
+      lawyerItem: {
+        serviceData: {
+          satisfaction: 0
+        }
+      },
+      lawyerId: ""
+    };
+  },
+  methods: {
+    getDictionaryList(dictCode, typeName, flag) {
+      this.$ajaxPost("/support/getDictionaryList", {
+        dictCode,
+        userId: "1"
+      }).then(({ data }) => {
+        if (data.code == 200) {
+          const defaultArr = flag
+            ? [{ dictDataCode: "", dictDataName: "全部" }]
+            : [];
+          this[typeName] = defaultArr.concat(data.content.resultList);
+        }
+      });
+    },
+    getAreaList() {
+      this.$ajaxPost("/support/getAreaList", { areaLevel: "3" }).then(
+        ({ data }) => {
+          if (data.code === 200) {
+            this.areaRegionList = [{ areaId: "", areaName: "全部" }].concat(
+              data.content.dataList.reduce((res, item) => {
+                if (!res.some(val => val.areaId === item.areaId)) {
+                  item.leaf = item.areaLevel === "4";
+                  res.push(item);
+                }
+                return res;
+              }, [])
+            );
           }
-        },
-        lawyerId: ''
+        }
+      );
+    },
+    tabClick({ name }) {
+      if (name === "2") {
+        this.getDictionaryList("shanchangzhuangye", "adeptSpecialtyList", true);
+        this.getAreaList();
+        this.getValidLawyerList();
       }
     },
-    methods: {
-      getDictionaryList(dictCode, typeName, flag) {
-        this.$ajaxPost('/support/getDictionaryList', {dictCode, userId: '1'}).then(({data}) => {
-          if (data.code == 200) {
-            const defaultArr = flag ? [{dictDataCode: '', dictDataName: '全部'}] : [];
-            this[typeName] = defaultArr.concat(data.content.resultList);
-          }
-        })
-      },
-      getAreaList() {
-        this.$ajaxPost('/support/getAreaList', {areaLevel: '3'}).then(({data}) => {
-          if (data.code === 200) {
-            this.areaRegionList = [{areaId: '', areaName: '全部'}].concat(data.content.dataList.reduce((res, item) => {
-              if (!res.some(val => val.areaId === item.areaId)) {
-                item.leaf = item.areaLevel === '4';
-                res.push(item)
-              }
-              return res;
-            }, []));
-          }
-        })
-      },
-      tabClick({name}) {
-        if (name === '2') {
-          this.getDictionaryList('shanchangzhuangye', 'adeptSpecialtyList', true);
-          this.getAreaList();
-          this.getValidLawyerList();
-        }
-      },
-      sizeChange(pageNum) {
-        this.lawyerRequest.pageNum = pageNum;
-        this.getValidLawyerList();
-      },
-      search() {
-        this.lawyerRequest.pageNum = '1';
-        this.getValidLawyerList();
-      },
-      setClass(sortModel) {
-        return {active: this.lawyerRequest.sortModel === sortModel, 'sort-bottom': this.lawyerRequest.sortModel === sortModel && this.lawyerRequest.sortType === '2'}
-      },
-      searchSort(sortModel) {
-        if (this.lawyerRequest.sortModel === sortModel) {
-          this.lawyerRequest.sortType = this.lawyerRequest.sortType === '1' ? '2' : '1';
-        } else {
-          this.lawyerRequest.sortModel = sortModel;
-          this.lawyerRequest.sortType = '1';
-        }
-        this.getValidLawyerList();
-      },
-      getValidLawyerList() {
-        this.$ajaxPost('/lawyer/getValidLawyerList', this.lawyerRequest).then(res=>{
+    sizeChange(pageNum) {
+      this.lawyerRequest.pageNum = pageNum;
+      this.getValidLawyerList();
+    },
+    search() {
+      this.lawyerRequest.pageNum = "1";
+      this.getValidLawyerList();
+    },
+    setClass(sortModel) {
+      return {
+        active: this.lawyerRequest.sortModel === sortModel,
+        "sort-bottom":
+          this.lawyerRequest.sortModel === sortModel &&
+          this.lawyerRequest.sortType === "2"
+      };
+    },
+    searchSort(sortModel) {
+      if (this.lawyerRequest.sortModel === sortModel) {
+        this.lawyerRequest.sortType =
+          this.lawyerRequest.sortType === "1" ? "2" : "1";
+      } else {
+        this.lawyerRequest.sortModel = sortModel;
+        this.lawyerRequest.sortType = "1";
+      }
+      this.getValidLawyerList();
+    },
+    getValidLawyerList() {
+      this.$ajaxPost("/lawyer/getValidLawyerList", this.lawyerRequest).then(
+        res => {
           const dataList = res.data.content.dataList;
           this.lawList = dataList;
           // for (let i = 0; i < 10; i++) {
           //   this.lawList = this.lawList.concat(dataList);
           // }
-          this.lawyerRequest.total = res.data.content.pageInfo.total
-        })
-      },
-      payRefer(item) {
-        this.lawyerItem = item;
-        this.form = Object.assign({},this.form, {lawyerId: item.lawyerId});
-      },
-      modLawyer() {
-        this.form = Object.assign({},this.form, {lawyerId: ''});
-      },
-      cancel() {
-        this.form = {
-          areaArray: [],
-          consultType: "2",
-          fileId: ''
-        };
-      },
-      // 图片上传成功的回调处理
-      uploadSuccess(res, file) {
-        if (res.code === 200) {
-          this.form.fileId = res.content.fileList.map(item => item.fileId).join();
-          this.imageUrl = URL.createObjectURL(file.raw);
+          this.lawyerRequest.total = res.data.content.pageInfo.total;
         }
-      },
-      beforeAvatarUpload(file) {
-        const isImg = file.type.indexOf("image/") > -1;
-        const isLt100M = file.size / 1024 / 1024 < 100;
-        if (!isImg) {
-          this.$message.error("只能上传照片");
-        }
-        if (!isLt100M) {
-          this.$message.error("上传头像图片大小不能超过 100MB!");
-        }
-        return isImg && isLt100M;
-      },
-      onSubmit(consultType) {
-        this.$refs['form'].validate((valid) => {
-          if (valid) {
-            const areaArray = this.form.areaArray;
-            let form = Object.assign({}, this.form);
-            if (areaArray && areaArray.length) {
-              form.areaCityId = areaArray[0];
-              form.areaRegionId = areaArray[1];
-              form.areaStreetId = areaArray[2];
-            }
-            this.$ajaxPost('/consult/saveConsultOnline', form).then(({data}) => {
+      );
+    },
+    payRefer(item) {
+      this.lawyerItem = item;
+      this.form = Object.assign({}, this.form, { lawyerId: item.lawyerId });
+    },
+    modLawyer() {
+      this.form = Object.assign({}, this.form, { lawyerId: "" });
+    },
+    cancel() {
+      this.form = {
+        areaArray: [],
+        consultType: "2",
+        fileId: ""
+      };
+    },
+    // 图片上传成功的回调处理
+    uploadSuccess(res, file) {
+      if (res.code === 200) {
+        this.form.fileId = res.content.fileList.map(item => item.fileId).join();
+        this.imageUrl = URL.createObjectURL(file.raw);
+      }
+    },
+    beforeAvatarUpload(file) {
+      const isImg = file.type.indexOf("image/") > -1;
+      const isLt100M = file.size / 1024 / 1024 < 100;
+      if (!isImg) {
+        this.$message.error("只能上传照片");
+      }
+      if (!isLt100M) {
+        this.$message.error("上传头像图片大小不能超过 100MB!");
+      }
+      return isImg && isLt100M;
+    },
+    onSubmit(consultType) {
+      this.$refs["form"].validate(valid => {
+        if (valid) {
+          const areaArray = this.form.areaArray;
+          let form = Object.assign({}, this.form);
+          if (areaArray && areaArray.length) {
+            form.areaCityId = areaArray[0];
+            form.areaRegionId = areaArray[1];
+            form.areaStreetId = areaArray[2];
+          }
+          this.$ajaxPost("/consult/saveConsultOnline", form).then(
+            ({ data }) => {
               if (data.code === 200) {
-                this.form = {token: this.$store.getters.token, areaArray: [], consultType};
+                this.form = {
+                  token: this.$store.getters.token,
+                  areaArray: [],
+                  consultType
+                };
                 this.imageUrl = "";
                 this.$nextTick(() => {
-                  this.$refs['form'].clearValidate();
+                  this.$refs["form"].clearValidate();
                 });
-                this.$message.success('提交成功', 3000);
+                this.$message.success("提交成功", 3000);
               } else {
                 this.$message.error(data.msg, 3000);
               }
-            })
-          } else {
-            console.log('error submit!!');
-            return false;
-          }
-        });
-      }
-    },
-    mounted() {
-      this.form.token = this.$Cookies.get('token');
-      this.userInfo = this.$store.state.userInfo;
-      this.getDictionaryList('wentileixing', 'questionTypeList');
-    },
+            }
+          );
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    }
+  },
+  mounted() {
+    this.form.token = this.$Cookies.get("token");
+    this.userInfo = this.$store.state.userInfo;
+    this.getDictionaryList("wentileixing", "questionTypeList");
   }
+};
 </script>
 
 <style lang="scss">
-.law-body .el-tabs__header{
-  border-bottom:0 !important;  
+.law-body .el-tabs__header {
+  border-bottom: 0 !important;
 }
-.el-tabs__item{
+.el-tabs__item {
   background: #f1f1f1;
 }
 .payHelp {
@@ -443,7 +515,7 @@
         border: 1px solid #ccc;
         cursor: pointer;
         &.active {
-          color: #1982C6;
+          color: #1982c6;
         }
         &.sort-bottom {
           i {
@@ -461,6 +533,7 @@
 }
 .lawerList {
   padding-bottom: 20px;
+  overflow: hidden;
   ul {
     overflow: hidden;
   }
@@ -503,6 +576,8 @@
         }
         .info-right {
           margin: 0 10px;
+          float: left;
+          margin-left: 10px;
           .el-button {
             width: 70px;
             height: 70px;
@@ -540,7 +615,7 @@
     line-height: initial;
   }
 }
- .law .law-body .el-tabs__item.is-active{
+.law .law-body .el-tabs__item.is-active {
   background: linear-gradient(to right, #10a0d3, #1b79c3);
 }
 </style>
