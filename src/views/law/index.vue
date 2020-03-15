@@ -37,8 +37,6 @@ export default {
   methods: {
   },
   mounted() {
-    const query = this.$route.query;
-    this.active = query.type ? query.type : 'refer';
   }
 }
 </script>

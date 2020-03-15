@@ -5,7 +5,7 @@
       <div class="lawerList">
         <div class="lawerInfobox">
           <h3>
-            {{form.lawyerName}}律师
+            {{form.baseInfo.lawyerName}}律师
             <span>(执业{{form.baseInfo?form.baseInfo.operationYears:''}}年)</span>
           </h3>
           <p>
@@ -62,7 +62,7 @@
     </div>
 
     <div class="lawerMsg">
-      <el-button class="lawerMsg-btn" @click="focusComment">针对性咨询</el-button>
+      <el-button type="primary" class="lawerMsg-btn" @click="focusComment">针对性咨询</el-button>
       <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
         <el-tab-pane label="基本信息" name="first">
           <el-form :model="form" label-width="100px">
@@ -149,15 +149,12 @@ export default {
   data() {
     return {
       form: {
-        name: "",
-        year: 0,
-        mobile: "",
-        content: "知识产权，房产纠纷，劳动争议，债权债务，婚姻 家庭",
-        id: 2
+        baseInfo: {},
+        consultByLawerList: [],
+        faithList: []
       },
       activeName: "first",
       tableData: [],
-      id: "",
       page: {
         pageSize: 10,
         pageNum: 1
@@ -171,7 +168,6 @@ export default {
   },
   created() {},
   mounted() {
-    this.id = this.$router.currentRoute.query.id;
     this.getLawerInfo();
     this.getConsultByLawyer();
   },
@@ -189,7 +185,7 @@ export default {
     },
     getLawerInfo() {
       let obj = {
-        lawyerId: this.id
+        lawyerId: this.$route.query.id
       };
       this.$ajaxPost("/lawyer/getValidLawyerInfo", obj).then(res => {
         if (res.data.code == 200) {
@@ -201,7 +197,7 @@ export default {
     },
     getConsultByLawyer() {
       let obj = {
-        lawyerId: this.id,
+        lawyerId: this.$route.query.id,
         ...this.pageform
       };
       this.$ajaxPost("/consult/getConsultByLawyer", obj).then(res => {
@@ -224,7 +220,8 @@ export default {
       }
     },
     focusComment() {
-      this.$router.push("/law");
+      this.$store.commit('refer', {consultType: '2', lawyerId: this.$route.query.id});
+      this.$router.push({path: "/law"});
     }
   }
 };
@@ -240,6 +237,7 @@ export default {
   margin-top: 20px;
   padding: 20px;
   position: relative;
+  z-index: 999;
 }
 .lawerInfos {
   width: 85%;
@@ -322,12 +320,8 @@ export default {
   position: absolute;
   right: 22px;
   top: 10px;
-  width: 120px;
-  height: 44px;
-  background: linear-gradient(to right, #10a1d4, #1b7bc3);
-  color: #fff;
-  font-size: 16px;
   cursor: pointer;
+  z-index: 99;
 }
 .lawerMsg .el-tabs__item {
   border: none;

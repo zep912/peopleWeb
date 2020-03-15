@@ -8,7 +8,9 @@ export default new Vuex.Store({
   state: {
     userInfo: {},
     authorityList: [],
-    token: ''
+    token: '',
+    refer: {lawyerId: '', consultType: ''},
+    lawyerItem: {}
   },
   mutations: {
     userInfo: (state, userInfo) => {
@@ -19,6 +21,12 @@ export default new Vuex.Store({
     },
     token: (state, token) => {
       state.token = token
+    },
+    refer: (state, refer) => {
+      state.refer = refer
+    },
+    lawyerItem: (state, lawyerItem) => {
+      state.lawyerItem = lawyerItem
     }
   },
   actions: {

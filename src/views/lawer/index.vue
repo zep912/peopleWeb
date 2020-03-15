@@ -66,7 +66,7 @@
     <!-- 律师信息 -->
     <div class="lawerList">
       <ul class="lawerUl">
-        <li v-for="(item,index) in lawList" :key="index" @click="lawerClick(item.lawyerId)">
+        <li v-for="(item,index) in lawList" :key="index" @click="lawerClick(item)">
           <div class="lawerImg">
             <img :src="item.photoUrl" alt />
             <div class="lawerInfo">
@@ -214,8 +214,9 @@ export default {
         }
       );
     },
-    lawerClick(id) {
-      this.$router.push({ path: "/listLaywer/info", query: { id } });
+    lawerClick(item) {
+      this.$store.commit('lawyerItem', item);
+      this.$router.push({ path: "/listLaywer/info", query: {id: item.lawyerId} });
     }
   }
 };

@@ -184,50 +184,44 @@
         v-if="form.lawyerId"
       >
         <el-form-item label="意见律师" prop="lawyerId">
-          <div class="lawerList" style="position:relative">
-            <ul style="width:40%;float:left">
-              <li style="width: 100%">
-                <div class="lawerImg">
-                  <img :src="lawyerItem.photoUrl" alt />
-                  <div class="lawerInfo">
-                    <div class="info-box">
-                      <div class="info-left">
-                        <h3 class="info-title">
-                          {{lawyerItem.lawyerName}}律师
-                          <span>(执业{{lawyerItem.operationYears}}年)</span>
-                        </h3>
-                        <div class="info-phone">
-                          电话：
-                          <span>{{lawyerItem.lawyerPhone}}</span>
-                        </div>
-                      </div>
+          <div class="lawerBox">
+            <div class="lawerImg">
+              <img :src="lawyerItem.photoUrl" alt />
+              <div class="lawerInfo">
+                <div class="info-box">
+                  <div class="info-left">
+                    <h3 class="info-title">
+                      {{lawyerItem.lawyerName}}律师
+                      <span>(执业{{lawyerItem.operationYears}}年)</span>
+                    </h3>
+                    <div class="info-phone">
+                      电话：
+                      <span>{{lawyerItem.lawyerPhone}}</span>
                     </div>
-                    <p>
-                      <span>擅长专业：</span>
-                      <span>{{lawyerItem.content}}</span>
-                    </p>
                   </div>
                 </div>
-                <div class="lawerExcu">
-                  <div>
-                    <p>{{lawyerItem.serviceData.consultAmount}}</p>
-                    <p>咨询量</p>
-                  </div>
-                  <div>
-                    <p>{{lawyerItem.serviceData.serviceAmount}}</p>
-                    <p>服务次数</p>
-                  </div>
-                  <div>
-                    <p>{{lawyerItem.serviceData.satisfaction.toFixed(2)}}</p>
-                    <p>满意度</p>
-                  </div>
-                </div>
-              </li>
-            </ul>
-            <div class="info-right" style="margin-left:20px;position:absolute;bottom:20px;left:40%">
-              <el-button @click="modLawyer">修改</el-button>
+                <p>
+                  <span>擅长专业：</span>
+                  <span>{{lawyerItem.content}}</span>
+                </p>
+              </div>
+            </div>
+            <div class="lawerExcu">
+              <div>
+                <p>{{lawyerItem.serviceData.consultAmount}}</p>
+                <p>咨询量</p>
+              </div>
+              <div>
+                <p>{{lawyerItem.serviceData.serviceAmount}}</p>
+                <p>服务次数</p>
+              </div>
+              <div>
+                <p>{{lawyerItem.serviceData.satisfaction.toFixed(2)}}</p>
+                <p>满意度</p>
+              </div>
             </div>
           </div>
+          <el-button @click="modLawyer">修改</el-button>
         </el-form-item>
         <el-form-item label="标题" prop="questionTitle">
           <el-input v-model="form.questionTitle"></el-input>
@@ -408,6 +402,7 @@ export default {
     },
     modLawyer() {
       this.form = Object.assign({}, this.form, { lawyerId: "" });
+      this.getValidLawyerList();
     },
     cancel() {
       this.form = {
@@ -473,6 +468,12 @@ export default {
     this.form.token = this.$Cookies.get("token");
     this.userInfo = this.$store.state.userInfo;
     this.getDictionaryList("wentileixing", "questionTypeList");
+    if (this.$store.getters.refer.lawyerId) {
+      this.form = Object.assign({}, this.form, this.$store.getters.refer);
+      this.lawyerItem = this.$store.getters.lawyerItem;
+      this.$store.commit('refer', {lawyerId: '', consultType: ''});
+      this.$store.commit('lawyerItem', {});
+    }
   }
 };
 </script>
@@ -575,9 +576,7 @@ export default {
           }
         }
         .info-right {
-          margin: 0 10px;
-          float: left;
-          margin-left: 10px;
+          margin: 0 10px 10px;
           .el-button {
             width: 70px;
             height: 70px;
@@ -612,10 +611,77 @@ export default {
 }
 .payHelpClass {
   .el-form-item__content {
-    line-height: initial;
+    /*line-height: initial;*/
   }
 }
 .law .law-body .el-tabs__item.is-active {
   background: linear-gradient(to right, #10a0d3, #1b79c3);
+}
+.lawerBox {
+  width: 36%;
+  background: #fff;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  padding-top: 20px;
+  float: left;
+  margin-right: 0.5%;
+  margin-bottom: 0.5%;
+  font-size: 14px;
+  .lawerImg {
+    overflow: hidden;
+    display: flex;
+    img {
+      width: 110px;
+      height: 130px;
+      margin-right: 10px;
+      margin-left: 15px;
+    }
+    .lawerInfo {
+      box-sizing: border-box;
+      flex: 1;
+      .info-box {
+        display: flex;
+        .info-left {
+          flex: 1;
+          .info-title {
+            span {
+              font-size: 14px;
+              font-weight: 400;
+            }
+          }
+        }
+        .info-right {
+          margin: 0 10px 10px;
+          .el-button {
+            width: 70px;
+            height: 70px;
+            padding: 5px;
+          }
+        }
+      }
+    }
+  }
+  .lawerExcu {
+    overflow: hidden;
+    background: #e8f4fa;
+    box-sizing: border-box;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-top: 10px;
+    div {
+      float: left;
+      width: 33%;
+      text-align: center;
+      line-height: 20px;
+      p:nth-of-type(1) {
+        font-weight: 600;
+        font-size: 16px;
+      }
+    }
+    div:nth-of-type(2) {
+      border-right: 1px solid #ccc;
+      border-left: 1px solid #ccc;
+    }
+  }
 }
 </style>
