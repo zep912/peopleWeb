@@ -123,7 +123,6 @@ export default {
       this.$ajaxPost("/index/recentlyConsultList", obj).then(res => {
         if (res.data.code === 200) {
           this.consultList = res.data.content.dataList;
-          console.log(this.consultList);
           this.pageform.total = res.data.content.pageInfo.total;
         }
       });
