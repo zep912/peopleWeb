@@ -63,7 +63,7 @@
 
     <div class="lawerMsg">
       <el-button type="primary" class="lawerMsg-btn" @click="focusComment">针对性咨询</el-button>
-      <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+      <el-tabs v-model="activeName" type="card">
         <el-tab-pane label="基本信息" name="first">
           <el-form :model="form" label-width="100px">
             <el-row>
@@ -180,9 +180,6 @@ export default {
       this.pageform.pageNum = val;
       this.getConsultByLawyer();
     },
-    handleClick(tab, event) {
-      console.log(tab, event);
-    },
     getLawerInfo() {
       let obj = {
         lawyerId: this.$route.query.id
@@ -190,8 +187,6 @@ export default {
       this.$ajaxPost("/lawyer/getValidLawyerInfo", obj).then(res => {
         if (res.data.code == 200) {
           this.form = res.data.content;
-        } else {
-          console.log("error");
         }
       });
     },
