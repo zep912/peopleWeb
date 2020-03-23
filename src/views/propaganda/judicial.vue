@@ -225,14 +225,12 @@ export default {
         ...this.page
       };
       this.$ajaxPost("/train/getPublicTrainList", obj).then(res => {
-        console.log(res, 111);
         this.list = res.data.content.dataList
         this.pageform = res.data.content.pageInfo
       });
     },
     toVideo(id) {
-      console.log(id);
-      this.$router.push({ path: "/propaganda/video", query: { id: id } });
+      this.$router.push({ path: "/propaganda/video", query: { id } });
     }
   }
 };
