@@ -218,7 +218,6 @@ export default {
       this.$ajaxPost("/support/getDictionaryList", obj3).then(res => {
         this.scopeList = res.data.content.resultList;
       });
-      console.log(this.scopeList, 111);
     },
     getData() {
       let obj = {
@@ -228,7 +227,7 @@ export default {
       this.$ajaxPost("/train/getPublicTrainList", obj).then(res => {
         console.log(res, 111);
         this.list = res.data.content.dataList
-
+        this.pageform = res.data.content.pageInfo
       });
     },
     toVideo(id) {
