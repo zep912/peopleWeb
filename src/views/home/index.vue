@@ -124,7 +124,7 @@
       </el-col>
       <el-col :span="8">
         <a href="http://www.moj.gov.cn/index.html" target="_blank"><img src="../../assets/img/csfb.png" class="img-content" alt /></a>
-        <a href="http://www.sft.ln.gov.cn/" target="_blank"><img src="../../assets/img/sft.png" class="img-content" alt /></a>
+        <a href="http://sft.ln.gov.cn/" target="_blank"><img src="../../assets/img/sft.png" class="img-content" alt /></a>
         <a href="http://www.legalinfo.gov.cn/" target="_blank"><img src="../../assets/img/pfw.png" class="img-content" alt /></a>
       </el-col>
     </el-row>
