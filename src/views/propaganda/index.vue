@@ -14,9 +14,10 @@
               <span>{{item.name}}</span>
             </li>
           </ul>
-          <img src="../../assets/img/pic1.png" alt class="propaImg" />
-          <img src="../../assets/img/pic2.png" alt class="propaImg" />
-          <img src="../../assets/img/pic3.png" alt class="propaImg" />
+          <a href="http://search.chinalaw.gov.cn/" target="_blank"><img src="../../assets/img/pic1.png" alt class="propaImg" /></a>
+          <a href="http://search.chinalaw.gov.cn/search2.html" target="_blank"><img src="../../assets/img/pic2.png" alt class="propaImg" /></a>
+          <a href="javascript:void(0)"><img src="../../assets/img/pic3.png" alt class="propaImg" /></a>
+          
         </el-col>
         <el-col :span="15">
           <div class="lawArt" v-show="isShow">
