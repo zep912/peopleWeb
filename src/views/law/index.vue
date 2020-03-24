@@ -6,7 +6,7 @@
         <div>在线咨询</div>
       </div>
       <div class="law-content" :class="{active: active === 'booking'}" @click="active = 'booking'">
-        <i class="iconfont iconyuyuexuanzhong"></i>
+        <i class="iconfont icondate901"></i>
         <div>在线预约</div>
       </div>
       <div class="law-content" :class="{active: active === 'feedback'}" @click="active = 'feedback'">
@@ -14,7 +14,7 @@
         <div>群众批评意见</div>
       </div>
       <div class="law-content" :class="{active: active === 'exam'}" @click="active = 'exam'">
-        <i class="iconfont iconsifa"></i>
+        <i class="iconfont iconsfks"></i>
         <div>司法考试</div>
       </div>
     </div>

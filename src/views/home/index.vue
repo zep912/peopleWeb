@@ -111,11 +111,11 @@
                 <div>在线咨询</div>
               </div>
               <div class="serve-content" @click="goLaw('booking')">
-                <i class="iconfont iconyuyuexuanzhong"></i>
+                <i class="iconfont icondate901"></i>
                 <div>在线预约</div>
               </div>
               <div class="serve-content" @click="goLaw('exam')">
-                <i class="iconfont iconsifa"></i>
+                <i class="iconfont iconsfks"></i>
                 <div>司法考试</div>
               </div>
               <div class="serve-content" @click="goLaw('feedback')">
