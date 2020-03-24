@@ -55,11 +55,11 @@
             <div class="mapTreeMain">
               <span>
                 <img src="../../assets/img/tree1.png" alt />
-                {{mapTreeList[0]?mapTreeList[0].areaRegionName:''}}
+                {{treeHeader}}
               </span>
               <span>
                 数量:
-                <span>{{mapTreeList[0]?mapTreeList[0].areaOrgCount:''}}</span>
+                <span>{{treeHeaderNum}}</span>
               </span>
             </div>
             <!-- 具体律所 -->
@@ -78,7 +78,7 @@
               <li
                 v-for="(item,index) in organArr"
                 :key="index"
-                @click="orgClick(item.areaRegionId)"
+                @click="orgClick(item.areaRegionId,item.areaRegionName)"
               >
                 <span>
                   <img src="../../assets/img/tree2.png" alt />
@@ -192,6 +192,8 @@ export default {
   },
   data() {
     return {
+      treeHeader:'',
+      treeHeaderNum:'',
       centerForm: {
         areaRegionName: "",
         orgImg: "",
@@ -319,7 +321,8 @@ export default {
     search() {
       this.getOrgList();
     },
-    orgClick(id) {
+    orgClick(id,item) {
+      this.treeHeader = item;
       this.form.areaRegionId = id;
       this.organShow = !this.organShow;
       this.getLawList();
@@ -388,6 +391,7 @@ export default {
               return {lng: areaX, lat: areaY, areaRegionName: orgName, lawMsg: false, infoMsg: false};
             });
           })
+          this.treeHeaderNum = this.pageform.total
         }
       });
     },
@@ -411,6 +415,8 @@ export default {
             return el
           });
         });
+        this.treeHeader = this.mapTreeList[0].areaRegionName;
+        this.treeHeaderNum = this.mapTreeList[0].areaOrgCount
       });
     },
     getAreaList() {

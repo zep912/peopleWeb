@@ -53,6 +53,7 @@
   .detail {
     white-space: pre-wrap;
     margin: 10px;
+    padding-bottom: 20px;
   }
 }
 </style>

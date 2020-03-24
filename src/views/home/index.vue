@@ -4,7 +4,9 @@
       <el-col :span="16">
         <el-carousel height="360px">
           <el-carousel-item v-for="item in content.bannerList1" :key="item.bannerId">
-            <img :src="item.imgPath" />
+            <a :href="item.linkUrl" target="_blank">
+              <img :src="item.imgPath" />
+            </a>
             <div class="bannerTitle">{{item.bannerTitle}}</div>
           </el-carousel-item>
         </el-carousel>
@@ -16,7 +18,9 @@
               <div
                 v-for="(item, index) in content.noticeList.slice(0, 6)"
                 :key="item.newsId"
-                class="item" @click="goNews(item.newsId)">
+                class="item"
+                @click="goNews(item.newsId)"
+              >
                 <div class="header-top" v-if="index === 0">
                   <h3>{{item.newsTitle}}</h3>
                   <p>{{item.newsContent}}</p>
@@ -30,7 +34,9 @@
               <div
                 v-for="(item, index) in content.publicityList.slice(0, 6)"
                 :key="item.newsId"
-                class="item" @click="goNews(item.newsId)">
+                class="item"
+                @click="goNews(item.newsId)"
+              >
                 <div class="header-top" v-if="index === 0">
                   <h3>{{item.newsTitle}}</h3>
                   <p>{{item.newsContent}}</p>
@@ -44,7 +50,9 @@
               <div
                 v-for="(item, index) in content.newsList.slice(0, 6)"
                 :key="item.newsId"
-                class="item" @click="goNews(item.newsId)">
+                class="item"
+                @click="goNews(item.newsId)"
+              >
                 <div class="header-top" v-if="index === 0">
                   <h3>{{item.newsTitle}}</h3>
                   <p>{{item.newsContent}}</p>
@@ -60,19 +68,34 @@
       <el-col :span="16">
         <el-tabs class="new-box" type="card">
           <el-tab-pane label="法律法规">
-            <div class="tab-content" v-for="item in content.lawList" :key="item.lawId" @click="goInfo(item.lawId)">
+            <div
+              class="tab-content"
+              v-for="item in content.lawList"
+              :key="item.lawId"
+              @click="goInfo(item.lawId)"
+            >
               <div class="tab-left">{{item.lawTitle}}</div>
               <div class="tab-right">{{item.execDate}}</div>
             </div>
           </el-tab-pane>
           <el-tab-pane label="司法解释">
-            <div class="tab-content" v-for="item in content.judicialList" :key="item.lawId" @click="goInfo(item.lawId)">
+            <div
+              class="tab-content"
+              v-for="item in content.judicialList"
+              :key="item.lawId"
+              @click="goInfo(item.lawId)"
+            >
               <div class="tab-left">{{item.lawTitle}}</div>
               <div class="tab-right">{{item.publishDate}}</div>
             </div>
           </el-tab-pane>
           <el-tab-pane label="国际条约惯例">
-            <div class="tab-content" v-for="item in content.internationalList" :key="item.lawId" @click="goInfo(item.lawId)">
+            <div
+              class="tab-content"
+              v-for="item in content.internationalList"
+              :key="item.lawId"
+              @click="goInfo(item.lawId)"
+            >
               <div class="tab-left">{{item.lawTitle}}</div>
               <div class="tab-right">{{item.publishDate}}</div>
             </div>
@@ -106,7 +129,7 @@
     </el-row>
     <el-carousel height="120px" style="margin: 10px 0">
       <el-carousel-item v-for="item in content.bannerList2" :key="item.bannerId">
-        <img :src="item.imgPath" />
+        <a :href="item.linkUrl" target="_blank"><img :src="item.imgPath" /></a>
       </el-carousel-item>
     </el-carousel>
     <el-row :gutter="10">
@@ -114,7 +137,12 @@
         <el-tabs class="new-box" type="card">
           <el-tab-pane label="司法培训">
             <div class="serve-box train-box">
-              <div class="train-content" v-for="item in content.trainList" :key="item.couId" @click="goVideo(item.planId)">
+              <div
+                class="train-content"
+                v-for="item in content.trainList"
+                :key="item.couId"
+                @click="goVideo(item.planId)"
+              >
                 <img :src="item.coverUrl" alt />
                 <div class="train-title">{{item.trainTitle}}</div>
               </div>
@@ -123,21 +151,32 @@
         </el-tabs>
       </el-col>
       <el-col :span="8">
-        <a href="http://www.moj.gov.cn/index.html" target="_blank"><img src="../../assets/img/csfb.png" class="img-content" alt /></a>
-        <a href="http://sft.ln.gov.cn/" target="_blank"><img src="../../assets/img/sft.png" class="img-content" alt /></a>
-        <a href="http://www.legalinfo.gov.cn/" target="_blank"><img src="../../assets/img/pfw.png" class="img-content" alt /></a>
+        <a href="http://www.moj.gov.cn/index.html" target="_blank">
+          <img src="../../assets/img/csfb.png" class="img-content" alt />
+        </a>
+        <a href="http://sft.ln.gov.cn/" target="_blank">
+          <img src="../../assets/img/sft.png" class="img-content" alt />
+        </a>
+        <a href="http://www.legalinfo.gov.cn/" target="_blank">
+          <img src="../../assets/img/pfw.png" class="img-content" alt />
+        </a>
       </el-col>
     </el-row>
-    <el-row :gutter="10" style="margin-top: 10px">
+    <el-row :gutter="10" style="margin-top: 10px;background:#fff;border-top: 1px solid #ccc;border-image: linear-gradient(to right, #10a0d3, #1b79c3) 1 10;padding-bottom:20px">
       <el-col :span="16">
-        <el-tabs type="card" class="new-box">
+        <el-tabs type="card" class="new-box" style="border-top:none;border-image:0">
           <el-tab-pane label="司法地图">
-            <baidu-map class="bm-view" :center="center" :zoom="zoom" @ready="handler">
-              <bm-marker
-                :position="center"
-                :dragging="true"
-                animation="BMAP_ANIMATION_BOUNCE"
-              >
+            <baidu-map class="bm-view" :center="center" :zoom="zoom" @ready="handler" style='margin-top:20px;height:300px'>
+              <bm-marker :position="center" :dragging="true" @click="infoWindowOpen">
+                <bm-info-window
+                  :show="infoWindow.show"
+                  @close="infoWindowClose"
+                  @open="infoWindowOpen"
+                  :width='100'
+                  :height=0
+                >
+                辽阳市司法局
+                </bm-info-window>
               </bm-marker>
             </baidu-map>
           </el-tab-pane>
@@ -186,16 +225,24 @@ export default {
         internationalList: []
       },
       center: { lng: 0, lat: 0 },
-      zoom: 3
+      zoom: 3,
+      infoWindow: {
+        show: true
+      }
     };
   },
   methods: {
     handler({ BMap, map }) {
       console.log(BMap, map);
-      console.log(this.center);
       this.center.lng = 123.17;
       this.center.lat = 41.27;
       this.zoom = 15;
+    },
+    infoWindowClose (e) {
+      this.infoWindow.show = false
+    },
+    infoWindowOpen (e) {
+      this.infoWindow.show = true
     },
     getData() {
       this.$ajaxPost("/index/mainData", { request: 123 }).then(({ data }) => {
@@ -225,7 +272,7 @@ export default {
 <style lang="scss">
 .bm-view {
   width: 100%;
-  height: 235px;
+  height: 300px;
 }
 .content {
   width: 85%;
@@ -300,10 +347,10 @@ export default {
   }
   .new-box {
     overflow: hidden;
-    height: 300px;
+    // height: 300px;
     background-color: #fff;
     padding: 15px !important;
-    border-top: 2px solid #449efe;
+    // border-top: 2px solid #449efe;
     box-sizing: border-box;
     .el-tabs__item {
       height: 40px;
@@ -402,7 +449,10 @@ export default {
       display: flex;
       font-size: 16px;
       padding: 0 20px;
-      border: 1px solid #ccc;
+      // border: 1px solid #ccc;
+      border-left: 1px solid #ccc;
+      border-right: 1px solid #ccc;
+      border-top: 1px solid #ccc;
       height: 48px;
       line-height: 48px;
       .map-left {
@@ -418,15 +468,18 @@ export default {
         }
       }
     }
+    .map-content:last-child{
+      border-bottom: 1px solid #ccc;
+    }
   }
 }
-.content .el-tabs__item.is-active{
+.content .el-tabs__item.is-active {
   background: linear-gradient(to right, #10a0d3, #1b79c3);
 }
-.content .el-tabs__header{
-  border-bottom:0 !important;
+.content .el-tabs__header {
+  border-bottom: 0 !important;
 }
-.el-tabs__item{
+.el-tabs__item {
   background: #f1f1f1;
 }
 .el-carousel__item {
@@ -453,18 +506,21 @@ export default {
     }
   }
 }
-  .bannerTitle {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    color: #fff;
-    width: 100%;
-    height: 40px;
-    line-height: 40px;
-    background-color: #00000080;
-    padding: 0 10px;
-  }
-  .el-carousel--horizontal {
-    overflow: hidden;
-  }
+.bannerTitle {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  color: #fff;
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  background-color: #00000080;
+  padding: 0 10px;
+}
+.el-carousel--horizontal {
+  overflow: hidden;
+}
+.map-list{
+  margin-top: 75px;
+}
 </style>

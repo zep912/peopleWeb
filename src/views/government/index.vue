@@ -26,7 +26,7 @@
             </div>
             <ul class="lawUl">
               <li v-for="(item,index) in list" :key="index" @click="lawClick(item.newsId)">
-                <span>{{item.newsTitle}}</span>
+                <span class="newsTitle" :title="item.newsTitle">{{item.newsTitle}}</span>
                 <span class="time">{{item.publishTime}}</span>
               </li>
             </ul>
@@ -170,6 +170,14 @@ export default {
       justify-content: space-between;
       cursor: pointer;
       list-style: none;
+    }
+    li span:nth-of-type(1){
+      display: inline-block;
+      width: 80%;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      word-break: break-all;
     }
     li span:nth-of-type(1)::before {
       content: "";

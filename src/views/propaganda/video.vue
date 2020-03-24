@@ -3,7 +3,7 @@
     <h2>{{form.couName}}</h2>
     <el-row>
       <el-col :span="16">
-        <video :src="form.playUrl" :poster="form.cusCover"></video>
+        <video :src="form.playUrl" :poster="form.couCover" style="width:95%;" controls="true"></video>
       </el-col>
       <el-col :span="6">
         <h4>课件信息</h4>
@@ -32,12 +32,13 @@ export default {
     return {
         video:'',
         form:{
-            title:'',
+            couName:'',
             knowScope:'',
             cate:'',
-            duration:'',
+            videoDuration:'',
             content:'',
-            video:''
+            video:'',
+            cusCover:''
         }
     };
   },
@@ -51,8 +52,9 @@ export default {
         planId:this.$router.currentRoute.query.id
       };
       this.$ajaxPost('/train/getPublicTrainVideo',obj).then(res=>{
-        console.log(res)
-        this.form = res.data.content
+        this.form = res.data.content;
+        console.log(this.form,111)
+        console.log(this.form.couCover)
       })
     }
   }
