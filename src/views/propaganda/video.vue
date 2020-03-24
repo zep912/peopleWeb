@@ -53,8 +53,6 @@ export default {
       };
       this.$ajaxPost('/train/getPublicTrainVideo',obj).then(res=>{
         this.form = res.data.content;
-        console.log(this.form,111)
-        console.log(this.form.couCover)
       })
     }
   }

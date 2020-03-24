@@ -107,19 +107,19 @@
           <el-tab-pane label="法律服务">
             <div class="serve-box">
               <div class="serve-content" @click="goLaw('refer')">
-                <i class="iconfont iconhtmal"></i>
+                <i class="iconfont iconzixun"></i>
                 <div>在线咨询</div>
               </div>
               <div class="serve-content" @click="goLaw('booking')">
-                <i class="iconfont icondate901"></i>
+                <i class="iconfont iconrili"></i>
                 <div>在线预约</div>
               </div>
               <div class="serve-content" @click="goLaw('exam')">
-                <i class="iconfont iconsfks"></i>
+                <i class="iconfont iconsifa"></i>
                 <div>司法考试</div>
               </div>
               <div class="serve-content" @click="goLaw('feedback')">
-                <i class="iconfont iconxiaoxi"></i>
+                <i class="iconfont iconyijian"></i>
                 <div>群众批评意见</div>
               </div>
             </div>

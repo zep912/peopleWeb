@@ -2,19 +2,19 @@
   <div class="law">
     <div class="law-header">
       <div class="law-content" :class="{active: active === 'refer'}" @click="active = 'refer'">
-        <i class="iconfont iconhtmal"></i>
+        <i class="iconfont iconzixun"></i>
         <div>在线咨询</div>
       </div>
       <div class="law-content" :class="{active: active === 'booking'}" @click="active = 'booking'">
-        <i class="iconfont icondate901"></i>
+        <i class="iconfont iconrili"></i>
         <div>在线预约</div>
       </div>
       <div class="law-content" :class="{active: active === 'feedback'}" @click="active = 'feedback'">
-        <i class="iconfont iconxiaoxi"></i>
+        <i class="iconfont iconyijian"></i>
         <div>群众批评意见</div>
       </div>
       <div class="law-content" :class="{active: active === 'exam'}" @click="active = 'exam'">
-        <i class="iconfont iconsfks"></i>
+        <i class="iconfont iconsifa"></i>
         <div>司法考试</div>
       </div>
     </div>
