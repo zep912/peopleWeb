@@ -169,6 +169,7 @@ export default {
   },
   methods: {
     handleSizeChange(val) {
+
       this.pageform.pageNum = val;
       this.getData();
     },
@@ -209,6 +210,7 @@ export default {
       };
       this.$ajaxPost("/support/getDictionaryList", obj2).then(res => {
         this.videoOrWordList = res.data.content.resultList;
+        console.log(this.videoOrWordList)
       });
       let obj3 = {
         dictCode: "zhishifanwei",
@@ -222,7 +224,7 @@ export default {
     getData() {
       let obj = {
         ...this.form,
-        ...this.page
+        ...this.pageform
       };
       this.$ajaxPost("/train/getPublicTrainList", obj).then(res => {
         this.list = res.data.content.dataList

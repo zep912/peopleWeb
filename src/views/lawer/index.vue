@@ -80,7 +80,7 @@
               </p>
               <p>
                 <span>擅长专业：</span>
-                <span>{{item.content}}</span>
+                <span class="shanchang">{{item.adeptSpecialtys}}</span>
               </p>
             </div>
           </div>
@@ -142,7 +142,7 @@ export default {
   mounted() {
     this.getValidLawyerList();
     this.getAreaList();
-    this.getDictionaryList("shanchangzhuangye", "adeptSpecialtyList", true);
+    this.getDictionaryList("shanchangzhuanye", "adeptSpecialtyList", true);
   },
   methods: {
     handleSizeChange(val) {
@@ -154,7 +154,7 @@ export default {
       this.getValidLawyerList();
     },
     search() {
-      this.lawyerRequest.pageNum = "1";
+      this.lawyerRequest.pageNum = 1;
       this.getValidLawyerList();
     },
     getDictionaryList(dictCode, typeName, flag) {
@@ -365,5 +365,12 @@ export default {
   background: linear-gradient(to right, #0ea4d5, #1c78c2);
   color: #fff;
   font-weight: 600;
+}
+.shanchang{
+  height: 40px;
+  display: -webkit-box;
+-webkit-box-orient: vertical;
+-webkit-line-clamp: 3; //需要控制的文本行数
+overflow: hidden;
 }
 </style>

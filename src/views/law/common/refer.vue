@@ -353,7 +353,7 @@ export default {
     },
     tabClick({ name }) {
       if (name === "2") {
-        this.getDictionaryList("shanchangzhuangye", "adeptSpecialtyList", true);
+        this.getDictionaryList("shanchangzhuanye", "adeptSpecialtyList", true);
         this.getAreaList();
         this.getValidLawyerList();
       }

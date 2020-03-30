@@ -241,11 +241,11 @@ export default {
   color: #fff;
   font-weight: 600;
 }
-.propa_wrap .el-col li:nth-of-type(2) {
+.propa_wrap .propaUl li:nth-of-type(2) {
   border-top: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
 }
-.propa_wrap .el-col li:nth-of-type(3) {
+.propa_wrap .propaUl li:nth-of-type(3) {
   border-bottom: 1px solid #ccc;
 }
 </style>
