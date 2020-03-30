@@ -7,6 +7,10 @@ import 'element-ui/lib/theme-chalk/index.css'
 import './assets/js/api'
 import Cookies from 'js-cookie'
 import BaiduMap from 'vue-baidu-map'
+// import VideoPlayer from 'vue-video-player'
+// require('vue-video-player/node_modules/video.js/dist/video-js.css')
+// require('vue-video-player/src/custom-theme.css')
+// Vue.use(VideoPlayer)
 Vue.use(ElementUI);
 Vue.config.productionTip = false;
 

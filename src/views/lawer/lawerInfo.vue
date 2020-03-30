@@ -114,7 +114,7 @@
           </el-form>
         </el-tab-pane>
         <el-tab-pane label="服务记录" name="second">
-          <el-table :data="form.consultByLawerList" style="width: 100%" border>
+          <el-table :data="formItem.consultByLawerList" style="width: 100%" border>
             <el-table-column type="index" label="序号" width="80"></el-table-column>
             <el-table-column prop="consultType" label="服务类型" width="180"></el-table-column>
             <el-table-column prop="consultPhone" label="服务人员"></el-table-column>
@@ -150,8 +150,10 @@ export default {
     return {
       form: {
         baseInfo: {},
-        consultByLawerList: [],
         faithList: []
+      },
+      formItem:{
+        consultByLawerList: [],
       },
       activeName: "first",
       tableData: [],
@@ -191,13 +193,15 @@ export default {
       });
     },
     getConsultByLawyer() {
+      let _this = this;
       let obj = {
-        lawyerId: this.$route.query.id,
-        ...this.pageform
+        lawyerId: _this.$route.query.id,
+        ..._this.pageform
       };
-      this.$ajaxPost("/consult/getConsultByLawyer", obj).then(res => {
-        this.form.consultByLawerList = res.data.content.dataList;
-        this.pageform.total = res.data.content.pageInfo.total;
+      
+      _this.$ajaxPost("/consult/getConsultByLawyer", obj).then(res => {
+        _this.formItem.consultByLawerList = res.data.content.dataList;
+        _this.pageform.total = res.data.content.pageInfo.total;
       });
     },
     consultStatus(n) {
@@ -215,8 +219,11 @@ export default {
       }
     },
     focusComment() {
-      this.$store.commit('refer', {consultType: '2', lawyerId: this.$route.query.id});
-      this.$router.push({path: "/law"});
+      this.$store.commit("refer", {
+        consultType: "2",
+        lawyerId: this.$route.query.id
+      });
+      this.$router.push({ path: "/law" });
     }
   }
 };
