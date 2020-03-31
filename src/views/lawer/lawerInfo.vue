@@ -189,6 +189,11 @@ export default {
       this.$ajaxPost("/lawyer/getValidLawyerInfo", obj).then(res => {
         if (res.data.code == 200) {
           this.form = res.data.content;
+          const breadcrumbList = this.$store.state.breadcrumbList;
+          if (breadcrumbList[breadcrumbList.length - 1].path !== '/listLaywer/info') {
+            breadcrumbList.push({path: '/listLaywer/info', name: `${this.form.baseInfo.lawyerName}律师详情`});
+            this.$store.commit('breadcrumbList', breadcrumbList);
+          }
         }
       });
     },
@@ -198,7 +203,7 @@ export default {
         lawyerId: _this.$route.query.id,
         ..._this.pageform
       };
-      
+
       _this.$ajaxPost("/consult/getConsultByLawyer", obj).then(res => {
         _this.formItem.consultByLawerList = res.data.content.dataList;
         _this.pageform.total = res.data.content.pageInfo.total;

@@ -17,7 +17,7 @@
           <a href="http://search.chinalaw.gov.cn/" target="_blank"><img src="../../assets/img/pic1.png" alt class="propaImg" /></a>
           <a href="http://search.chinalaw.gov.cn/search2.html" target="_blank"><img src="../../assets/img/pic2.png" alt class="propaImg" /></a>
           <a href="javascript:void(0)"><img src="../../assets/img/pic3.png" alt class="propaImg" /></a>
-          
+
         </el-col>
         <el-col :span="15">
           <div class="lawArt" v-show="isShow">
@@ -112,11 +112,21 @@ export default {
     lawClick(id) {
       this.$router.push({ path: "/propaganda/getInfo", query: { id } });
     },
+    setBreadcrumbList(name) {
+      const breadcrumbList = this.$store.state.breadcrumbList;
+      if (breadcrumbList.length < 3) {
+        breadcrumbList.push({path: '/propaganda', name});
+      } else {
+        breadcrumbList.splice(2, breadcrumbList.length - 2, {path: '/propaganda', name});
+      }
+      this.$store.commit('breadcrumbList', breadcrumbList);
+    },
     navClick(n, type, index) {
       this.types = type;
-      this.proIndex = index
+      this.proIndex = index;
       this.active = index;
-      this.pageform.pageNum=1
+      this.setBreadcrumbList(n.name);
+      this.pageform.pageNum=1;
       if (type != 4) {
         this.isShow = true;
         this.navTitle = n.name;
@@ -163,7 +173,7 @@ export default {
   border-top: 1px solid #ccc;
   border-image:linear-gradient(to right,#10a0d3,#1b79c3) 1 10;
   .lawTitles {
-    
+
     display: inline-block;
     width: 150px;
     height: 40px;

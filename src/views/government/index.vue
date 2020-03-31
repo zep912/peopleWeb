@@ -109,9 +109,19 @@ export default {
       this.active = this.proIndex
       this.getData()
     },
+    setBreadcrumbList(name) {
+      const breadcrumbList = this.$store.state.breadcrumbList;
+      if (breadcrumbList.length < 3) {
+        breadcrumbList.push({path: '/government', name});
+      } else {
+        breadcrumbList.splice(2, breadcrumbList.length - 2, {path: '/government', name});
+      }
+      this.$store.commit('breadcrumbList', breadcrumbList);
+    },
     navClick(n,index,type) {
       this.active = index;
       this.navTitle = n.name;
+      this.setBreadcrumbList(n.name);
       this.types = type;
       this.proIndex = index
       this.pageform.pageNum=1;

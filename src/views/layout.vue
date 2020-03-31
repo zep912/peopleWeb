@@ -32,7 +32,7 @@
       </div>
     </div>
     <el-breadcrumb separator-class="el-icon-arrow-right" v-if="!['', '/'].includes($route.path)">
-      <el-breadcrumb-item v-for="item in breadcrumbList" :key="item.path" :to="item">{{item.name}}</el-breadcrumb-item>
+      <el-breadcrumb-item v-for="item in this.$store.state.breadcrumbList" :key="item.path" :to="item">{{item.name}}</el-breadcrumb-item>
     </el-breadcrumb>
     <router-view />
     <Footer></Footer>
@@ -49,7 +49,6 @@ export default {
   data() {
     return {
       keyWord: "",
-      breadcrumbList: [{path: '/', name: '首页'}],
       isLogin:true,
       userName:''
     };
@@ -68,24 +67,28 @@ export default {
       this.$store.commit('authorityList', '');
       this.$store.commit('token', '');
       this.$Cookies.set('token', '');
+    },
+    setBreadcrumbList(path, name) {
+      const lastIndex = path.lastIndexOf('/'),
+          firstIndex = path.indexOf('/');
+      if (lastIndex === firstIndex) {
+        if (path.length > 1) {
+          this.$store.commit('breadcrumbList', [{path: '/', name: '首页'}, {path, name}]);
+        } else {
+          this.$store.commit('breadcrumbList', [{path: '/', name: '首页'}]);
+        }
+      } else {
+        // const breadcrumbList = this.$store.state.breadcrumbList;
+        // breadcrumbList.push({path, name});
+        // this.$store.commit('breadcrumbList', breadcrumbList);
+      }
     }
   },
   created() {
     const {path, name} = this.$route;
-    const lastIndex = path.lastIndexOf('/'),
-          firstIndex = path.indexOf('/');
-    if (lastIndex === firstIndex) {
-      if (path.length > 1) {
-        this.breadcrumbList = [{path: '/', name: '首页'}, {path, name}];
-      } else {
-        this.breadcrumbList = [{path: '/', name: '首页'}];
-      }
-    } else {
-      this.breadcrumbList.push({path, name});
-    }
+    this.setBreadcrumbList(path, name);
   },
   mounted(){
-    console.log(this.$store)
     if(this.$store.state.token){
       this.isLogin = false;
       this.userName = this.$store.state.userInfo.userName
@@ -94,15 +97,7 @@ export default {
   watch: {
     $route(val) {
       const {path, name} = val;
-      if (path.lastIndexOf('/') === 0) {
-        if (path.length > 1) {
-          this.breadcrumbList = [{path: '/', name: '首页'}, {path, name}];
-        } else {
-          this.breadcrumbList = [{path: '/', name: '首页'}];
-        }
-      } else if (path.lastIndexOf('/') > 0) {
-        this.breadcrumbList.push({path, name});
-      }
+      this.setBreadcrumbList(path, name);
     }
   }
 };

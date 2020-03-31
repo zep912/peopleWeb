@@ -10,7 +10,8 @@ export default new Vuex.Store({
     authorityList: [],
     token: '',
     refer: {lawyerId: '', consultType: ''},
-    lawyerItem: {}
+    lawyerItem: {},
+    breadcrumbList: [{path: '/', name: '首页'}]
   },
   mutations: {
     userInfo: (state, userInfo) => {
@@ -27,7 +28,10 @@ export default new Vuex.Store({
     },
     lawyerItem: (state, lawyerItem) => {
       state.lawyerItem = lawyerItem
-    }
+    },
+    breadcrumbList: (state, breadcrumbList) => {
+      state.breadcrumbList = breadcrumbList
+    },
   },
   actions: {
   },
