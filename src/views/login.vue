@@ -46,6 +46,9 @@
       }
     },
     methods: {
+      // 登录操作
+      // 需要保存用户信息，token。这些信息都是全局使用，所以都放到vuex中保存
+      // 其中token也是判断路由的条件，为了方便也放在cookie中
       login() {
         this.$refs['form'].validate((valid) => {
           if (valid) {

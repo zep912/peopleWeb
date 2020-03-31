@@ -2,7 +2,7 @@
   <div class="video">
     <h2>{{form.couName}}</h2>
     <el-row>
-      <el-col :span="16">
+      <el-col :span="16" style="height:400px">
         <!-- <video-player
           class="video-player vjs-custom-skin"
           ref="videoPlayer"
@@ -15,10 +15,12 @@
           controls
           preload="auto"
           autoplay
-          :poster="form.couCover"
+          :poster="poster"
           width="100%"
           height="400"
           data-setup='{"html5" : { "nativeTextTracks" : false }}'
+          v-if="videoShow"
+          ref="myVideo"
         >
           <!-- <source src='rtmp://59.44.27.201:9035/sfjvod/train/20200330/dae641baf26044c2a34078038bf8ad18.mp4' type='rtmp/mp4'> -->
           <source :src="playUrl" type="rtmp/mp4" />此视频暂无法播放，请稍后再试
@@ -46,6 +48,10 @@
 </template>
 
 <script>
+// 视频页面，后台返回的视频地址是直播地址，以rtmp开头的，使用video标签是不能播放的
+// 下载了video.js,vue-video-player，videojs-flash这3个插件，实现播放rtmp视频
+// 其中下载vue-video-player这个插件，主要是使用这个插件的样式，因此引入其样式
+//
 import videojs from "video.js";
 import "video.js/dist/video-js.css";
 import "vue-video-player/src/custom-theme.css";
@@ -65,7 +71,10 @@ export default {
         cusCover: "",
         playUrl: ""
       },
-      playUrl: ""
+      playUrl: "",
+      poster: "",
+      videoShow: true
+      // player: ""
     };
   },
   created() {},
@@ -73,14 +82,24 @@ export default {
     this.getData();
     this.initVideo();
   },
+  watch: {
+    $route() {
+      this.$destroy(this.player);
+    }
+  },
   methods: {
     initVideo() {
       //谷歌浏览器要专门去开启flash播放器，打包后查看和代码运行都需要重新设置flash为允许状态
       // 设置flash路径,用于在videojs发现浏览器不支持HTML5播放器的时候自动唤起flash播放器
       videojs.options.flash.swf =
         "https://cdn.bootcss.com/videojs-swf/5.4.1/video-js.swf";
-      // this.player = videojs("my-player"); //my-player为页面video元素的id
-      // this.player.play(); //播放
+      // 原本在这里初始化视频，但是有个bug，如果是请求过来的数据，视频地址是有了，但并不会播放
+      this.player = videojs("my-player"); //my-player为页面video元素的id
+      // this.player.src({
+      //   src: this.playUrl,
+      //   type: "rtmp/mp4"
+      // });
+      this.player.play(); //播放
     },
     getData() {
       let obj = {
@@ -88,14 +107,31 @@ export default {
       };
       this.$ajaxPost("/train/getPublicTrainVideo", obj).then(res => {
         this.form = res.data.content;
-          this.playUrl = this.form.playUrl;
-          const videoPlayer = videojs('my-player');
-          videoPlayer.src({
-            src:this.playUrl,
-            type:'rtmp/mp4'
-          })
-          videoPlayer.play()
+        this.poster = this.form.couCover;
+        // 手动添加视频地址到src中
+        this.playUrl = this.form.playUrl;
+        // my-player为页面video元素的id，videoPlayer是videojs的实例
+        const videoPlayer = videojs("my-player");
+        //
+        videoPlayer.src({
+          src: this.playUrl,
+          type: "rtmp/mp4"
+        });
+        videoPlayer.play();
       });
+    },
+
+    destroyVideo() {
+      if (this.player != null) {
+        this.player.dispose();
+        this.player = null;
+      }
+    },
+    beforeDestroy() {
+      this.$refs.myVideo.destroyVideo();
+    },
+    beforeRouteLeave() {
+      this.videoShow = false;
     }
   }
 };
@@ -111,5 +147,6 @@ export default {
 }
 #my-player {
   width: 93%;
+  height: 400px;
 }
 </style>

@@ -54,6 +54,7 @@
 <script>
 export default {
   data() {
+    // 自定义校验事件
     var validatePass = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请输入密码"));
@@ -109,6 +110,7 @@ export default {
   created() {},
   mounted() {},
   methods: {
+    // 保存找回密码事件
     save(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
@@ -116,7 +118,7 @@ export default {
             pwdToken: this.pwdToken,
             newPassword: this.formItem.newPassword
           };
-          this.$$ajaxPost("/login/saveNewPwd", obj).then(res => {
+          this.$ajaxPost("/login/saveNewPwd", obj).then(res => {
             if (res.data.code == 200) {
               this.$message.success("找回成功");
             } else {
@@ -126,6 +128,7 @@ export default {
         }
       });
     },
+    // 下一步操作
     next(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
@@ -138,6 +141,8 @@ export default {
         }
       });
     },
+    // 获取验证码，需要做判断，手机号，倒计时的问题
+    // 
     getCode() {
       if (this.form.phoneNum == "") {
         this.$message.warning("手机号不能为空");

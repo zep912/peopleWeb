@@ -168,32 +168,39 @@ export default {
     this.initData();
   },
   methods: {
+    // 分页改变pagesize触发
     handleSizeChange(val) {
 
       this.pageform.pageNum = val;
       this.getData();
     },
+    // 分页点击每个页码改变数据
     handleCurrentChange(val) {
       this.pageform.pageNum = val;
       // this.active = this.proIndex
       this.getData();
     },
+    // 播放量下拉菜单的事件，选择时改变列表数据
     handCommand(command) {
       this.form.orderModel = "1";
       this.form.orderType = command;
       this.getData();
     },
+    // 日期下拉菜单事件，选择时改变列表数据
     handDateCommand(command) {
       this.form.orderModel = "2";
       this.form.orderType = command;
       this.getData();
     },
+    // 司法培训，列表显示和块级显示的切换事件。通过改变显示隐藏来改变图标的变化
     tabListChange() {
       this.imgShow = !this.imgShow;
     },
+    // 搜索事件
     search() {
       this.getData();
     },
+    // 初始化课件类型，知识范围，内容分类的数组。查字典表
     initData() {
       let obj = {
         dictCode: "neirongfenlei",
@@ -210,7 +217,6 @@ export default {
       };
       this.$ajaxPost("/support/getDictionaryList", obj2).then(res => {
         this.videoOrWordList = res.data.content.resultList;
-        console.log(this.videoOrWordList)
       });
       let obj3 = {
         dictCode: "zhishifanwei",
@@ -221,6 +227,7 @@ export default {
         this.scopeList = res.data.content.resultList;
       });
     },
+    // 初始化司法培训的列表
     getData() {
       let obj = {
         ...this.form,
@@ -231,6 +238,7 @@ export default {
         this.pageform = res.data.content.pageInfo
       });
     },
+    // 点击司法培训列表跳转到对应的视频页面
     toVideo(id) {
       this.$router.push({ path: "/propaganda/video", query: { id } });
     }

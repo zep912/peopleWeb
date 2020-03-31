@@ -16,11 +16,11 @@ export default {
 
     },
     mounted(){
-        console.log(this.$router.currentRoute.query.id)
         this.id = this.$router.currentRoute.query.id;
         this.getData()
     },
     methods:{
+        // 详情，返回值是html网页，放置在iframe框架才能浏览
         getData(){
             let obj = {
                 lawId:this.id

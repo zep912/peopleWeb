@@ -145,18 +145,23 @@ export default {
     this.getDictionaryList("shanchangzhuanye", "adeptSpecialtyList", true);
   },
   methods: {
+    // 律师列表分页操作,pagesize改变时的
     handleSizeChange(val) {
       this.lawyerRequest.pageNum = val;
       this.getValidLawyerList();
     },
+    // 分页操作触发，点击每页改变时触发
     handleCurrentChange(val) {
+      console.log(999)
       this.lawyerRequest.pageNum = val;
       this.getValidLawyerList();
     },
+    // 搜索查询列表的事件
     search() {
       this.lawyerRequest.pageNum = 1;
       this.getValidLawyerList();
     },
+    // 字典表，查询擅长专业的list并手动添加全部选项
     getDictionaryList(dictCode, typeName, flag) {
       this.$ajaxPost("/support/getDictionaryList", {
         dictCode,
@@ -170,6 +175,7 @@ export default {
         }
       });
     },
+    // 查询律师列表中咨询量等的操作，动态添加class属性
     setClass(sortModel) {
       return {
         active: this.lawyerRequest.sortModel === sortModel,
@@ -178,6 +184,7 @@ export default {
           this.lawyerRequest.sortType === "2"
       };
     },
+    // 咨询量，满意度，接案率等的事件操作，同时改变律师的list
     searchSort(sortModel) {
       if (this.lawyerRequest.sortModel === sortModel) {
         this.lawyerRequest.sortType =
@@ -188,6 +195,7 @@ export default {
       }
       this.getValidLawyerList();
     },
+    // 律师列表初始化，查询所有律师列表并分页
     getValidLawyerList() {
       this.$ajaxPost("/lawyer/getValidLawyerList", this.lawyerRequest).then(
         res => {
@@ -197,6 +205,7 @@ export default {
         }
       );
     },
+    // 搜索条件中所属区域的list，全部选项需要手动添加，同时使用数组reduce方法对数组进行过滤
     getAreaList() {
       this.$ajaxPost("/support/getAreaList", { areaLevel: "3" }).then(
         ({ data }) => {
@@ -214,6 +223,7 @@ export default {
         }
       );
     },
+    // 点击每个律师，跳转到对应律师详细信息
     lawerClick(item) {
       this.$store.commit('lawyerItem', item);
       this.$router.push({ path: "/listLaywer/info", query: {id: item.lawyerId} });

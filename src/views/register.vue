@@ -127,7 +127,7 @@ export default {
           if (idcardReg.test(this.form.identityCard)) {
             const areaArray = this.form.areaArray;
             let form = Object.assign({}, this.form);
-            if (areaArray && areaArray.length) {
+            if (areaArray && areaArray.length) {//对地址重新包装
               form.areaCityId = areaArray[0];
               form.areaRegionId = areaArray[1];
               form.areaStreetId = areaArray[2];
@@ -151,6 +151,7 @@ export default {
         }
       });
     },
+    // 获取验证码，判断手机号，倒计时事件
     getCode() {
       if (this.form.phoneNum == "") {
         this.$message.warning("手机号不能为空");
