@@ -26,7 +26,7 @@
           <source :src="playUrl" type="rtmp/mp4" />此视频暂无法播放，请稍后再试
         </video>
       </el-col>
-      <el-col :span="6">
+      <el-col :span="6" class="kejian">
         <h4>课件信息</h4>
         <p>
           <span>知识范围:</span>
@@ -40,8 +40,8 @@
           <span>视频时长:</span>
           <span>{{form.videoDuration}}</span>
         </p>
-        <p>课程简介:</p>
-        <p>{{form.cusDesc}}</p>
+        <p><span>课程简介:</span></p>
+        <p class="cusDesc">{{form.cusDesc}}</p>
       </el-col>
     </el-row>
   </div>
@@ -73,7 +73,7 @@ export default {
       },
       playUrl: "",
       poster: "",
-      videoShow: true
+      videoShow: false
       // player: ""
     };
   },
@@ -89,6 +89,7 @@ export default {
   },
   methods: {
     initVideo() {
+      this.videoShow = true
       //谷歌浏览器要专门去开启flash播放器，打包后查看和代码运行都需要重新设置flash为允许状态
       // 设置flash路径,用于在videojs发现浏览器不支持HTML5播放器的时候自动唤起flash播放器
       videojs.options.flash.swf =
@@ -148,5 +149,23 @@ export default {
 #my-player {
   width: 93%;
   height: 400px;
+}
+.kejian{
+  h4{
+    color: #1b79c3;
+    margin-bottom: 10px;
+  }
+  p{
+    line-height: 28px;
+  }
+  p span:nth-of-type(1){
+    color: #999;
+    margin-right: 10px;
+  }
+  .cusDesc{
+    line-height: 24px;
+    text-indent: 1em;
+    
+  }
 }
 </style>

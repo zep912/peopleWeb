@@ -44,7 +44,7 @@
               :total="pageform.total"
             >></el-pagination>
           </div>
-          <Judicial v-show="!isShow"></Judicial>
+          <Judicial v-show="!isShow" ref='children'></Judicial>
         </el-col>
       </el-row>
     </div>
@@ -91,7 +91,8 @@ export default {
         total: 0
       },
       types:'',
-      proIndex:''
+      proIndex:'',
+      pageNum:1
     };
   },
   created() {},
@@ -133,6 +134,7 @@ export default {
         this.getData()
       } else {
         this.isShow = false;
+        this.$refs.children.pageform.pageNum=1;
         return;
       }
     },

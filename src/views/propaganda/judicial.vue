@@ -10,7 +10,7 @@
                   v-for="item in videoOrWordList"
                   :key="item.id"
                   :label="item.dictDataName"
-                  :value="item.id"
+                  :value="item.dictDataCode"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -22,7 +22,7 @@
                   v-for="item in scopeList"
                   :key="item.id"
                   :label="item.dictDataName"
-                  :value="item.id"
+                  :value="item.dictDataCode"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -36,7 +36,7 @@
                   v-for="item in contentTypeList"
                   :key="item.id"
                   :label="item.dictDataName"
-                  :value="item.id"
+                  :value="item.dictDataCode"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -162,15 +162,24 @@ export default {
       }
     };
   },
+  props:{
+    pageNum:{
+      type:Number,
+      default:()=>{
+        return 1
+      }
+    }
+  },
   created() {},
   mounted() {
     this.getData();
-    this.initData();
+    this.initData2('neirongfenlei','contentTypeList')
+    this.initData2('kejianleixing','videoOrWordList')
+    this.initData2('zhishifanwei','scopeList')
   },
   methods: {
     // 分页改变pagesize触发
     handleSizeChange(val) {
-
       this.pageform.pageNum = val;
       this.getData();
     },
@@ -200,31 +209,14 @@ export default {
     search() {
       this.getData();
     },
-    // 初始化课件类型，知识范围，内容分类的数组。查字典表
-    initData() {
+    initData2(dictName,typeName){
       let obj = {
-        dictCode: "neirongfenlei",
+        dictCode: dictName,
         userId: "111",
         parentDictDataCode: ""
-      };
+      }
       this.$ajaxPost("/support/getDictionaryList", obj).then(res => {
-        this.contentTypeList = res.data.content.resultList;
-      });
-      let obj2 = {
-        dictCode: "kejianleixing",
-        userId: "111",
-        parentDictDataCode: ""
-      };
-      this.$ajaxPost("/support/getDictionaryList", obj2).then(res => {
-        this.videoOrWordList = res.data.content.resultList;
-      });
-      let obj3 = {
-        dictCode: "zhishifanwei",
-        userId: "111",
-        parentDictDataCode: ""
-      };
-      this.$ajaxPost("/support/getDictionaryList", obj3).then(res => {
-        this.scopeList = res.data.content.resultList;
+        this[typeName] = [{dictDataCode:'',dictDataName:'全部'}].concat(res.data.content.resultList)
       });
     },
     // 初始化司法培训的列表
@@ -241,6 +233,9 @@ export default {
     // 点击司法培训列表跳转到对应的视频页面
     toVideo(id) {
       this.$router.push({ path: "/propaganda/video", query: { id } });
+    },
+    beforeDestroy(){
+      this.pageform.pageNum=1
     }
   }
 };
