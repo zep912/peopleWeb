@@ -122,6 +122,7 @@
               if (data.code == 200) {
                 this.$message.success('保存成功');
                 this.isMod = false;
+                this.getUserInfo()
               }
             })
           }

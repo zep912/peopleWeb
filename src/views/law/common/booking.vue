@@ -165,7 +165,7 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="预约日期" prop="appointmentDate">
-              <el-date-picker v-model="appointment.appointmentDate" type="date" placeholder="选择日期">
+              <el-date-picker v-model="appointment.appointmentDate" type="date" placeholder="选择日期" format='yyyy-MM-dd' value-format='yyyy-MM-dd'>
               </el-date-picker>
             </el-form-item>
           </el-col>
@@ -256,7 +256,7 @@
             {type: 'array', required: true, message: '请上传证明材料', trigger: 'change'}
           ],
           appointmentDate: [
-            {type: 'date', required: true, message: '请选择预约日期', trigger: 'change'}
+            { required: true, message: '请选择预约日期', trigger: 'change'}
           ],
           appointmentTime: [
             {required: true, message: '请选择预约日期', trigger: 'change'}
@@ -379,6 +379,7 @@
           this.$refs['appointment'].validateField(['lawOrgId']);
         });
       },
+
       async onSubmit(formName) {
         if (formName === 'form') {
           this.$refs['form'].validate();
