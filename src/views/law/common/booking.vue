@@ -382,29 +382,32 @@
 
       async onSubmit(formName) {
         if (formName === 'form') {
-          this.$refs['form'].validate();
-          this.$refs['imageUrls'].validate((valid) => {
-            if (valid) {
-              if (!this.imageUrls.acceptance) {
-                this.$message.warning('请勾选承诺书');
-                return false
-              }
-              const areaArray = this.form.areaArray;
-              let form = Object.assign({}, this.form);
-              this.form.identityTypeList = this.form.identityTypeList.map(item => {
-                return {matterType: item}
+          this.$refs['form'].validate((val) => {
+            if (val) {
+              this.$refs['imageUrls'].validate((valid) => {
+                if (valid) {
+                  if (!this.imageUrls.acceptance) {
+                    this.$message.warning('请勾选承诺书');
+                    return false
+                  }
+                  const areaArray = this.form.areaArray;
+                  let form = Object.assign({}, this.form);
+                  form.identityTypeList = this.form.identityTypeList.map(item => {
+                    return {matterType: item}
+                  });
+                  if (areaArray && areaArray.length) {
+                    form.areaCityId = areaArray[0];
+                    form.areaRegionId = areaArray[1];
+                    form.areaStreetId = areaArray[2];
+                  }
+                  delete form.areaArray;
+                  form.fileList = Object.values(this.fileObj);
+                  form.identityType = this.form.identityTypeList[0];
+                  form.appointmentDate = '2020-03-03';
+                  form.appointmentTime = '08:00';
+                  this.submit(formName, form);
+                }
               });
-              if (areaArray && areaArray.length) {
-                form.areaCityId = areaArray[0];
-                form.areaRegionId = areaArray[1];
-                form.areaStreetId = areaArray[2];
-              }
-              delete form.areaArray;
-              form.fileList = Object.values(this.fileObj);
-              form.identityType = this.form.identityTypeList[0];
-              form.appointmentDate = '2020-03-03';
-              form.appointmentTime = '08:00';
-              this.submit(formName, form);
             }
           });
         } else {
@@ -442,12 +445,12 @@
             this.$ajaxPost(`/appointment/${formName === 'form' ? 'saveLawAidAppointment' : 'saveAppointmentMediate'}`, form).then(({data}) => {
               if (data.code === 200) {
                 const {applyName, applyPhone} = form;
-                if (this.tabName !== 'law') {
-                  this.appointment = {token: this.$store.getters.token, applyName, applyPhone, identityTypeList: [], areaArray: [], fileList: []};
+                if (formName === 'form') {
+                  this.form = {token: this.$store.getters.token, applyName, applyPhone, identityTypeList: [], areaArray: [], fileList: []};
                   this.imageUrls = {idCard: '', dibao: '', hard: '', rest: ''};
                   this.fileObj = {idCard: {}, dibao: {}, hard: {}, rest: {}};
                 } else {
-                  this.form = {token: this.$store.getters.token, applyName, applyPhone, aplayArray: [], appelleeArray: []};
+                  this.appointment = {token: this.$store.getters.token, applyName, applyPhone, aplayArray: [], appelleeArray: []};
                   this.params = {pageNum: 1, pageSize: 4, total: 0};
                 }
                 this.$nextTick(() => {

@@ -13,7 +13,8 @@
         <span class="time">{{item.publishTime}}</span>
       </li>
     </ul>
-    <el-pagination background layout="prev, pager, next" :total="total"></el-pagination>
+    <el-pagination background layout="prev, pager, next" :total="total" :current-page.sync="pageform.pageNum"
+                   :page-size.sync="pageform.pageSize" @current-change="handleCurrentChange"></el-pagination>
   </div>
 </template>
 
@@ -25,21 +26,28 @@
         list: [
           {newsTitle: '标题', publishTime: '2020-02-10'}
         ],
-        total: 1
+        total: 1,
+        pageform: {
+          pageNum: 1,
+          pageSize: 10
+        }
       }
     },
     methods: {
       getOpenNewsList() {
-        const request = {
+        const request = Object.assign({}, this.pageform, {
           token: this.$Cookies.get('token'),
           newsType: '8'
-        };
+        });
         this.$ajaxPost("/doc/news/getOpenNewsList", request).then(({data}) => {
           if (data.code === 200) {
             this.list = data.content.dataList;
             this.total = data.content.pageInfo.total;
           }
         });
+      },
+      handleCurrentChange() {
+        this.getOpenNewsList();
       }
     },
     mounted() {

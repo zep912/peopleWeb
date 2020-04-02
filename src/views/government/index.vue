@@ -47,6 +47,7 @@
 </template>
 
 <script>
+import util from "@/assets/js/util.js";
 export default {
   data() {
     return {
@@ -92,10 +93,6 @@ export default {
       proIndex:''
     };
   },
-  created() {},
-  mounted() {
-    this.navClick({ name: "组织机构" }, 0,1);
-  },
   methods: {
     lawClick(newId) {
       this.$router.push({path:'/government/info',query:{newId}})
@@ -137,6 +134,34 @@ export default {
           this.list = res.data.content.dataList;
           this.pageform.total = res.data.content.pageInfo.total;
         });
+    }
+  },
+  // 路由周期，离开页面，跳转其他页面时，根据nextRoute判断是否需要缓存查询条件
+  beforeRouteLeave(to, from, next) {
+    const nextRoute = ['/government/info'];
+    console.log(to, 'to.name');
+    if (nextRoute.indexOf(to.path) > -1) {
+      util.setSearchCache({ to, from, next }, { toPath: to.path, pagePath: '/government', request: { active: this.active, navTitle: this.navTitle, types: this.types, pageform: this.pageform }})
+    }
+    next()
+  },
+  // 路由周期，进入周期页面，根据nextRoute判断是否需要缓存查询条件
+  beforeRouteEnter(to, from, next) {
+    const nextRoute = ['/government/info'];
+    if (nextRoute.indexOf(from.path) > -1) {
+      next(vm => {
+        const request = util.getSearchCache({ to, from, next }, { fromPath: from.path, pagePath: '/government' });
+        console.log(request, 'request12333');
+        vm.active = request ? request.active : vm.active;
+        vm.navTitle = request ? request.navTitle : vm.navTitle;
+        vm.types = request ? request.types : vm.types;
+        vm.pageform = request ? request.pageform : vm.pageform;
+        vm.getData()
+      })
+    } else {
+      next(vm => {
+        vm.navClick({ name: "组织机构" }, 0,1);
+      })
     }
   }
 };

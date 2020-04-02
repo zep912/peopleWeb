@@ -313,7 +313,6 @@ export default {
   },
   methods: {
     payRefer(item) {
-      console.log(item);
       this.lawyerId = item.lawyerId;
       // this.form = Object.assign({},this.form, {lawyerId: item.lawyerId});
     },

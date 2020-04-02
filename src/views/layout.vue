@@ -32,7 +32,7 @@
       </div>
     </div>
     <el-breadcrumb separator-class="el-icon-arrow-right" v-if="!['', '/'].includes($route.path)">
-      <el-breadcrumb-item v-for="item in this.$store.state.breadcrumbList" :key="item.path" :to="item">{{item.name}}</el-breadcrumb-item>
+      <el-breadcrumb-item v-for="(item, index) in this.$store.state.breadcrumbList" :key="item.path + index" :to="item">{{item.name}}</el-breadcrumb-item>
     </el-breadcrumb>
     <router-view />
     <Footer></Footer>
@@ -68,6 +68,7 @@ export default {
       this.$store.commit('token', '');
       this.$Cookies.set('token', '');
     },
+    // 设置面包屑跳转路由及名称
     setBreadcrumbList(path, name) {
       const lastIndex = path.lastIndexOf('/'),
           firstIndex = path.indexOf('/');
@@ -77,10 +78,6 @@ export default {
         } else {
           this.$store.commit('breadcrumbList', [{path: '/', name: '首页'}]);
         }
-      } else {
-        // const breadcrumbList = this.$store.state.breadcrumbList;
-        // breadcrumbList.push({path, name});
-        // this.$store.commit('breadcrumbList', breadcrumbList);
       }
     }
   },
@@ -96,6 +93,7 @@ export default {
   },
   watch: {
     $route(val) {
+      console.log(val, 'val');
       const {path, name} = val;
       this.setBreadcrumbList(path, name);
     }

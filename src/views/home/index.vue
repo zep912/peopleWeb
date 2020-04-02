@@ -250,15 +250,19 @@ export default {
         }
       });
     },
-    goLaw(type) {
-      this.$router.push({ path: "/law", query: { type } });
+    // 跳转到法律服务页面
+    goLaw(active) {
+      this.$router.push({ path: "/law", query: { active } });
     },
+    // 跳转到视频播放页面
     goVideo(id) {
       this.$router.push({ path: "/propaganda/video", query: { id } });
     },
+    // 跳转到普法宣传详情页
     goInfo(id) {
       this.$router.push({ path: "/propaganda/getInfo", query: { id } });
     },
+    // 跳转到政务公开详情页
     goNews(newId) {
       this.$router.push({ path: "/government/info", query: { newId } });
     }

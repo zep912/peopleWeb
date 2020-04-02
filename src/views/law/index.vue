@@ -27,8 +27,10 @@ import refer from './common/refer';
 import booking from './common/booking';
 import feedback from './common/feedback';
 import exam from './common/exam';
+import mixins from '@/assets/js/mixins.js'
 export default {
   components: {refer, booking, feedback, exam},
+  mixins: [mixins],
   data() {
     return {
       active: 'refer',
@@ -36,7 +38,10 @@ export default {
   },
   methods: {
   },
+  // 路由传参，有指定tab时进指定tab，否则加第一个tab
   mounted() {
+    const {active = 'refer'} = this.$route.query;
+    this.active = active;
   }
 }
 </script>

@@ -3,6 +3,7 @@ const getters = {
   authorityList: state => state.authorityList,
   token: state => state.token,
   refer: state => state.refer,
-  lawyerItem: state => state.lawyerItem
+  lawyerItem: state => state.lawyerItem,
+  searchCache: state => state.cache
 };
 export default getters
