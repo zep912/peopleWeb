@@ -183,8 +183,10 @@
 </template>
 
 <script>
-import MyOverlay from "@/components/myOverlay";
+import MyOverlay from "@/components/myOverlay";//根据api文档，这是自定义覆盖物的方法
 // import myMap from "@/components/map";
+// 地图使用了基于百度地图封装的vue-baidu-map地图
+// 文档地址https://dafrok.github.io/vue-baidu-map/#/zh/start/usage
 export default {
   components: {
     MyOverlay
@@ -264,15 +266,18 @@ export default {
       el.style.left = pixel.x - 60 + "px";
       el.style.top = pixel.y - 20 + "px";
     },
+    // 分页操作，改变pagesize时触发
     handleSizeChange(val) {
       this.pageform.pageNum = val;
       this.getLawList();
     },
+    // 分页操作，改变每个页码触发
     handleCurrentChange(val) {
       this.pageform.pageNum = val;
       this.active = this.proIndex;
       this.getLawList();
     },
+    // 获取所有法院机构的列表
     getFaYuan() {
       let obj = {
         dictCode: "fayuanjigou",
@@ -283,13 +288,14 @@ export default {
         this.orgList = res.data.content.resultList;
       });
     },
-
+    // 地图初始化时的中心点和地图层级
     handler() {
       // console.log(BMap, map);
       this.center.lng = 123.17;
       this.center.lat = 41.27;
       this.zoom = 15;
     },
+    // 点击所有的机构列表的时间。全部，法律援助等，也会触发请求机构事件3
     orgListClick(n, index) {
       this.form.orgType = n || "";
       this.active = index;
@@ -304,15 +310,19 @@ export default {
       this.organShow = !this.organShow;
       this.getLawList();
     },
+    // 机构类别下拉菜单的点击事件
     handleCommand(n) {
       this.form.orgType = n;
       this.getOrgList();
     },
+    //地址下拉菜单的点击事件
     handleAreaCommand(id) {
       this.form.areaRegionId = id;
       this.getOrgList();
     },
-    // 点击具体律所
+    // 点击具体律所。
+    // 律所信息需要重新组装数据结构，获取律所信息，是为了方便在显示的时候能直接显示。
+    // 并且点击具体律所，要将地图的经纬度换成律所所在的经纬度
     organClick(id) {
       this.mapList = [];
       this.boxShow = !this.boxShow;
@@ -333,7 +343,7 @@ export default {
         obj.lawMsg = false;
         obj.infoMsg = true;
         this.centerForm = obj;
-        this.baseMapShow = false;
+        this.baseMapShow = false;//结构上，左侧是需要点击几次才到达的。控制其显示隐藏
         this.labelBoxShow = true;
         this.mapList.push(obj);
 
@@ -345,6 +355,7 @@ export default {
       });
     },
     // 点击某区获取区内的律所
+    // 所获取的数据需要重新组装成新的数据结构方便显示
     getLawList() {
       if(this.orgListShow){
         this.orgListShow = false;
@@ -362,6 +373,10 @@ export default {
         this.pageform.total = res.data.content.pageInfo.total;
         if (res.data.content.dataList && res.data.content.dataList.length !== 0) {
           this.mapList = [];
+          // 地图上所有点的信息都是通过mapList这个数组来显示
+          // 在每次切换的时候，分页切换也会相应的改变数组数据，改变地图数据。因此需要等页面加载完成之后替换
+          // 在这里使用了$nextTick方法,重新改变了数组数据，不保留上一次的数据，使用$nextTick
+          // 如果不使用，bug表现就是切换了分页，但地图上依然显示了上一页的数据。或者切换了左侧数据，但地图上没有改变。
           this.$nextTick(() => {
             this.mapList = res.data.content.dataList.map(el => {
               const {areaX, areaY, orgName} = el;
@@ -372,6 +387,8 @@ export default {
         }
       });
     },
+    // 初始化的时候获取下面所有区的数据。需要重新组装数据
+    // 通过mapList这个数组来统一管理
     getOrgList() {
       let obj = {
         token: this.$store.state.token,
@@ -382,6 +399,8 @@ export default {
         this.mapTreeList = res.data.content.areaOrgList;
         this.organArr = this.mapTreeList.slice(0);
         this.organArr = this.organArr.slice(1);
+        // 切换分页，点击第二层都要将mapList置空，
+        // 为了避免在加载过程中出现重复现象，使用$nextTick方法保持数组的纯粹性
         this.mapList = [];
         this.$nextTick(() => {
           this.mapList = this.organArr.map(el => {
@@ -396,6 +415,7 @@ export default {
         this.treeHeaderNum = this.mapTreeList[0].areaOrgCount
       });
     },
+    // 获取地址的list
     getAreaList() {
       this.$ajaxPost("/support/getAreaList", { areaLevel: "3" }).then(
         ({ data }) => {
