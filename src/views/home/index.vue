@@ -232,17 +232,21 @@ export default {
     };
   },
   methods: {
+    // 地图初始化，中心点定位，设置地图层级
     handler({}) {
       this.center.lng = 123.17;
       this.center.lat = 41.27;
       this.zoom = 15;
     },
+    // 控制地图的信息窗体的显示隐藏
     infoWindowClose (e) {
       this.infoWindow.show = false
     },
+    // 控制地图的信息窗体的显示隐藏
     infoWindowOpen (e) {
       this.infoWindow.show = true
     },
+    // 获取首页的数据
     getData() {
       this.$ajaxPost("/index/mainData", { request: 123 }).then(({ data }) => {
         if (data.code === 200) {

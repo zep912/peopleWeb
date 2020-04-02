@@ -76,6 +76,7 @@
       }
     },
     methods: {
+      // 提交群众意见
       onSubmit() {
         this.$refs['form'].validate((valid) => {
           if (valid) {
@@ -90,7 +91,7 @@
               if (data.code === 200) {
                 this.form = {token: this.$store.getters.token, areaArray: []};
                 this.$nextTick(() => {
-                  this.$refs['form'].clearValidate();
+                  this.$refs['form'].clearValidate();//每次提交之后都清除掉先前填写的数据
                 });
                 this.$message.success('提交成功', 3000);
               } else {

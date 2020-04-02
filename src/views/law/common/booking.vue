@@ -305,6 +305,7 @@
       }
     },
     methods: {
+      // 字典表，方法查询事项列表，困难情况等数组的方法
       getDictionaryList(dictCode, typeName, flag) {
         this.$ajaxPost('/support/getDictionaryList', {dictCode, userId: '1'}).then(({data}) => {
           if (data.code == 200) {
@@ -313,6 +314,7 @@
           }
         })
       },
+      // 切换法律援助和人民调解的方法，并在每次切换的时候清除在对应tab下填写的内容
       tabClick({name}) {
         if (name !== 'law') this.getMediateCommitteeList();
         this.$nextTick(() => {
@@ -331,6 +333,7 @@
       uploadSuccessRest(res, file) {
         this.uploadSuccess(res, file, 'rest');
       },
+      // 上传成功的回调。并回显图片地址
       uploadSuccess(res, file, type) {
         if (res.code === 200) {
           this.$refs['imageUrls'].clearValidate([type]);
@@ -345,9 +348,11 @@
             fileType,
             fileId: res.content.fileList.map(item => item.fileId).join()
           };
+          // URL.createObjectURL获取当前文件的一个内存url
           this.imageUrls[type] = URL.createObjectURL(file.raw);
         }
       },
+      // 图片上传之前的判断
       beforeAvatarUpload(file) {
         const isImg = file.type.indexOf("image/") > -1;
         const isLt100M = file.size / 1024 / 1024 < 100;
@@ -359,6 +364,7 @@
         }
         return isImg && isLt100M;
       },
+      // 获取预约调委会的数据
       getMediateCommitteeList() {
         this.$ajaxPost('/lawOrg/getMediateCommitteeList', Object.assign({token: this.form.token}, this.params)).then(({data}) => {
           if (data.code === 200) {
@@ -367,19 +373,21 @@
           }
         })
       },
+      // 加载更多，分页展示。每次页码加1，
       more() {
         let {pageNum, pageSize, total} = this.params;
         this.params.pageNum = total > pageNum * pageSize ? pageNum + 1 : 1;
         this.getMediateCommitteeList();
         this.setLawOrgId('');
       },
+      // 点击调委会，清除校验数据
       setLawOrgId(lawOrgId) {
         this.appointment = Object.assign({}, this.appointment, {lawOrgId});
         this.$nextTick(() => {
           this.$refs['appointment'].validateField(['lawOrgId']);
         });
       },
-
+      // 提交并判断
       async onSubmit(formName) {
         if (formName === 'form') {
           this.$refs['form'].validate((val) => {
@@ -413,6 +421,9 @@
         } else {
           let appointment = Object.assign({}, this.appointment);
           const {appointmentDate, appointmentTime, token, lawOrgId} = appointment;
+          // 注意，如果这里对时间做处理，需要注意两个点，第一个就是html上指定时间格式
+          // 指定时间格式，如果对时间做了校验type为date时，会报错。因为下面这个是对字符串的操作，上面默认了是时间对象格式
+          // 所以最后处理的办法，就是取消了校验中type为date。并在html上设置默认的时间格式
           appointment.appointmentDate = appointment.appointmentDate.slice(0, 10);
           const res = await this.$ajaxPost('/appointment/getAppointmentTime', {appointmentDate, appointmentTime, lawOrgId, token});
           if (res.data.code === 200) {

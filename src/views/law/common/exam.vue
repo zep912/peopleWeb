@@ -34,6 +34,7 @@
       }
     },
     methods: {
+      // 获取考试动态的列表
       getOpenNewsList() {
         const request = Object.assign({}, this.pageform, {
           token: this.$Cookies.get('token'),
@@ -46,6 +47,7 @@
           }
         });
       },
+      // 分页切换
       handleCurrentChange() {
         this.getOpenNewsList();
       }

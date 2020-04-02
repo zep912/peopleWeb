@@ -321,6 +321,8 @@ export default {
     };
   },
   methods: {
+    // 字典表，方法查询问题类型，擅长专业的list字段
+    // 同时添加全部选项。通过数组拼接的方式赋值给目标数组
     getDictionaryList(dictCode, typeName, flag) {
       this.$ajaxPost("/support/getDictionaryList", {
         dictCode,
@@ -334,6 +336,7 @@ export default {
         }
       });
     },
+    // 查询地址的方法，使用数组reduce方法来判断重组
     getAreaList() {
       this.$ajaxPost("/support/getAreaList", { areaLevel: "3" }).then(
         ({ data }) => {
@@ -351,6 +354,7 @@ export default {
         }
       );
     },
+    // 免费咨询，针对性咨询tab切换方法
     tabClick({ name }) {
       if (name === "2") {
         this.getDictionaryList("shanchangzhuanye", "adeptSpecialtyList", true);
@@ -358,14 +362,17 @@ export default {
         this.getValidLawyerList();
       }
     },
+    // 律师列表的分页事件
     sizeChange(pageNum) {
       this.lawyerRequest.pageNum = pageNum;
       this.getValidLawyerList();
     },
+    // 搜索的事件
     search() {
       this.lawyerRequest.pageNum = "1";
       this.getValidLawyerList();
     },
+    // 动态给针对性咨询律师列表排序添加class属性。改变其样式
     setClass(sortModel) {
       return {
         active: this.lawyerRequest.sortModel === sortModel,
@@ -374,6 +381,7 @@ export default {
           this.lawyerRequest.sortType === "2"
       };
     },
+    // 此方法是针对性咨询点击咨询量，满意度等排序方法。
     searchSort(sortModel) {
       if (this.lawyerRequest.sortModel === sortModel) {
         this.lawyerRequest.sortType =
@@ -384,6 +392,7 @@ export default {
       }
       this.getValidLawyerList();
     },
+    // 律师列表数据
     getValidLawyerList() {
       this.$ajaxPost("/lawyer/getValidLawyerList", this.lawyerRequest).then(
         res => {
@@ -396,6 +405,7 @@ export default {
         }
       );
     },
+    // 咨询，使用拷贝的方式给对象添加律师id值。
     payRefer(item) {
       this.lawyerItem = item;
       this.form = Object.assign({}, this.form, { lawyerId: item.lawyerId });
@@ -418,6 +428,7 @@ export default {
         this.imageUrl = URL.createObjectURL(file.raw);
       }
     },
+    // 图片上传之前的判断
     beforeAvatarUpload(file) {
       const isImg = file.type.indexOf("image/") > -1;
       const isLt100M = file.size / 1024 / 1024 < 100;
@@ -429,6 +440,7 @@ export default {
       }
       return isImg && isLt100M;
     },
+    // 提交的事件
     onSubmit(consultType) {
       this.$refs["form"].validate(valid => {
         if (valid) {
