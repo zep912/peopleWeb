@@ -94,18 +94,23 @@ export default {
     };
   },
   methods: {
+    // 通过列表跳转到对应的文章页面
     lawClick(newId) {
       this.$router.push({path:'/government/info',query:{newId}})
     },
+    // 改变pagesize触发的分页方法
     handleSizeChange(val) {
       this.pageform.pageNum = val;
       this.getData()
     },
+    // 点击分页的每个页码触发的分页方法，同时请求数据初始化
     handleCurrentChange(val) {
       this.pageform.pageNum = val;
       this.active = this.proIndex
       this.getData()
     },
+    // 返回上一页回到当时点击的状态的方法
+    // 通过vuex来保存数据，通过判断路由来设置面包屑导航的数据。
     setBreadcrumbList(name) {
       const breadcrumbList = this.$store.state.breadcrumbList;
       if (breadcrumbList.length < 3) {
@@ -115,15 +120,17 @@ export default {
       }
       this.$store.commit('breadcrumbList', breadcrumbList);
     },
+    // 点击左侧导航改变右侧数据内容
     navClick(n,index,type) {
       this.active = index;
       this.navTitle = n.name;
       this.setBreadcrumbList(n.name);
-      this.types = type;
-      this.proIndex = index
+      this.types = type;//左侧导航的标识，1,2,3,4...请求数据
+      this.proIndex = index//改变左侧点击的状态值。active
       this.pageform.pageNum=1;
       this.getData()
     },
+    // 初始化右侧列表数据
     getData(){
       let obj = {
           newsType: this.types, //类型：String  必有字段  备注：资讯类型 1：组织机构；2：公示信息；3：通知公告；4：新闻资讯；5：办事指南；6：征求意见；7：政务公开

@@ -162,6 +162,7 @@ export default {
       this.getValidLawyerList();
     },
     // 字典表，查询擅长专业的list并手动添加全部选项
+    // 使用传参的方式可以方便的请求多个接口，而不用一个个的写
     getDictionaryList(dictCode, typeName, flag) {
       this.$ajaxPost("/support/getDictionaryList", {
         dictCode,

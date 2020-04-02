@@ -174,14 +174,17 @@ export default {
     this.getConsultByLawyer();
   },
   methods: {
+    // 分页改变pagesize时触发的方法
     handleSizeChange(val) {
       this.pageform.pageNum = val;
       this.getConsultByLawyer();
     },
+    // 点击分页每一个页码，触发的方法，同时初始化数据
     handleCurrentChange(val) {
       this.pageform.pageNum = val;
       this.getConsultByLawyer();
     },
+    // 律师详情的数据，保存律师详情为了跳转到针对性咨询页面
     getLawerInfo() {
       let obj = {
         lawyerId: this.$route.query.id
@@ -190,6 +193,7 @@ export default {
         if (res.data.code == 200) {
           this.form = res.data.content;
           const breadcrumbList = this.$store.state.breadcrumbList;
+          // 点击返回键，返回到对应的律师信息下，通过vuex的方法保存律师信息。通过判断路由，来设置面包屑导航
           if (breadcrumbList[breadcrumbList.length - 1].path !== '/listLaywer/info') {
             breadcrumbList.push({path: '/listLaywer/info', name: `${this.form.baseInfo.lawyerName}律师详情`});
             this.$store.commit('breadcrumbList', breadcrumbList);
@@ -197,6 +201,7 @@ export default {
         }
       });
     },
+    // 服务记录的数据
     getConsultByLawyer() {
       let _this = this;
       let obj = {
@@ -209,6 +214,7 @@ export default {
         _this.pageform.total = res.data.content.pageInfo.total;
       });
     },
+    // 此方法为了判断服务记录中状态值
     consultStatus(n) {
       switch (n) {
         case 1:
@@ -223,6 +229,7 @@ export default {
           return "律师拒绝";
       }
     },
+    // 针对性咨询跳转页面，跳转的页面通过状态，id去匹配到底是哪个tab选项，哪个律师
     focusComment() {
       this.$store.commit("refer", {
         consultType: "2",
