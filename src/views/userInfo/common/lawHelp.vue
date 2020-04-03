@@ -154,7 +154,7 @@ export default {
       });
     },
     lawClick(id){
-      this.$router.push({path:'/user/lawConsult',query:{applyId:id}})
+      this.$router.push({path:'/user/lawConsult',query:{applyId:id,title:'法律援助预约'}})
     }
   }
 };

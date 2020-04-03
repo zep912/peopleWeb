@@ -2,56 +2,56 @@
   <div class="userConsult">
     <div class="consultHead">
       <div class="stepTitle">
-        <span>[人民调解预约]</span>
-        <span>[指派调委会]</span>
-        <span>[调委会响应]</span>
+        <span v-for='(item,index) in form.flowAxis' :key='index'>[{{item.taskName}}]</span>
       </div>
       <el-steps :active="2" align-center :space="200">
-        <el-step title="张三" description="2020-01-01 10:10"></el-step>
-        <el-step title="李晓航律师" description="2020-01-01 10:10"></el-step>
-        <el-step title="张三" description="2020-01-01 10:10"></el-step>
-        <div style></div>
+        <el-step :title="item.disposeName" v-for='(item,index) in form.flowAxis' :key='index' :description='item.disposeTime.substring(0,10)' ></el-step>
       </el-steps>
     </div>
     <div style="width:100%;height:20px;"></div>
     <div class="userConsultContent">
       <!-- 免费咨询 -->
       <div class="freeConsult consultBox" style="margin-top:0">
-        <h3>人民调解预约</h3>
+        <h3>{{title}}</h3>
         <div class="freeBox borderTop">
-          <el-form :model="form" label-width="100px">
+          <el-form :model="form" label-width="110px">
             <el-row>
               <el-col :span="8">
-                <el-form-item label="申请人:">{{form.applyData.applyName}}</el-form-item>
+                <el-form-item label="申请人:">{{form.applyData.applyName!=null?form.applyData.applyName:''}}</el-form-item>
               </el-col>
               <el-col :span="8">
-                <el-form-item label="手机号码:">{{form.applyData.applyPhone}}</el-form-item>
-              </el-col>
-            </el-row>
-            <el-row>
-              <el-form-item label="单位或住址:">{{form.applyData.applyAddress}}</el-form-item>
-            </el-row>
-            <el-row>
-              <el-col :span="8">
-                <el-form-item label="被申请人:">{{form.applyData.applyAddress}}</el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item label="联系电话:">{{form.applyData.applyAddress}}</el-form-item>
+                <el-form-item label="身份证号:">{{form.applyData.idNumber?form.applyData.idNumber:''}}</el-form-item>
               </el-col>
             </el-row>
             <el-row>
-              <el-form-item label="纠纷类型:">{{form.applyData.matterType}}</el-form-item>
+              <el-form-item label="单位或住址:">{{form.applyData.applyAddress?form.applyData.applyAddress:''}}</el-form-item>
             </el-row>
             <el-row>
-              <el-form-item label="纠纷情况">
+              <el-col :span="8">
+                <el-form-item label="手机号码:">{{form.applyData.applyPhone?form.applyData.applyPhone:''}}</el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="预约时间:">{{form.applyData.appointmentDate}} {{form.applyData.appointmentTime}}</el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span='8'>
+                  <el-form-item label="事项类型:">{{form.applyData.matterType}}</el-form-item>
+              </el-col>
+              <el-col :span='8'>
+                  <el-form-item label="身份类别:">{{form.applyData.identityType?form.applyData.identityType:''}}</el-form-item>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-form-item label="案情及申请理由">
                 <el-input type="textarea" :rows="4" v-model="form.applyData.applyReason"></el-input>
               </el-form-item>
             </el-row>
             <el-row>
-              <el-form-item label="预约调委会:">
+              <el-form-item label="证明材料:">
                 <div>
                   <img :src="form.applyData.lawOrg.orgImg" alt />
-                  <div>
+                  <!-- <div>
                     <h4>{{form.applyData.lawOrg.orgName}}</h4>
                     <p>
                       <span>联系电话:</span>
@@ -61,7 +61,7 @@
                       <span>联系地址:</span>
                       <span>{{form.applyData.lawOrg.orgAddress}}</span>
                     </p>
-                  </div>
+                  </div> -->
                 </div>
               </el-form-item>
             </el-row>
@@ -69,7 +69,7 @@
         </div>
       </div>
       <!-- 调委会响应 -->
-      <div class="lawerAnswer consultBox">
+      <!-- <div class="lawerAnswer consultBox">
         <h3>调委会响应</h3>
         <div class="lawerAnwserBox borderTop">
           <el-form label-width="80px">
@@ -97,9 +97,9 @@
             </el-row>
           </el-form>
         </div>
-      </div>
+      </div> -->
       <!-- 调委会响应 -->
-      <div class="seclectLawer consultBox">
+      <!-- <div class="seclectLawer consultBox">
         <h3>调委会响应</h3>
         <div class="borderTop">
           <div class="lawForm">
@@ -129,12 +129,12 @@
             </el-form>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
-    <div class="consultBtn">
+    <!-- <div class="consultBtn">
       <el-button class="save">提交</el-button>
       <el-button class="quit">取消</el-button>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -143,49 +143,24 @@ export default {
   data() {
     return {
       form:{
-          "applyData": {                //类型：Object  必有字段  备注：预约详情
-            "applyId":"gcled0d99c3433a9b09218e599dhwq03",                //类型：String  必有字段  备注：预约ID
-            "instanceId":"5505",                //类型：String  必有字段  备注：流程ID
-            "applyName":"张三",                //类型：String  必有字段  备注：申请人姓名
-            "applyPhone":"18940192235",                //类型：String  必有字段  备注：申请人手机号码
-            "applyAddress":"辽阳市白塔区二道街256号",                //类型：String  必有字段  备注：申请人住址
-            "appointmentDate":"2019-05-25",                //类型：String  必有字段  备注：预约日期
-            "appointmentTime":"09:00",                //类型：String  必有字段  备注：预约时间
-            "matterType":"民事",                //类型：String  必有字段  备注：事项类别
-            "identityType":"农民工",                //类型：String  必有字段  备注：身份类别
-            "applyReason":"申请理由",                //类型：String  必有字段  备注：申请理由
-            "idNumber":"身份证号",                //类型：String  必有字段  备注：身份证号
-            "lawOrg":{                //类型：Object  必有字段  备注：预约调委会信息
-                "lawOrgId":"gld9ed0d99c3433a9b09218e59zqjd02",                //类型：String  必有字段  备注：调委会ID
-                "orgName":"org_address",                //类型：String  必有字段  备注：调委会名称
-                "orgTelephone":"0419-223654812",                //类型：String  必有字段  备注：联系电话
-                "orgAddress":"辽阳市白塔区四道街102号",                //类型：String  必有字段  备注：联系地址
-                "orgImg":"http://www.baidu.com/11.jpg"                //类型：String  必有字段  备注：机构图片(默认取图片第一张)
-            }
-      }
+          
+      
       },
       radio: 1,
       proposal: "",
       lawerList: [],
-      formList: [
-        {
-          type: 1,
-          content: "你的阿的发送到发送到"
-        },
-        {
-          type: 2,
-          content: "阿斯顿发送到大幅度"
-        }
-      ],
+      formList: [],
       applyId: "",
       total:0,
-      resultList:[]
+      resultList:[],
+      title:''
     };
   },
   created() {},
   mounted() {
     this.applyId = this.$router.currentRoute.query.applyId;
     this.getData()
+    this.title = this.$router.currentRoute.query.title;
   },
   methods: {
       getDict() {
@@ -205,7 +180,9 @@ export default {
               applyId:this.applyId
           };
           this.$ajaxPost('/appointment/getLawAidDetail',obj).then(res =>{
-              this.form.applyData = res.data.content.applyData;
+            this.form = res.data.content
+            console.log(this.form)
+              // this.form.applyData = res.data.content.applyData;
           })
       }
   }
@@ -223,7 +200,7 @@ export default {
   padding-bottom: 10px;
   overflow: hidden;
   .stepTitle {
-    width: 600px;
+    width:412px;
     display: flex;
     justify-content: space-between;
     span {
@@ -268,7 +245,7 @@ export default {
 }
 .userConsultContent {
   overflow-y: auto;
-  height: 800px;
+  // height: 800px;
   h3 {
     width: 220px;
     height: 44px;
