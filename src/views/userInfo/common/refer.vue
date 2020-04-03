@@ -75,12 +75,17 @@ export default {
     return {
       form: {
         questionType: "",
-        questionTitle: ""
+        questionTitle: "",
+        consultStatus: ''
       },
       total: 0,
       questionTypeList: [],
       list: [],
       consultStatus: [
+        {
+          label: "全部",
+          value: ""
+        },
         {
           label: "待确认",
           value: "1"
@@ -118,7 +123,7 @@ export default {
     };
   },
   mounted() {
-    this.getDictionaryList("wentileixing", "questionTypeList");
+    this.getDictionaryList("wentileixing", "questionTypeList", true);
     this.getOwnerConsultList();
   },
   methods: {

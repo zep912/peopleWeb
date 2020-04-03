@@ -146,7 +146,6 @@ export default {
   // 路由周期，离开页面，跳转其他页面时，根据nextRoute判断是否需要缓存查询条件
   beforeRouteLeave(to, from, next) {
     const nextRoute = ['/government/info'];
-    console.log(to, 'to.name');
     if (nextRoute.indexOf(to.path) > -1) {
       util.setSearchCache({ to, from, next }, { toPath: to.path, pagePath: '/government', request: { active: this.active, navTitle: this.navTitle, types: this.types, pageform: this.pageform }})
     }
@@ -158,7 +157,6 @@ export default {
     if (nextRoute.indexOf(from.path) > -1) {
       next(vm => {
         const request = util.getSearchCache({ to, from, next }, { fromPath: from.path, pagePath: '/government' });
-        console.log(request, 'request12333');
         vm.active = request ? request.active : vm.active;
         vm.navTitle = request ? request.navTitle : vm.navTitle;
         vm.types = request ? request.types : vm.types;

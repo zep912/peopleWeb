@@ -154,7 +154,6 @@ export default {
   // 路由周期，离开页面，跳转其他页面时，根据nextRoute判断是否需要缓存查询条件
   beforeRouteLeave(to, from, next) {
     const nextRoute = ['/propaganda/getInfo'];
-    console.log(to, 'to.name');
     if (nextRoute.indexOf(to.path) > -1) {
       util.setSearchCache({ to, from, next }, { toPath: to.path, pagePath: '/propaganda', request: { active: this.active, navTitle: this.navTitle, types: this.types, pageform: this.pageform }})
     }

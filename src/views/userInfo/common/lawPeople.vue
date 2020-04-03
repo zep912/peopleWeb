@@ -3,7 +3,7 @@
     <div class="referTop">
       <el-form label-width="80px">
         <el-row>
-          <el-col :span="6">
+          <el-col :span="7">
             <el-form-item label="纠纷种类">
               <el-select v-model="form.matterType" placeholder="请选择">
                 <el-option
@@ -15,7 +15,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="7">
             <el-form-item label="状态">
               <el-select v-model="form.applyStatus" placeholder="请选择">
                 <el-option
@@ -27,8 +27,8 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="10" :offset="1" class="referInput">
-            <el-input placeholder="请输入" style="width:220px" v-model="form.questionTitle"></el-input>
+          <el-col :span="9" :offset="1" class="referInput">
+            <el-input placeholder="请输入" style="flex: 1" v-model="form.questionTitle"></el-input>
             <el-button class="referBtn">搜索</el-button>
           </el-col>
         </el-row>
@@ -37,7 +37,7 @@
 
     <div class="homeBox">
       <div class="homeAt">
-        <span class="homeNear">法律援助预约</span>
+        <span class="homeNear">人民调解预约</span>
         <span class="homeAccout">
           共有：
           <span>{{pageform.total}}篇</span>
@@ -61,7 +61,7 @@
         :total="pageform.total"
       >></el-pagination>
       </div>
-      
+
     </div>
   </div>
 </template>
@@ -77,6 +77,10 @@ export default {
         questionTitle: ""
       },
       statusList: [
+        {
+          label: "全部",
+          value: ""
+        },
         {
           label: "待响应",
           value: "1"
@@ -101,7 +105,7 @@ export default {
     };
   },
   mounted() {
-    this.getDict();
+    this.getDict(true);
     this.getData();
   },
   methods: {
@@ -124,14 +128,15 @@ export default {
           return "预约失败";
       }
     },
-    getDict() {
+    getDict(flag) {
       let obj = {
         dictCode: "jiufenleixing",
         parentDictDataCode: "",
         userId: "111"
       };
       this.$ajaxPost("/support/getDictionaryList", obj).then(res => {
-        this.resultList = res.data.content.resultList;
+        const defaultArr = flag ? [{ dictDataCode: "", dictDataName: "全部" }] : [];
+        this.resultList = defaultArr.concat(res.data.content.resultList);
       });
     },
     getData() {
@@ -164,6 +169,7 @@ export default {
       padding-top: 20px;
     }
     .referInput {
+      display: flex;
       .el-input__inner {
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;

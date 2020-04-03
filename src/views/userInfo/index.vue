@@ -2,7 +2,7 @@
   <div class="userInfo">
     <el-row>
       <el-col :span="6">
-        <el-menu :unique-opened="true" @open="handleOpen" @select="handleSelect">
+        <el-menu ref="userMenu" :unique-opened="true" @open="handleOpen" @select="handleSelect">
           <el-submenu index="home" :class="{'no-opened': ['home', 'info', 'feedback', 'session'].includes(active)}">
             <template slot="title">
               <i class="el-icon-arrow-right"></i>
@@ -14,16 +14,16 @@
               <i class="el-icon-arrow-right"></i>
               <span>我的咨询</span>
             </template>
-            <el-menu-item index="refer" :class="{'is-active': active === 'refer'}">免费咨询</el-menu-item>
-            <el-menu-item index="payRefer" :class="{'is-active': active === 'payRefer'}">针对性咨询</el-menu-item>
+            <el-menu-item index="refer" :class="[active === 'refer' ? 'is-active' : 'not-active']">免费咨询</el-menu-item>
+            <el-menu-item index="payRefer" :class="[active === 'payRefer' ? 'is-active' : 'not-active']">针对性咨询</el-menu-item>
           </el-submenu>
           <el-submenu index="lawHelp">
             <template slot="title">
               <i class="el-icon-arrow-right"></i>
               <span>我的预约</span>
             </template>
-            <el-menu-item index="lawHelp" :class="{'is-active': active === 'lawHelp'}">法律援助预约</el-menu-item>
-            <el-menu-item index="lawPeople" :class="{'is-active': active === 'lawPeople'}">人民调解预约</el-menu-item>
+            <el-menu-item index="lawHelp" :class="[active === 'lawHelp' ?'is-active' : 'not-active']">法律援助预约</el-menu-item>
+            <el-menu-item index="lawPeople" :class="[active === 'lawPeople' ? 'is-active': 'not-active']">人民调解预约</el-menu-item>
           </el-submenu>
           <el-submenu index="info" :class="{'no-opened': ['home', 'info', 'feedback', 'session'].includes(active)}">
             <template slot="title">
@@ -60,6 +60,7 @@ import lawHelp from './common/lawHelp';
 import lawPeople from './common/lawPeople';
 import payRefer from './common/payRefer';
 import refer from './common/refer';
+import util from "@/assets/js/util.js";
 export default {
   data() {
     return {
@@ -69,11 +70,36 @@ export default {
   components: {home, info, feedback, lawHelp, lawPeople, payRefer, refer},
   methods: {
     handleOpen(key) {
+      console.log(key, 'handleOpen');
       this.active = key !== 'session' ? key : 'home';
     },
     handleSelect(key) {
+      console.log(key, 'handleSelect');
       this.active = key;
     },
+  },
+  // 路由周期，离开页面，跳转其他页面时，根据nextRoute判断是否需要缓存查询条件
+  beforeRouteLeave(to, from, next) {
+    const nextRoute = ['/user/lawConsult'];
+    if (nextRoute.indexOf(to.path) > -1) {
+      util.setSearchCache({ to, from, next }, { toPath: to.path, pagePath: '/user', request: { active: this.active }})
+    }
+    next()
+  },
+  // 路由周期，进入周期页面，根据nextRoute判断是否需要缓存查询条件
+  beforeRouteEnter(to, from, next) {
+    const nextRoute = ['/user/lawConsult'];
+    if (nextRoute.indexOf(from.path) > -1) {
+      next(vm => {
+        const request = util.getSearchCache({ to, from, next }, { fromPath: from.path, pagePath: '/user' });
+        const active = request ? request.active : 'home';
+        vm.$refs.userMenu.open(active);
+      })
+    } else {
+      next(vm => {
+        vm.$refs.userMenu.open('home');
+      })
+    }
   }
 };
 </script>
@@ -84,6 +110,11 @@ export default {
   margin: 0 auto 20px;
   .el-submenu {
     border-bottom: 1px solid #ccc;
+    .el-menu-item {
+      &.not-active {
+        color: #303133;
+      }
+    }
     .el-menu-item::before{
       content: '';
       width: 4px;
