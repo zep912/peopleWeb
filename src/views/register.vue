@@ -41,12 +41,12 @@
         <el-date-picker v-model="form.birthday" type="date" placeholder="选择日期"></el-date-picker>
       </el-form-item>
       <el-row style="border-bottom:1px solid #ccc">
-        <el-col :span="7">
-          <el-form-item label="所属地区::" prop="areaArray" style="border-bottom:0;margin-bottom:0">
+        <el-col :span="10">
+          <el-form-item label="所属地区:" prop="areaArray" style="border-bottom:0;margin-bottom:0">
             <area-list v-model="form.areaArray"></area-list>
           </el-form-item>
         </el-col>
-        <el-col :span="7">
+        <el-col :span="10">
           <el-input
             v-model="form.desc"
             style="margin-left:20px;border:1px solid #ccc"
@@ -54,8 +54,8 @@
           ></el-input>
         </el-col>
       </el-row>
+      <el-button type="primary" @click="onSubmit" style="margin-top:20px">注册</el-button>
     </el-form>
-    <el-button type="primary" @click="onSubmit('rules')" style="margin-top:20px">注册</el-button>
   </div>
 </template>
 
@@ -119,10 +119,10 @@ export default {
   created() {},
   mounted() {},
   methods: {
-    onSubmit(formName) {
+    onSubmit() {
       // 校验身份证
       var idcardReg = /^[1-9]\d{7}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}$|^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/;
-      this.$refs[formName].validate(valid => {
+      this.$refs['form'].validate(valid => {
         if (valid) {
           if (idcardReg.test(this.form.identityCard)) {
             const areaArray = this.form.areaArray;
@@ -196,6 +196,10 @@ export default {
   padding: 15px;
   margin: 10px auto;
   text-align: left;
+  .el-form {
+    max-width: 800px;
+    margin: 0 auto;
+  }
   .el-form-item {
     padding-bottom: 5px;
     border-bottom: 1px solid #ccc;

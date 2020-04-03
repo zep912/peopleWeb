@@ -419,35 +419,44 @@
             }
           });
         } else {
-          let appointment = Object.assign({}, this.appointment);
-          const {appointmentDate, appointmentTime, token, lawOrgId} = appointment;
-          // 注意，如果这里对时间做处理，需要注意两个点，第一个就是html上指定时间格式
-          // 指定时间格式，如果对时间做了校验type为date时，会报错。因为下面这个是对字符串的操作，上面默认了是时间对象格式
-          // 所以最后处理的办法，就是取消了校验中type为date。并在html上设置默认的时间格式
-          appointment.appointmentDate = appointment.appointmentDate.slice(0, 10);
-          const res = await this.$ajaxPost('/appointment/getAppointmentTime', {appointmentDate, appointmentTime, lawOrgId, token});
-          if (res.data.code === 200) {
-            if (res.data.dataList && res.data.dataList.length && res.data.dataList[0].appointmentCount > 0) {
-              const applyArray = this.appointment.appelleeArray;
-              const appelleeArray = this.appointment.appelleeArray;
-              if (applyArray && applyArray.length) {
-                appointment.applyCityId = applyArray[0];
-                appointment.applyRegionId = applyArray[1];
-                appointment.applyStreetId = applyArray[2];
+          this.$refs['appointment'].validate(async (val) => {
+            if (val) {
+              let appointment = Object.assign({}, this.appointment);
+              const {appointmentDate, appointmentTime, token, lawOrgId} = appointment;
+              // 注意，如果这里对时间做处理，需要注意两个点，第一个就是html上指定时间格式
+              // 指定时间格式，如果对时间做了校验type为date时，会报错。因为下面这个是对字符串的操作，上面默认了是时间对象格式
+              // 所以最后处理的办法，就是取消了校验中type为date。并在html上设置默认的时间格式
+              appointment.appointmentDate = appointment.appointmentDate.slice(0, 10);
+              const res = await this.$ajaxPost('/appointment/getAppointmentTime', {
+                appointmentDate,
+                appointmentTime,
+                lawOrgId,
+                token
+              });
+              if (res.data.code === 200) {
+                if (res.data.dataList && res.data.dataList.length && res.data.dataList[0].appointmentCount > 0) {
+                  const applyArray = this.appointment.appelleeArray;
+                  const appelleeArray = this.appointment.appelleeArray;
+                  if (applyArray && applyArray.length) {
+                    appointment.applyCityId = applyArray[0];
+                    appointment.applyRegionId = applyArray[1];
+                    appointment.applyStreetId = applyArray[2];
+                  }
+                  if (appelleeArray && appelleeArray.length) {
+                    appointment.appelleeCityId = appelleeArray[0];
+                    appointment.appelleeRegionId = appelleeArray[1];
+                    appointment.appelleeStreetId = appelleeArray[2];
+                  }
+                  this.submit(formName, appointment);
+                } else {
+                  this.$message.error('该机构这个时间已约满');
+                  return false;
+                }
+              } else {
+                return false;
               }
-              if (appelleeArray && appelleeArray.length) {
-                appointment.appelleeCityId = appelleeArray[0];
-                appointment.appelleeRegionId = appelleeArray[1];
-                appointment.appelleeStreetId = appelleeArray[2];
-              }
-              this.submit(formName, appointment);
-            } else {
-              this.$message.error('该机构这个时间已约满');
-              return false;
             }
-          } else {
-            return false;
-          }
+          })
         }
       },
       submit(formName, form) {
@@ -494,15 +503,6 @@
       this.$nextTick(() => {
         this.$refs[this.tabName === 'law' ? 'form' : 'appointment'].clearValidate();
       });
-    },
-    watch: {
-      'form': function(val){
-        if (val) this.$refs['form'].validateField(['areaArray']);
-      },
-      'appointment': function(val){
-        if (val) this.$refs['appointment'].validateField(['applyArray']);
-        if (val) this.$refs['appointment'].validateField(['appelleeArray']);
-      },
     }
   }
 </script>

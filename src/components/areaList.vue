@@ -37,16 +37,16 @@
             })
           }
         },
-        myValue: []
       }
     },
-    watch: {
-      value(value) {
-        this.myValue = value;
-        this.$emit('change', value);
-      },
-      myValue(value) {
-        this.$emit('input', value);
+    computed: {
+      myValue: {
+        get() {
+          return this.value
+        },
+        set(value) {
+          this.$emit('input', value)
+        }
       }
     }
   }

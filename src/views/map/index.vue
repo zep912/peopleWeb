@@ -1,5 +1,6 @@
 <template>
   <div class="map">
+    <el-button size="small" v-if="!boxShow || !organShow" @click="back" class="btn-fr">返回上一级</el-button>
     <div class="mapbox">
       <el-row>
         <el-col :span="8" v-show="boxShow" style="position:relative;padding-bottom:40px">
@@ -293,7 +294,7 @@ export default {
       // console.log(BMap, map);
       this.center.lng = 123.17;
       this.center.lat = 41.27;
-      this.zoom = 15;
+      this.zoom = 10;
     },
     // 点击所有的机构列表的时间。全部，法律援助等，也会触发请求机构事件3
     orgListClick(n, index) {
@@ -351,7 +352,7 @@ export default {
           lng: this.mapList[0].lng,
           lat: this.mapList[0].lat
         };
-        this.zoom = 8;
+        this.zoom = 18;
       });
     },
     // 点击某区获取区内的律所
@@ -382,14 +383,19 @@ export default {
               const {areaX, areaY, orgName} = el;
               return {lng: areaX, lat: areaY, areaRegionName: orgName, lawMsg: false, infoMsg: false};
             });
-          })
+            this.center = {
+              lng: this.mapList[0].lng,
+              lat: this.mapList[0].lat
+            };
+            this.zoom = 16;
+          });
           this.treeHeaderNum = this.pageform.total
         }
       });
     },
     // 初始化的时候获取下面所有区的数据。需要重新组装数据
-    // 通过mapList这个数组来统一管理
-    getOrgList() {
+    // 通过mapList这个数组来统一管理 notInit表示判断不是初始状态，即不是第一次加载
+    getOrgList(notInit) {
       let obj = {
         token: this.$store.state.token,
         ...this.form
@@ -410,6 +416,7 @@ export default {
             el.infoMsg = false;
             return el
           });
+          notInit && this.handler();
         });
         this.treeHeader = this.mapTreeList[0].areaRegionName;
         this.treeHeaderNum = this.mapTreeList[0].areaOrgCount
@@ -418,20 +425,34 @@ export default {
     // 获取地址的list
     getAreaList() {
       this.$ajaxPost("/support/getAreaList", { areaLevel: "3" }).then(
-        ({ data }) => {
-          if (data.code === 200) {
-            this.areaRegionList = [{ areaId: "", areaName: "全部" }].concat(
-              data.content.dataList.reduce((res, item) => {
-                if (!res.some(val => val.areaId === item.areaId)) {
-                  item.leaf = item.areaLevel === "4";
-                  res.push(item);
-                }
-                return res;
-              }, [])
-            );
+          ({ data }) => {
+            if (data.code === 200) {
+              this.areaRegionList = [{ areaId: "", areaName: "全部" }].concat(
+                  data.content.dataList.reduce((res, item) => {
+                    if (!res.some(val => val.areaId === item.areaId)) {
+                      item.leaf = item.areaLevel === "4";
+                      res.push(item);
+                    }
+                    return res;
+                  }, [])
+              );
+            }
           }
-        }
       );
+    },
+    // 返回上一级，当查看区或者律师列表时显示，此时才可点击
+    back() {
+      if (!this.boxShow) {
+        this.boxShow = !this.boxShow;
+        this.labelBoxShow = false;
+        this.getLawList();
+        return
+      }
+      if (!this.organShow) {
+        this.organShow = !this.organShow;
+        this.form.areaRegionId = '';
+        this.getOrgList(true);
+      }
     }
   }
 };
@@ -578,6 +599,12 @@ export default {
 .map {
   width: 85%;
   margin: 0 auto;
+  position: relative;
+  .btn-fr {
+    position: absolute;
+    top: -40px;
+    right: 0;
+  }
 }
 .bm-view {
   width: 100%;
