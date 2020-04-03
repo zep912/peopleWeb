@@ -143,8 +143,8 @@ export default {
   data() {
     return {
       form:{
-          
-      
+
+
       },
       radio: 1,
       proposal: "",
@@ -181,8 +181,6 @@ export default {
           };
           this.$ajaxPost('/appointment/getLawAidDetail',obj).then(res =>{
             this.form = res.data.content
-            console.log(this.form)
-              // this.form.applyData = res.data.content.applyData;
           })
       }
   }
