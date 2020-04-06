@@ -38,7 +38,7 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="出生日期:" prop="birthday">
-        <el-date-picker v-model="form.birthday" type="date" placeholder="选择日期"></el-date-picker>
+        <el-date-picker v-model="form.birthday" type="date" placeholder="选择日期" value-format="yyyy-MM-dd"></el-date-picker>
       </el-form-item>
       <el-row style="border-bottom:1px solid #ccc">
         <el-col :span="10">
@@ -132,14 +132,15 @@ export default {
               form.areaRegionId = areaArray[1];
               form.areaStreetId = areaArray[2];
             }
-            this.$ajaxPost("/login/saveRegisterUser", form).then(({ res }) => {
-              if (res.code == 200) {
+            this.$ajaxPost("/login/saveRegisterUser", form).then((res) => {
+              console.log(res)
+              if (res.data.code == 200) {
                 this.$nextTick(() => {
                   this.$refs["form"].clearValidate();
                 });
                 this.$message.success("提交成功", 3000);
               } else {
-                this.$message.error(res.msg, 3000);
+                this.$message.error(res.data.msg, 3000);
               }
             });
           } else {
@@ -174,13 +175,14 @@ export default {
           }
         }, 1000);
       }
-      this.$ajaxPost("/login/getSmsCode", { phoneNum: this.form.mobile }).then(
+      this.$ajaxPost("/login/getSmsCode", { phoneNum: this.form.phoneNum }).then(
         res => {
-          if (res.data.msg == "成功") {
+          if (res.data.code == "200") {
             this.$message({
               message: "发送成功",
               type: "success"
             });
+            this.form.validateCode = res.data.content.code
           }
         }
       );
