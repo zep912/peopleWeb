@@ -19,7 +19,11 @@
         </div>
       </div>
       <div class="wx">
-        <img src="../../assets/img/wx.png" alt />
+        <!-- <img src="../../assets/img/wx.png" alt /> -->
+        <div style="width:130px;height:130px">
+        <img :src="form.qrCode" alt="">
+        </div>
+
         <p>微信扫码，及时咨询</p>
       </div>
       <!-- 进度条 -->
