@@ -488,6 +488,7 @@
                 } else {
                   this.appointment = {token: this.$store.getters.token, applyName, applyPhone, aplayArray: [], appelleeArray: []};
                   this.params = {pageNum: 1, pageSize: 4, total: 0};
+                  this.appointmentTimeList = [];
                 }
                 this.$nextTick(() => {
                   this.$refs[formName].clearValidate();
@@ -498,7 +499,6 @@
               }
             })
           } else {
-            console.log('error submit!!');
             return false;
           }
         });
