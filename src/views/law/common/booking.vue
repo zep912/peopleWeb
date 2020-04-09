@@ -405,8 +405,8 @@
           token
         });
         if (res.data.code === 200) {
-          if (res.data.dataList && res.data.dataList.length && res.data.dataList[0].appointmentCount > 0) {
-            this.appointmentTimeList = res.data.dataList.map(item => {
+          if (res.data.content.dataList && res.data.content.dataList.length && res.data.content.dataList[0].appointmentCount > 0) {
+            this.appointmentTimeList = res.data.content.dataList.map(item => {
               item.disabled = item.appointmentCount;
               return item;
             });
