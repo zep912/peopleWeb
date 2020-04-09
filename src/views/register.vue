@@ -133,7 +133,6 @@ export default {
               form.areaStreetId = areaArray[2];
             }
             this.$ajaxPost("/login/saveRegisterUser", form).then((res) => {
-              console.log(res)
               if (res.data.code == 200) {
                 this.$nextTick(() => {
                   this.$refs["form"].clearValidate();
@@ -147,8 +146,6 @@ export default {
            this.$message.error('请填写正确的身份证号')
             return false;
           }
-        }else{
-          console.log('error')
         }
       });
     },
