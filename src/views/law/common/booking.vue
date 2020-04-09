@@ -165,14 +165,15 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="预约日期" prop="appointmentDate">
-              <el-date-picker v-model="appointment.appointmentDate" type="date" placeholder="选择日期" format='yyyy-MM-dd' value-format='yyyy-MM-dd'>
+              <el-date-picker v-model="appointment.appointmentDate" type="date" placeholder="选择日期" format='yyyy-MM-dd' value-format='yyyy-MM-dd' @change="getAppointmentTimeList">
               </el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="预约时间" prop="appointmentTime">
-              <el-time-select v-model="appointment.appointmentTime" :picker-options="{start: '09:00', step: '01:00', end: '20:00'}" placeholder="选择时间">
-              </el-time-select>
+              <el-select v-model="appointment.appointmentTime" placeholder="选择时间" @visible-change="visibleChange">
+                <el-option v-for="(item, index) in appointmentTimeList" :key="index" :label="item.appointmentTime" :value="item.appointmentTime"></el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -302,6 +303,7 @@
           applyArray: [],
           appelleeArray: [],
         },
+        appointmentTimeList: []
       }
     },
     methods: {
@@ -386,6 +388,40 @@
         this.$nextTick(() => {
           this.$refs['appointment'].validateField(['lawOrgId']);
         });
+        this.getAppointmentTimeList();
+      },
+      // 查询可预约时间
+      async getAppointmentTimeList() {
+        let appointment = Object.assign({}, this.appointment);
+        const {appointmentDate, token, lawOrgId} = appointment;
+        if (!lawOrgId || !appointmentDate) this.$message.warning(`${!lawOrgId ? '请选择预约委员会' : '请选择预约日期'}`);
+        const appointmentTime = '08:00';
+        // 注意，如果这里对时间做处理，需要注意两个点，第一个就是html上指定时间格式
+        // 指定时间格式，如果对时间做了校验type为date时，会报错。因为下面这个是对字符串的操作，上面默认了是时间对象格式
+        const res = await this.$ajaxPost('/appointment/getAppointmentTime', {
+          appointmentDate,
+          appointmentTime,
+          lawOrgId,
+          token
+        });
+        if (res.data.code === 200) {
+          if (res.data.dataList && res.data.dataList.length && res.data.dataList[0].appointmentCount > 0) {
+            this.appointmentTimeList = res.data.dataList.map(item => {
+              item.disabled = item.appointmentCount;
+              return item;
+            });
+          } else {
+            this.$message.error('该机构这个时间已约满');
+            return false;
+          }
+        }
+      },
+      // 下拉框出现的时候
+      visibleChange(visible) {
+        if (visible) {
+          const isAppointmentTimeList = this.appointmentTimeList.length === 0;
+          isAppointmentTimeList && this.$message.warning('请重新选择预约委员会或预约时间');
+        }
       },
       // 提交并判断
       async onSubmit(formName) {
@@ -422,39 +458,19 @@
           this.$refs['appointment'].validate(async (val) => {
             if (val) {
               let appointment = Object.assign({}, this.appointment);
-              const {appointmentDate, appointmentTime, token, lawOrgId} = appointment;
-              // 注意，如果这里对时间做处理，需要注意两个点，第一个就是html上指定时间格式
-              // 指定时间格式，如果对时间做了校验type为date时，会报错。因为下面这个是对字符串的操作，上面默认了是时间对象格式
-              // 所以最后处理的办法，就是取消了校验中type为date。并在html上设置默认的时间格式
-              appointment.appointmentDate = appointment.appointmentDate.slice(0, 10);
-              const res = await this.$ajaxPost('/appointment/getAppointmentTime', {
-                appointmentDate,
-                appointmentTime,
-                lawOrgId,
-                token
-              });
-              if (res.data.code === 200) {
-                if (res.data.dataList && res.data.dataList.length && res.data.dataList[0].appointmentCount > 0) {
-                  const applyArray = this.appointment.appelleeArray;
-                  const appelleeArray = this.appointment.appelleeArray;
-                  if (applyArray && applyArray.length) {
-                    appointment.applyCityId = applyArray[0];
-                    appointment.applyRegionId = applyArray[1];
-                    appointment.applyStreetId = applyArray[2];
-                  }
-                  if (appelleeArray && appelleeArray.length) {
-                    appointment.appelleeCityId = appelleeArray[0];
-                    appointment.appelleeRegionId = appelleeArray[1];
-                    appointment.appelleeStreetId = appelleeArray[2];
-                  }
-                  this.submit(formName, appointment);
-                } else {
-                  this.$message.error('该机构这个时间已约满');
-                  return false;
-                }
-              } else {
-                return false;
+              const applyArray = appointment.appelleeArray;
+              const appelleeArray = appointment.appelleeArray;
+              if (applyArray && applyArray.length) {
+                appointment.applyCityId = applyArray[0];
+                appointment.applyRegionId = applyArray[1];
+                appointment.applyStreetId = applyArray[2];
               }
+              if (appelleeArray && appelleeArray.length) {
+                appointment.appelleeCityId = appelleeArray[0];
+                appointment.appelleeRegionId = appelleeArray[1];
+                appointment.appelleeStreetId = appelleeArray[2];
+              }
+              this.submit(formName, appointment);
             }
           })
         }
